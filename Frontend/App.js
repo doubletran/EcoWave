@@ -3,8 +3,9 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from './components/splash.js'
-
 import Problems from './test/Problems.js';
+import ReportProblem from './components/reportProblem.js'
+
 function HomeScreen({ navigation }) {
   //const problemsDB = ProblemsDBcreate({name: "sfd"});
   return (
@@ -14,6 +15,10 @@ function HomeScreen({ navigation }) {
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate('Details')}
+      />
+      <Button
+        title="Report a Problem"
+        onPress={() => navigation.navigate('ReportProblem')}
       />
 
     </View>
@@ -32,6 +37,7 @@ function App() {
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={Splash} />
+        <Stack.Screen name="ReportProblem" component={Problem} />
       </Stack.Navigator>
       <Problems/>
     </NavigationContainer>
