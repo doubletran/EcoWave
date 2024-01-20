@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from './components/splash.js'
+import { ViewEvents, CreateEvent } from './components/events.js'
 
 function HomeScreen({ navigation }) {
   return (
@@ -11,6 +12,10 @@ function HomeScreen({ navigation }) {
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate('Details')}
+      />
+      <Button
+        title="View Events"
+        onPress={() => navigation.navigate('Events')}
       />
     </View>
   );
@@ -24,6 +29,8 @@ function App() {
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={Splash} />
+        <Stack.Screen name="Events" component={ViewEvents} />
+        <Stack.Screen name="CreateEvent" component={CreateEvent} />
       </Stack.Navigator>
     </NavigationContainer>
   );
