@@ -37,7 +37,7 @@ function App() {
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={Splash} />
-        <Stack.Screen name="ReportProblem" component={Problem} />
+        <Stack.Screen name="ReportProblem" component={ReportProblem} />
       </Stack.Navigator>
       <Problems/>
     </NavigationContainer>
