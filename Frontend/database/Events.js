@@ -24,8 +24,8 @@ export async function create({ title, latitude, longtitude, time  }) {
     context: context,
     location: new GeoPoint(latitude, longtitude),
     create_time: Timestamp.fromDate(new Date()),
-    time: Timestamp.fromDate(new Date(time)),
-
+  //  time: Timestamp.fromDate(new Date(time)),
+    problemRef : doc(db, id)
   });
 }
 export async function remove(id) {
