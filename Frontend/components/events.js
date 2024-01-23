@@ -13,7 +13,7 @@ export function ViewEvents({ navigation }) {
   );
 }
 
-export function CreateEvent({ navigation }) {
+export default function CreateEvent({ navigation }) {
   const [name, setName] = useState('')
   const [date, setDate] = useState('')
   const [description, setDescription] = useState('')

@@ -5,9 +5,8 @@ import {Button, StyleSheet, Text, View} from 'react-native';
 
 import ReportProblem from './components/reportProblem.js'
 import Splash from './components/splash.js'
-import { ViewEvents, CreateEvent } from './components/events.js'
 import Problems from './test/Problems.js';
-
+import CreateEvent from './components/events.js'
 
 function HomeScreen({navigation}) {
   // const problemsDB = ProblemsDBcreate({name: "sfd"});
@@ -20,13 +19,14 @@ function HomeScreen({navigation}) {
         onPress={() => navigation.navigate('Details')}
       />
       <Button
-        title="View Events"
-        onPress={() => navigation.navigate('Events')}
-      />
-      <Button
         title = 'Report a Problem'
         onPress={() => navigation.navigate('ReportProblem')}
       />
+      <Button
+        title = 'Create an Event'
+        onPress = {() => navigation.navigate('Create Event')}
+      />
+
     </View>
   );
 }
@@ -42,9 +42,8 @@ function App() {
         <Stack.Screen name='Home' component={
     HomeScreen} />
         <Stack.Screen name="Details" component={Splash} />
-        <Stack.Screen name="Events" component={ViewEvents} />
-        <Stack.Screen name="Create Event" component={CreateEvent} />
         <Stack.Screen name='ReportProblem' component={ReportProblem} />
+        <Stack.Screen name='Create an Event' component={CreateEvent} />
       </Stack.Navigator>
       <Problems/>
     </NavigationContainer>
