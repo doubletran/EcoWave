@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 
 const ReportProblem = ({ userId }) => {
   const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(null);
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
 
@@ -16,6 +16,11 @@ const ReportProblem = ({ userId }) => {
       if (status !== 'granted') {
         alert('camera roll permissions required to make this work!!1!');
       }
+
+    const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
+    if (locationStatus !== 'granted') {
+      alert('Location permissions required to display the map!');
+    }
     })();
   }, []);
 
@@ -27,9 +32,15 @@ const ReportProblem = ({ userId }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.uri);
     }
+  };
+
+  const handleMapPress = (event) => {
+    // Extract latitude and longitude from the pressed location
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setLocation({ latitude, longitude });
   };
 
   const submitReport = () => {
@@ -44,11 +55,18 @@ const ReportProblem = ({ userId }) => {
         value={name}
         onChangeText={setName}
       />
-      <TextInput
-        placeholder="Location"
-        value={location}
-        onChangeText={setLocation}
-      />
+      <MapView
+        style={styles.map}
+        onPress={handleMapPress}
+        provider = {PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+      </MapView>
       <TextInput
         placeholder="Description"
         value={description}
@@ -64,6 +82,18 @@ const ReportProblem = ({ userId }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+  },
+  mapContainer: {
+    height: 200, 
+    marginVertical: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  map: {
+    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height
   },
   image: {
     width: 200,
