@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MapView, { Marker } from 'react-native-maps';
-import * as db from '../'
-//pass in location 
-const ReportProblem = ({ userId}) => {
-  const [title, setTitle] = useState('');
+
+const ReportProblem = ({ userId }) => {
+  const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
@@ -17,6 +16,11 @@ const ReportProblem = ({ userId}) => {
       if (status !== 'granted') {
         alert('camera roll permissions required to make this work!!1!');
       }
+
+    const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
+    if (locationStatus !== 'granted') {
+      alert('Location permissions required to display the map!');
+    }
     })();
   }, []);
 
@@ -28,9 +32,15 @@ const ReportProblem = ({ userId}) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.uri);
     }
+  };
+
+  const handleMapPress = (event) => {
+    // Extract latitude and longitude from the pressed location
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setLocation({ latitude, longitude });
   };
 
   const submitReport = () => {
@@ -51,11 +61,18 @@ const ReportProblem = ({ userId}) => {
         value={title}
         onChangeText={setTitle}
       />
-      <TextInput
-        placeholder="Location"
-        value={location}
-        onChangeText={setLocation}
-      />
+      <MapView
+        style={styles.map}
+        onPress={handleMapPress}
+        provider = {PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+      </MapView>
       <TextInput
         placeholder="Description"
         value={description}
@@ -72,8 +89,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
-  
-
   image: {
     width: 200,
     height: 200,
