@@ -47,8 +47,8 @@ const ReportProblem = ({ userId }) => {
     <View style={styles.container}>
       <TextInput
         placeholder="Title"
-        value={title}
-        onChangeText={setTitle}
+        value={name}
+        onChangeText={setName}
       />
       <TextInput
         placeholder="Location"
