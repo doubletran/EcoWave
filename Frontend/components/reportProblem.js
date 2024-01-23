@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MapView, { Marker } from 'react-native-maps';
-
-const ReportProblem = ({ userId }) => {
-  const [name, setName] = useState('');
+import * as db from '../'
+//pass in location 
+const ReportProblem = ({ userId}) => {
+  const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
@@ -35,14 +36,20 @@ const ReportProblem = ({ userId }) => {
   const submitReport = () => {
     // Use Firebase to store the problem report data
     // Include userId, name, location, description, image URL, and timestemp when the problem was created
+    db.create({
+      title: title,
+      descriptiont:description,
+      longitude: 0,
+      latitude: 1
+    })
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
+        placeholder="Title"
+        value={title}
+        onChangeText={setTitle}
       />
       <TextInput
         placeholder="Location"
@@ -65,6 +72,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
+  
+
   image: {
     width: 200,
     height: 200,
