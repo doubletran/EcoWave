@@ -30,7 +30,7 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={Splash} />
         <Stack.Screen name="Events" component={ViewEvents} />
-        <Stack.Screen name="CreateEvent" component={CreateEvent} />
+        <Stack.Screen name="Create Event" component={CreateEvent} />
       </Stack.Navigator>
     </NavigationContainer>
   );
