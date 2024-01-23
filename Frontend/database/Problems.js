@@ -28,10 +28,10 @@ export async function get(id){
 }
 
 
-export async function create({ title, latitude, longtitude, context }) {
+export async function create({ title, latitude, longtitude, description }) {
   return await addDoc(db, {
     title: title,
-    context: context,
+    description: description, 
     location: new GeoPoint(latitude, longtitude),
     time: Timestamp.fromDate(new Date()),
     flag: 0,

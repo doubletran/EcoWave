@@ -35,14 +35,20 @@ const ReportProblem = ({ userId }) => {
   const submitReport = () => {
     // Use Firebase to store the problem report data
     // Include userId, name, location, description, image URL, and timestemp when the problem was created
+    db.create({
+      title: title,
+      descriptiont:description,
+      longitude: 0,
+      latitude: 1
+    })
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
+        placeholder="Title"
+        value={title}
+        onChangeText={setTitle}
       />
       <TextInput
         placeholder="Location"
