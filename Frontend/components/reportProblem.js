@@ -16,11 +16,6 @@ const ReportProblem = ({ userId }) => {
       if (status !== 'granted') {
         alert('camera roll permissions required to make this work!!1!');
       }
-
-    const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
-    if (locationStatus !== 'granted') {
-      alert('Location permissions required to display the map!');
-    }
     })();
   }, []);
 
@@ -32,15 +27,9 @@ const ReportProblem = ({ userId }) => {
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.cancelled) {
       setImage(result.uri);
     }
-  };
-
-  const handleMapPress = (event) => {
-    // Extract latitude and longitude from the pressed location
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    setLocation({ latitude, longitude });
   };
 
   const submitReport = () => {
@@ -61,18 +50,11 @@ const ReportProblem = ({ userId }) => {
         value={title}
         onChangeText={setTitle}
       />
-      <MapView
-        style={styles.map}
-        onPress={handleMapPress}
-        provider = {PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-      </MapView>
+      <TextInput
+        placeholder="Location"
+        value={location}
+        onChangeText={setLocation}
+      />
       <TextInput
         placeholder="Description"
         value={description}
