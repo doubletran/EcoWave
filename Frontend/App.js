@@ -1,10 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {StatusBar} from 'expo-status-bar';
+import {Button, StyleSheet, Text, View} from 'react-native';
+
+import ReportProblem from './components/reportProblem.js'
 import Splash from './components/splash.js'
 import Problems from './test/Problems.js';
-import ReportProblem from './components/reportProblem.js'
+import CreateEvent from './components/events.js'
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import ImageUploader from './database/ImageUploader.js';
@@ -20,8 +22,11 @@ function HomeScreen({ navigation }) {
       />
       <Button
         title="Report a Problem"
-        onPr
-        ess={() => navigation.navigate('ReportProblem')}
+        onPress={() => navigation.navigate('ReportProblem')}
+      />
+      <Button
+        title = 'Create an Event'
+        onPress = {() => navigation.navigate('Create Event')}
       />
             <Button
         title="Upload Image"
@@ -46,15 +51,16 @@ function HomeScreen({ navigation }) {
 const Stack = createNativeStackNavigator();
 
 function App() {
-  
-
   return (
   
     <NavigationContainer>
 
       <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name='Home' component={
+    HomeScreen} />
         <Stack.Screen name="Details" component={Splash} />
+        <Stack.Screen name='ReportProblem' component={ReportProblem} />
+        <Stack.Screen name='Create an Event' component={CreateEvent} />
         <Stack.Screen name="ReportProblem" component={ReportProblem} />
         <Stack.Screen name="Image Picker" component={ImageUploader}/>
       </Stack.Navigator>

@@ -9,13 +9,13 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCWE6zaJe6gfMBOSCRnXmlSA852wcPx8U4",
-  authDomain: "gdsc2024-a08e6.firebaseapp.com",
-  projectId: "gdsc2024-a08e6",
-  storageBucket: "gdsc2024-a08e6.appspot.com",
-  messagingSenderId: "544783740142",
-  appId: "1:544783740142:web:3fced6732ca4e9214b57ff",
-  measurementId: "G-FRGQMHNWJJ"
+  apiKey: 'AIzaSyCWE6zaJe6gfMBOSCRnXmlSA852wcPx8U4',
+  authDomain: 'gdsc2024-a08e6.firebaseapp.com',
+  projectId: 'gdsc2024-a08e6',
+  storageBucket: 'gdsc2024-a08e6.appspot.com',
+  messagingSenderId: '544783740142',
+  appId: '1:544783740142:web:3fced6732ca4e9214b57ff',
+  measurementId: 'G-FRGQMHNWJJ'
 };
 app =  initializeApp(firebaseConfig);
 
@@ -29,7 +29,7 @@ export default firebase;
 // const db = getFirestore(app);
 
 // try {
-//   const docRef = await 
+//   const docRef = await
 //   console.log("Document written with ID: ", docRef.id);
 // } catch (e) {
 //   console.error("Error adding document: ", e);
@@ -37,7 +37,7 @@ export default firebase;
 
 // export default class Firebase{
 
- 
+
 //   constructor(){
 //     try {
 //       addDoc(collection(db, "Problems"), {
@@ -56,7 +56,7 @@ export default firebase;
 //     } catch(e) {
 //       console.log("catch"  +e);
 //     }
-    
+
 //   }
 
 // }
