@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, TextInput, Button, Image, StyleSheet } from 'react-native';
+import { create } from '../database/Events';
 
 export function ViewEvents({ navigation }) {
   return (
@@ -19,6 +20,7 @@ export default function CreateEvent({ navigation }) {
   const [description, setDescription] = useState('')
 
   const submitReport = () => {
+    create({ title: name, description, latitude: 0, longtitude: 0, time: "2am"})
     // Use Firebase to store the event data
     // Include userId, name, location, description, and timestemp when the event was created
   };

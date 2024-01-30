@@ -24,7 +24,7 @@ function HomeScreen({navigation}) {
       />
       <Button
         title = 'Create an Event'
-        onPress = {() => navigation.navigate('Create Event')}
+        onPress = {() => navigation.navigate('Create an Event')}
       />
 
     </View>
