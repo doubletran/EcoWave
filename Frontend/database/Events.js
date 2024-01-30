@@ -4,7 +4,6 @@ import firebase from '../config/firebase';
 
 const EventsDB = collection(firebase, 'events');
 
-
 export async function getAll() {
   const querySnapshot = await getDocs(db);
   querySnapshot.forEach((doc) => {
@@ -13,19 +12,19 @@ export async function getAll() {
   });
 }
 export async function get(id) {
-  const document = await getDoc(doc(db, id));
+  const document = await getDoc(doc(EventsDB, id));
   console.log(' get:' + JSON.stringify(document.data()));
 }
 
 
-export async function create({title, latitude, longtitude, time}) {
-  return await addDoc(db, {
+export async function create({title, description, latitude, longtitude, time}) {
+  return await addDoc(EventsDB, {
     title: title,
-    context: context,
+    description: description,
     location: new GeoPoint(latitude, longtitude),
     create_time: Timestamp.fromDate(new Date()),
-    //  time: Timestamp.fromDate(new Date(time)),
-    problemRef: doc(db, id)
+    time: time,
+    problemRef: "undefined"
   });
 }
 export async function remove(id) {
