@@ -61,7 +61,6 @@ function App() {
         <Stack.Screen name="Details" component={Splash} />
         <Stack.Screen name='ReportProblem' component={ReportProblem} />
         <Stack.Screen name='Create an Event' component={CreateEvent} />
-        <Stack.Screen name="ReportProblem" component={ReportProblem} />
         <Stack.Screen name="Image Picker" component={ImageUploader}/>
       </Stack.Navigator>
 
