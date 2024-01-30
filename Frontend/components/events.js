@@ -21,8 +21,6 @@ export default function CreateEvent({ navigation }) {
 
   const submitReport = () => {
     create({ title: name, description, latitude: 0, longtitude: 0, time: "2am"})
-    // Use Firebase to store the event data
-    // Include userId, name, location, description, and timestemp when the event was created
   };
 
   return (
