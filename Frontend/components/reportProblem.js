@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Image, StyleSheet, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import firebase from '../config/firebase';
 import { create } from '../database/Problems';
 
 
@@ -43,10 +42,8 @@ const ReportProblem = ({ userId }) => {
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    const latitudeInt = Math.round(latitude);
-    const longitudeInt = Math.round(longitude);
 
-    setLocation({ latitude: latitudeInt, longitude: longitudeInt});
+    setLocation({ latitude: latitude, longitude: longitude});
     console.log(location);
   };
 
