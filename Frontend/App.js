@@ -10,6 +10,7 @@ import CreateEvent from './components/events.js'
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import ImageUploader from './database/ImageUploader.js';
+
 function HomeScreen({ navigation }) {
   //const problemsDB = ProblemsDBcreate({name: "sfd"});
   return (

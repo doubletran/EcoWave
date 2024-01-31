@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, Image, StyleSheet, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { create } from '../database/Problems';
+import { create } from '../database/problems';
 
 
 const ReportProblem = ({ userId }) => {

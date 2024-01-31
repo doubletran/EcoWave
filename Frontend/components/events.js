@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TextInput, Button, Image, StyleSheet } from 'react-native';
-import { create } from '../database/Events';
+import { Text, View, TextInput, Button, Image, StyleSheet, Dimensions } from 'react-native';
+import { create } from '../database/events';
+
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 
 export function ViewEvents({ navigation }) {
   return (
@@ -16,6 +18,7 @@ export function ViewEvents({ navigation }) {
 
 export default function CreateEvent({ navigation }) {
   const [name, setName] = useState('')
+  const [location, setLocation] = useState('')
   const [date, setDate] = useState('')
   const [description, setDescription] = useState('')
 
@@ -53,5 +56,11 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginVertical: 10,
+  },
+  map: {
+    //flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height
   },
 });
