@@ -16,7 +16,6 @@ export async function get(id) {
   console.log(' get:' + JSON.stringify(document.data()));
 }
 
-
 export async function create({title, latitude, longtitude, description}) {
   return await addDoc(db, {
     title: title,
@@ -29,6 +28,7 @@ export async function create({title, latitude, longtitude, description}) {
 export async function remove(id) {
   console.log('Deleted: at' + await deleteDoc(doc(db, id)));
 }
+
 export async function flag(id, factor) {
   await updateDoc(doc(db, id), {'flag': increment(factor)});
 }

@@ -11,11 +11,11 @@ export async function getAll() {
     console.log(doc.id, ' => ', doc.data());
   });
 }
+
 export async function get(id) {
   const document = await getDoc(doc(EventsDB, id));
   console.log(' get:' + JSON.stringify(document.data()));
 }
-
 
 export async function create({title, description, latitude, longtitude, time}) {
   return await addDoc(EventsDB, {
@@ -27,6 +27,7 @@ export async function create({title, description, latitude, longtitude, time}) {
     problemRef: "undefined"
   });
 }
+
 export async function remove(id) {
   console.log('Deleted: at' + await deleteDoc(doc(db, id)));
 }
