@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-import * as db from '../database/Problems.js';
+import * as db from '../database/problems.js';
 export default function Problems() {
   // db.create({
   //   title: "need cleanup",

@@ -1,6 +1,11 @@
-import React, { useState, useEffect, Component } from 'react';
-import { View, TextInput,  Image, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, Image, StyleSheet, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { create } from '../database/problems';
+
+
+const ReportProblem = ({ userId }) => {
 import { MdCameraAlt } from "react-icons/md";
 import MapView, { Marker } from 'react-native-maps';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,30 +19,89 @@ import { MaterialCommunityIcons, AntDesign, Entypo } from "@expo/vector-icons";
 const Form =({navigation, route})=>{
   const image = route.params.image;
   const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(null);
   const [description, setDescription] = useState('');
-  const submitReport = () => {
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    // Request permission to access the device's image library
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('camera roll permissions required to make this work!!1!');
+      }
+
+    const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
+    if (locationStatus !== 'granted') {
+      alert('Location permissions required to display the map!');
+    }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  const handleMapPress = (event) => {
+    // Extract latitude and longitude from the pressed location
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+
+    setLocation({ latitude: latitude, longitude: longitude});
+    console.log(location);
+  };
+
+  const submitReport = async () => {
     // Use Firebase to store the problem report data
     // Include userId, name, location, description, image URL, and timestemp when the problem was created
-    db.create({
-      title: title,
-      descriptiont:description,
-      longitude: 0,
-      latitude: 1
-    })
+    if (!name || !location.latitude  || !location.longitude || !description || !image) {
+      alert('Please fill in all fields before submitting.');
+    } try {
+  
+      await create({
+        title: name,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        description: description,
+      });
+      alert('Problem submitted successfully!');
+    } catch (error){
+      console.error('Error submitting problem:', error);
+      alert('Error submitting problem. Please try again.');
+    }
+
+    setName('');
+    setLocation(null);
+    setDescription('');
+    setImage(null);
   };
   return(
     <View style={styles.container}>
-      <ImagePicker/>
+      <MapView
+        style={styles.map}
+        onPress={handleMapPress}
+        provider = {PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      > 
+        {location && <Marker coordinate={location} />}
+      </MapView>
       <TextInput
-        placeholder="Title"
+        placeholder="Problem name"
         value={name}
         onChangeText={setName}
-      />
-      <TextInput
-        placeholder="Location"
-        value={location}
-        onChangeText={setLocation}
       />
       <TextInput
         placeholder="Description"
@@ -132,6 +196,12 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginVertical: 10,
+  },
+  map: {
+    //flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height
   },
 });
 

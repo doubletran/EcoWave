@@ -1,8 +1,8 @@
-import {addDoc, collection, deleteDoc, doc, FieldValue, GeoPoint, getDoc, getDocs, increment, query, Timestamp, updateDoc, where} from 'firebase/firestore';
+import {addDoc, collection, GeoPoint, getDocs, Timestamp} from 'firebase/firestore';
 
 import firebase from '../config/firebase';
 
-const db = collection(firebase, 'problems');
+const EventsDB = collection(firebase, 'events');
 
 export async function getAll() {
   const querySnapshot = await getDocs(db);
@@ -11,24 +11,23 @@ export async function getAll() {
     console.log(doc.id, ' => ', doc.data());
   });
 }
+
 export async function get(id) {
-  const document = await getDoc(doc(db, id));
+  const document = await getDoc(doc(EventsDB, id));
   console.log(' get:' + JSON.stringify(document.data()));
 }
 
-
-export async function create({title, latitude, longtitude, description}) {
-  return await addDoc(db, {
+export async function create({title, description, latitude, longtitude, time}) {
+  return await addDoc(EventsDB, {
     title: title,
     description: description,
     location: new GeoPoint(latitude, longtitude),
-    time: Timestamp.fromDate(new Date()),
-    flag: 0,
+    create_time: Timestamp.fromDate(new Date()),
+    time: time,
+    problemRef: "undefined"
   });
 }
+
 export async function remove(id) {
   console.log('Deleted: at' + await deleteDoc(doc(db, id)));
-}
-export async function flag(id, factor) {
-  await updateDoc(doc(db, id), {'flag': increment(factor)});
 }

@@ -15,7 +15,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyC2M542GAMZIBZsWxkiVaW6Vc3yAr7JEOs"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -23,7 +26,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["CAMERA_ROLL"]
+      "permissions": ["CAMERA_ROLL"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC2M542GAMZIBZsWxkiVaW6Vc3yAr7JEOs"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
