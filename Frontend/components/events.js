@@ -5,7 +5,9 @@ import { PermissionsAndroid } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 
-import { useAuth } from '@clerk/clerk-expo'
+import { useAuth, SignedIn, SignedOut } from '@clerk/clerk-expo'
+
+import SignInAndUp from './SignInAndUp';
 
 export function ViewEvents({ navigation }) {
   return (
@@ -76,6 +78,7 @@ export default function CreateEvent({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <SignedIn>
       <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -108,6 +111,10 @@ export default function CreateEvent({ navigation }) {
         Selected location: {location.latitude}, {location.longitude}
       </Text>
       <Button title="Create Event" onPress={submitReport} />
+    </SignedIn>
+    <SignedOut>
+      <SignInAndUp/>
+    </SignedOut>
     </View>
   );
 }

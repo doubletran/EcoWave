@@ -4,8 +4,7 @@ import { useState } from 'react';
 
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 
-import SignUpScreen from './SignUp'
-import SignInScreen from './SignIn'
+import SignInAndUp from './SignInAndUp';
 
 export function ProfileScreen() {
     const [signIn, setSignIn] = useState(false);
@@ -16,10 +15,7 @@ export function ProfileScreen() {
                 <Text>This is your account.</Text>
             </SignedIn>
             <SignedOut>
-                {!signIn && (<View><SignUpScreen/>
-                <TouchableOpacity onPress={()=>{setSignIn(true)}}><Text>Sign In instead</Text></TouchableOpacity></View>)}
-                {signIn && (<View><SignInScreen/>
-                <TouchableOpacity onPress={()=>{setSignIn(false)}}><Text>Sign Up instead</Text></TouchableOpacity></View>)}
+                <SignInAndUp/>
             </SignedOut>
         </View>
     )
