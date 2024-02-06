@@ -17,13 +17,14 @@ export async function get(id) {
   console.log(' get:' + JSON.stringify(document.data()));
 }
 
-export async function create({title, description, latitude, longtitude, time}) {
+export async function create({title, description, latitude, longtitude, time, userId}) {
   return await addDoc(EventsDB, {
     title: title,
     description: description,
     location: new GeoPoint(latitude, longtitude),
     create_time: Timestamp.fromDate(new Date()),
     time: time,
+    userId: userId,
     problemRef: "undefined"
   });
 }

@@ -1,4 +1,4 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
@@ -17,9 +17,9 @@ export function ProfileScreen() {
             </SignedIn>
             <SignedOut>
                 {!signIn && (<View><SignUpScreen/>
-                <Button title="Sign In instead" onPress={()=>{setSignIn(true)}}/></View>)}
+                <TouchableOpacity onPress={()=>{setSignIn(true)}}><Text>Sign In instead</Text></TouchableOpacity></View>)}
                 {signIn && (<View><SignInScreen/>
-                <Button title="Sign Up instead" onPress={()=>{setSignIn(false)}}/></View>)}
+                <TouchableOpacity onPress={()=>{setSignIn(false)}}><Text>Sign Up instead</Text></TouchableOpacity></View>)}
             </SignedOut>
         </View>
     )
