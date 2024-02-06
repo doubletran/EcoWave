@@ -4,8 +4,11 @@ import Navigator, {BottomNav} from './Navigator';
 
 import { NativeBaseProvider } from 'native-base';
 
+import { ClerkProvider } from '@clerk/clerk-expo'
+
 function App() {
   return (
+    <ClerkProvider publishableKey='pk_test_ZXhvdGljLXN3aW5lLTMzLmNsZXJrLmFjY291bnRzLmRldiQ'>
     <NativeBaseProvider>
    
       <NavigationContainer>
@@ -15,6 +18,7 @@ function App() {
       </NavigationContainer>
       
 </NativeBaseProvider>
+</ClerkProvider>
   );
 }
 
