@@ -4,7 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { create } from '../database/problems';
 
-
+import { Box, IconButton, Input } from 'native-base';
+import { ICONS } from '../config/style';
 const ReportProblem = ({ userId }) => {
   const [name, setName] = useState('');
   const [location, setLocation] = useState(null);
@@ -74,6 +75,7 @@ const ReportProblem = ({ userId }) => {
 
   return (
     <View style={styles.container}>
+      
       <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -87,13 +89,19 @@ const ReportProblem = ({ userId }) => {
       > 
         {location && <Marker coordinate={location} />}
       </MapView>
+
       <TextInput
         placeholder="Problem name"
         value={name}
         onChangeText={setName}
       />
+        <TextInput
+        placeholder="Location"
+        value={name}
+        onChangeText={setName}
+      />
       <TextInput
-        placeholder="Description"
+        placeholder=""
         value={description}
         onChangeText={setDescription}
       />
