@@ -4,7 +4,8 @@ import * as ImagePicker from 'expo-image-picker';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { create } from '../database/problems';
 
-
+import { Box, IconButton, Input } from 'native-base';
+import { ICONS } from '../config/style';
 const ReportProblem = ({ userId }) => {
 import { MdCameraAlt } from "react-icons/md";
 import MapView, { Marker } from 'react-native-maps';
@@ -85,6 +86,7 @@ const Form =({navigation, route})=>{
   };
   return(
     <View style={styles.container}>
+      
       <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -98,13 +100,19 @@ const Form =({navigation, route})=>{
       > 
         {location && <Marker coordinate={location} />}
       </MapView>
+
       <TextInput
         placeholder="Problem name"
         value={name}
         onChangeText={setName}
       />
+        <TextInput
+        placeholder="Location"
+        value={name}
+        onChangeText={setName}
+      />
       <TextInput
-        placeholder="Description"
+        placeholder=""
         value={description}
         onChangeText={setDescription}
       />
