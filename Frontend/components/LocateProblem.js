@@ -5,27 +5,30 @@ import { NAV_ICONS } from "../config/style";
 import React from "react";
 import {PROVIDER_GOOGLE, Marker} from 'react-native-maps'
 import { HeaderRightNext } from "../Navigator";
-
+import { Button } from "native-base";
 const LocateProblem=({navigation})=>{
-  const [location, setLocation] = React.useState(null);
+  const [location, setLocation] = React.useState(false);
   React.useEffect(()=>{
     navigation.setOptions({
       headerShown: true,
-      headerTitle: true
+      headerTitle: true,
+      headerRight: () => (
+        <Button  isDisabled={!location}
+        onPress ={()=>{
+          navigation.navigate("Report a problem", {latitude: location.latitude, longitude: location.longitude})
+        }}
+         >Next</Button>
+      )
     })
-  })
+  }, [location])
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
-
     setLocation({ latitude: latitude, longitude: longitude});
     console.log(location);
     navigation.setOptions({
      title: `${latitude}, ${longitude}`,
-     headerRight: () => HeaderRightNext(false, ()=>{
-      navigation.navigate("Report a problem", {latitude: latitude, longitude: longitude})
      })
-  })
  
   };
   return (

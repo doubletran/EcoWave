@@ -85,7 +85,7 @@ export default function Navigator() {
     </RootStack.Navigator>
   );
 }
-export function HeaderRightNext(disabled,handler){
-  return   <IconButton isDisabled={disabled} icon={icons.Next}
+export function HeaderRight( title, disabled,handler){
+  return   <Button title={title} isDisabled={disabled} icon={icons.Next}
   onPress={handler}/>
 }
