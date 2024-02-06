@@ -28,7 +28,6 @@ export default function CreateEvent({ navigation }) {
   const [description, setDescription] = useState('')
   const { isLoaded, userId, sessionId, getToken } = useAuth();
 
-
   useEffect(() => {
     // Request permission to access the device's location
     let getLocationPerms = async () => {
@@ -62,13 +61,13 @@ export default function CreateEvent({ navigation }) {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
 
-    setLocation({ latitude: latitude, longitude: longitude});
+    setLocation({ latitude: latitude, longitude: longitude });
     console.log(location);
   };
 
-  const submitReport = () => {
+  const submitEvent = () => {
     console.log(userId)
-    console.log(create({ title: name, description, latitude: location.latitude, longtitude: location.longitude, time: "undefined", userId: userId }))
+    console.log(create({ title: name, description, location: location, time: "undefined", userId: userId }))
 
     setName('')
     setDescription('')
@@ -110,7 +109,7 @@ export default function CreateEvent({ navigation }) {
       <Text>
         Selected location: {location.latitude}, {location.longitude}
       </Text>
-      <Button title="Create Event" onPress={submitReport} />
+      <Button title="Create Event" onPress={submitEvent} />
     </SignedIn>
     <SignedOut>
       <SignInAndUp/>

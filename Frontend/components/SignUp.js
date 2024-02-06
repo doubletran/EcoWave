@@ -20,8 +20,8 @@ export default function SignUpScreen() {
  
     try {
       await signUp.create({
-        //firstName,
-        //lastName,
+        firstName,
+        lastName,
         emailAddress,
         password,
       });
@@ -57,7 +57,7 @@ export default function SignUpScreen() {
     <View>
       {!pendingVerification && (
         <View>
-        {/*<View>
+        <View>
             <TextInput
               autoCapitalize="none"
               value={firstName}
@@ -72,7 +72,7 @@ export default function SignUpScreen() {
               placeholder="Last Name..."
               onChangeText={(lastName) => setLastName(lastName)}
             />
-      </View>*/}
+      </View>
           <View>
             <TextInput
               autoCapitalize="none"
