@@ -11,7 +11,7 @@ export default function SignUpScreen() {
   const [password, setPassword] = React.useState("");
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState("");
- 
+
   // start the sign up process.
   const onSignUpPress = async () => {
     if (!isLoaded) {
@@ -20,8 +20,8 @@ export default function SignUpScreen() {
  
     try {
       await signUp.create({
-        firstName,
-        lastName,
+        //firstName,
+        //lastName,
         emailAddress,
         password,
       });
@@ -57,7 +57,7 @@ export default function SignUpScreen() {
     <View>
       {!pendingVerification && (
         <View>
-        <View>
+        {/*<View>
             <TextInput
               autoCapitalize="none"
               value={firstName}
@@ -72,7 +72,7 @@ export default function SignUpScreen() {
               placeholder="Last Name..."
               onChangeText={(lastName) => setLastName(lastName)}
             />
-          </View>
+      </View>*/}
           <View>
             <TextInput
               autoCapitalize="none"
@@ -86,7 +86,7 @@ export default function SignUpScreen() {
             <TextInput
               value={password}
               placeholder="Password..."
-              placeholderTextColor="#000"
+              //placeholderTextColor="#000"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
             />
