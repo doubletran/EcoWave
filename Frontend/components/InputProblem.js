@@ -12,7 +12,6 @@ import ImageUploader from '../database/ImageUploader';
     navigation.setOptions({
       headerShown: true,
       headerTitle: true,
-
     })
   })
   React.useEffect(()=>{
