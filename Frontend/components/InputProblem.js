@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import * as ImagePicker from 'expo-image-picker';
 import { create } from '../database/problems';
-import { HeaderRightNext } from '../Navigator';
 import { Box,Button, Input } from 'native-base';
 import ImageUploader from '../database/ImageUploader';
 
@@ -17,8 +15,8 @@ import ImageUploader from '../database/ImageUploader';
   React.useEffect(()=>{
     navigation.setOptions({
       headerRight: () => (
-        <Button isDisabled={status=="disabled"} isLoading={status=="loading"} isLoadingText="Submitting">
-       Submit
+        <Button isDisabled={status=="disabled"} isLoading={status=="loading"} >
+       Create
       </Button>
       )
 

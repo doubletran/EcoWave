@@ -6,7 +6,7 @@ import React from "react";
 import {PROVIDER_GOOGLE, Marker} from 'react-native-maps'
 import { HeaderRightNext } from "../Navigator";
 import { Button } from "native-base";
-const LocateProblem=({navigation})=>{
+const LocateProblem=({navigation, route})=>{
   const [location, setLocation] = React.useState(false);
   React.useEffect(()=>{
     navigation.setOptions({
@@ -15,7 +15,7 @@ const LocateProblem=({navigation})=>{
       headerRight: () => (
         <Button  isDisabled={!location}
         onPress ={()=>{
-          navigation.navigate("Report a problem", {latitude: location.latitude, longitude: location.longitude})
+          navigation.navigate(route.params.action, {latitude: location.latitude, longitude: location.longitude})
         }}
          >Next</Button>
       )

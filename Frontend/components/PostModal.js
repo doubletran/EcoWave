@@ -26,11 +26,11 @@ export const PostModal = ({navigation}) => {
   const [event, setEvent] = useState(false);
   
   const handleProblem = ()=>{
-    navigation.navigate("Set location")
+    navigation.navigate("Set location", {action: "Report a problem"})
     setShowModal(false);
   }
   const handleEvent = ()=>{
-    navigation.navigate("AddEvent")
+    navigation.navigate("New Event")
     setShowModal(false);
   }
   const renderMediaAction = () => {

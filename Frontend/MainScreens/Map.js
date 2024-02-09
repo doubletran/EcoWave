@@ -1,7 +1,8 @@
 import MapView from "react-native-maps";
 import { StyleSheet } from "react-native";
+import {Center} from 'native-base'; 
 import { Dimensions } from "react-native";
-import {PROVIDER_GOOGLE, Marker} from 'react-native-maps'
+import {PROVIDER_GOOGLE} from 'react-native-maps'
 const MapScreen=({navigation})=>{
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
@@ -21,8 +22,12 @@ const MapScreen=({navigation})=>{
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        onMap
       > 
       </MapView>
+      <Center styp>
+
+      </Center>
 
  
 </>
