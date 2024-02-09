@@ -4,6 +4,27 @@ import Navigator, {BottomNav} from './Navigator';
 import { extendTheme } from 'native-base';
 import { NativeBaseProvider } from 'native-base';
 
+import { ClerkProvider } from '@clerk/clerk-expo'
+
+import * as SecureStore from "expo-secure-store";
+
+const tokenCache = {
+  async getToken(key) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key, value) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
+
 function App() {
   const theme = extendTheme({
 
@@ -41,7 +62,11 @@ function App() {
     }
   });
   return (
-    <NativeBaseProvider theme={theme}>
+    <ClerkProvider
+    tokenCache={tokenCache}
+    publishableKey='pk_test_ZXhvdGljLXN3aW5lLTMzLmNsZXJrLmFjY291bnRzLmRldiQ'
+    >
+    <NativeBaseProvider>
    
       <NavigationContainer>
      <Navigator/>
@@ -50,6 +75,7 @@ function App() {
       </NavigationContainer>
       
 </NativeBaseProvider>
+</ClerkProvider>
   );
 }
 

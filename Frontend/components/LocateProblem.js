@@ -6,7 +6,12 @@ import React from "react";
 import {PROVIDER_GOOGLE, Marker} from 'react-native-maps'
 import { HeaderRightNext } from "../Navigator";
 import { Button } from "native-base";
-const LocateProblem=({navigation, route})=>{
+
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+
+import SignInAndUp from './SignInAndUp';
+
+const LocateProblem=({navigation})=>{
   const [location, setLocation] = React.useState(false);
   React.useEffect(()=>{
     navigation.setOptions({
@@ -33,6 +38,7 @@ const LocateProblem=({navigation, route})=>{
   };
   return (
   <>
+  <SignedIn>
          <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -46,6 +52,10 @@ const LocateProblem=({navigation, route})=>{
       > 
         {location && <Marker coordinate={location} />}
       </MapView>
+      </SignedIn>
+      <SignedOut>
+        <SignInAndUp/>
+      </SignedOut>
 </>
   )
 }

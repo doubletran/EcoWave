@@ -11,7 +11,9 @@ import EventScreen from './MainScreens/Event';
 import MapScreen from './MainScreens/Map'
 import LocateProblem from './components/LocateProblem';
 import InputProblem from './components/InputProblem';
-import CreateEvent from './components/CreateEvent';
+import CreateEvent from './components/events';
+import { ProfileScreen } from './components/profile';
+
 export const BottomNav=()=>{
   const navigation=useNavigation();
   return (
@@ -38,13 +40,14 @@ export const BottomNav=()=>{
 }
 
  const Header=()=>{
+  const nav = useNavigation()
   return(
 
   <>
 <HStack >
 
   <IconButton alignItems="left" w="33%" title="Map" icon={icons.Updates}/>
-  <IconButton alignItems="right" w="33%" title="Map" icon={icons.Profile}/>
+  <IconButton alignItems="right" w="33%" title="Map" icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
        {/* <Center h="40" w="33%" bg="primary.300" rounded="md" shadow={3} /> */}
    
     </HStack>
@@ -54,7 +57,6 @@ export const BottomNav=()=>{
 }
 
 const RootStack = createNativeStackNavigator();
-
 export default function Navigator() {
   return (
     <RootStack.Navigator  screenOptions={{ headerTitle: (props) => <Header/>,
@@ -62,6 +64,7 @@ export default function Navigator() {
       <RootStack.Group>
         <RootStack.Screen name="Map" component={MapScreen} />
         <RootStack.Screen name="Events" component={EventScreen} />
+        <RootStack.Screen name="Profile" component={ProfileScreen} />
         {/* <RootStack.Screen name="AddProblem" component={ReportStack}/> */}
         <RootStack.Screen name="New Event" component={CreateEvent}/>
       </RootStack.Group>
