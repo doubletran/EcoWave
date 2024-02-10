@@ -5,39 +5,22 @@ import { NAV_ICONS as icons} from './config/style';
 
 import { Center, IconButton } from 'native-base';
 import { Button, HStack ,Text} from 'native-base';
-import { useNavigation } from '@react-navigation/native';
-import { PostModal } from './components/PostModal';
-import EventScreen from './MainScreens/Event';
+import { NavigationContainer, DefaultTheme, useNavigation} from '@react-navigation/native';
+import {EventScreen} from './MainScreens/Event';
 import MapScreen from './MainScreens/Map'
 import LocateProblem from './components/LocateProblem';
 import InputProblem from './components/InputProblem';
-import CreateEvent from './components/events';
+import CreateEvent from './components/CreateEvent';
 import { ProfileScreen } from './components/profile';
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'rgb(255, 45, 85)',
+    background: 'rgb(255, 255, 255)'
+  },
+};
 
-export const BottomNav=()=>{
-  const navigation=useNavigation();
-  return (
-<HStack marginTop="auto" marginBottom="0">
-  <IconButton w="33%" title="Map" icon={icons.Map}
- onPress={()=>{
-  navigation.navigate("Map")
-}}/>
-  <IconButton w="33%" title="Post" icon={icons.Post}
-  onPress={()=>{
-    navigation.navigate("Post")
-  }}/>
-  <IconButton w="33%" title="Event" icon={icons.Event}
- onPress={()=>{
-  navigation.navigate("Events")
-}}/>
-       {/* <Center h="40" w="33%" bg="primary.300" rounded="md" shadow={3} /> */}
-   
-    </HStack>
-  //    <Center><Button
- 
-    
-  )
-}
 
  const Header=()=>{
   const nav = useNavigation()
@@ -45,7 +28,6 @@ export const BottomNav=()=>{
 
   <>
 <HStack >
-
   <IconButton alignItems="left" w="33%" title="Map" icon={icons.Updates}/>
   <IconButton alignItems="right" w="33%" title="Map" icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
        {/* <Center h="40" w="33%" bg="primary.300" rounded="md" shadow={3} /> */}
@@ -59,17 +41,14 @@ export const BottomNav=()=>{
 const RootStack = createNativeStackNavigator();
 export default function Navigator() {
   return (
+    <NavigationContainer theme={theme}>
     <RootStack.Navigator  screenOptions={{ headerTitle: (props) => <Header/>,
     headerBackVisible:false }}>
       <RootStack.Group>
         <RootStack.Screen name="Map" component={MapScreen} />
         <RootStack.Screen name="Events" component={EventScreen} />
         <RootStack.Screen name="Profile" component={ProfileScreen} />
-        {/* <RootStack.Screen name="AddProblem" component={ReportStack}/> */}
         <RootStack.Screen name="New Event" component={CreateEvent}/>
-      </RootStack.Group>
-      <RootStack.Group screenOptions={{ presentation: 'transparentModal' }}>
-        <RootStack.Screen name="Post" component={PostModal} />
       </RootStack.Group>
 
       <RootStack.Group  screenOptions={{ 
@@ -84,6 +63,8 @@ export default function Navigator() {
         component={InputProblem}/>
       </RootStack.Group>
     </RootStack.Navigator>
+
+    </NavigationContainer>
   );
 }
 export function HeaderRight( title, disabled,handler){

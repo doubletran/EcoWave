@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Image, NativeBaseProvider, Center, Input } from "native-base";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+
 const pickImage = async (setImageUri) => {
   try {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
       aspect: [5, 3],
       quality: 1,
     });

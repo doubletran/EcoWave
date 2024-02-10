@@ -38,7 +38,7 @@ const LocateProblem=({navigation, route})=>{
   };
   return (
   <>
-  <SignedIn>
+  {/* <SignedIn> */}
          <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -52,10 +52,10 @@ const LocateProblem=({navigation, route})=>{
       > 
         {location && <Marker coordinate={location} />}
       </MapView>
-      </SignedIn>
+      {/* </SignedIn>
       <SignedOut>
         <SignInAndUp/>
-      </SignedOut>
+      </SignedOut> */}
 </>
   )
 }

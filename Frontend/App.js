@@ -1,11 +1,7 @@
-import {NavigationContainer} from '@react-navigation/native';
-
-import Navigator, {BottomNav} from './Navigator';
-import { extendTheme } from 'native-base';
-import { NativeBaseProvider } from 'native-base';
-
-import { ClerkProvider } from '@clerk/clerk-expo'
-
+import Navigator from "./Navigator";
+import { extendTheme } from "native-base";
+import { NativeBaseProvider } from "native-base";
+import { ClerkProvider } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 
 const tokenCache = {
@@ -27,55 +23,50 @@ const tokenCache = {
 
 function App() {
   const theme = extendTheme({
-
     components: {
-      Text:{
-        fontSize: "17"
+      Text: {
+        fontSize: "17",
       },
-      Input:{
-        _text:{
-          fontSize: "17"
-        }
+      Input: {
+        sizes: "lg",
+        baseStyle: {
+          p: "10",
+        },
+        _text: {
+          fontSize: "17",
+        },
       },
       Button: {
         h: "10",
         variants: {
-          rounded: ({
-            colorScheme
-          }) => {
+          rounded: ({ colorScheme }) => {
             return {
               bg: `${colorScheme}.500`,
               _hover: {
-                bg: `${colorScheme}.600`
+                bg: `${colorScheme}.600`,
               },
               _pressed: {
-                bg: `${colorScheme}.700`
+                bg: `${colorScheme}.700`,
               },
               _text: {
-                color: `${colorScheme}.50`
+                color: `${colorScheme}.50`,
               },
-              rounded: "full"
+              rounded: "full",
             };
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   });
   return (
     <ClerkProvider
-    tokenCache={tokenCache}
-    publishableKey='pk_test_ZXhvdGljLXN3aW5lLTMzLmNsZXJrLmFjY291bnRzLmRldiQ'
+      tokenCache={tokenCache}
+      publishableKey='pk_test_ZXhvdGljLXN3aW5lLTMzLmNsZXJrLmFjY291bnRzLmRldiQ'
     >
-    <NativeBaseProvider>
-   
-      <NavigationContainer>
-     <Navigator/>
-       
-      <BottomNav />
-      </NavigationContainer>
-      
-</NativeBaseProvider>
-</ClerkProvider>
+      <NativeBaseProvider theme={theme}>
+        <Navigator />
+      </NativeBaseProvider>
+    </ClerkProvider>
   );
 }
 

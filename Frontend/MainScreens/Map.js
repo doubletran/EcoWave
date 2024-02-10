@@ -1,6 +1,7 @@
 import MapView from "react-native-maps";
 import { StyleSheet } from "react-native";
 import {Center} from 'native-base'; 
+import { BottomNav } from "../components/PostModal"
 import { Dimensions } from "react-native";
 import {PROVIDER_GOOGLE} from 'react-native-maps'
 const MapScreen=({navigation})=>{
@@ -25,9 +26,7 @@ const MapScreen=({navigation})=>{
         onMap
       > 
       </MapView>
-      <Center styp>
-
-      </Center>
+      <BottomNav/>
 
  
 </>

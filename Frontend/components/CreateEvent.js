@@ -16,6 +16,7 @@ import {
   Text,
   Divider,
 } from "native-base";
+import { date_format, time_format } from "../config/lib"
 import { INPUT_ICONS } from "../config/style";
 export function ViewEvents({ navigation }) {
   return (
@@ -28,17 +29,6 @@ export function ViewEvents({ navigation }) {
     </View>
   );
 }
-const date_format = (date)=>{
-  if (!date) return ""
-  return date.toLocaleDateString()
-
-}
-const time_format= (timestamp)=>{
-
-    if (!timestamp) return ""
-    // console.log(timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }))
-    return timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-  }
 
 
 export default function CreateEvent({ navigation , route}) {

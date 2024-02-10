@@ -1,7 +1,8 @@
 import ReportProblem from "./reportProblem";
 import { useState, u, useEffect } from "react";
-import { Modal, Button } from "native-base";
-
+import { Modal, Button,HStack, IconButton } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { NAV_ICONS as icons} from '../config/style';
 function EventOrProblem  ({onProblem, onEvent})  {
   return (
     <>
@@ -19,12 +20,9 @@ function EventOrProblem  ({onProblem, onEvent})  {
     </>
   );
 };
-export const PostModal = ({navigation}) => {
-  const [showModal, setShowModal] = useState(true);
-  const [problem, setProblem] = useState(false);
-
-  const [event, setEvent] = useState(false);
-  
+export const BottomNav = () => {
+  const navigation=useNavigation();
+  const [showModal, setShowModal] = useState(false);
   const handleProblem = ()=>{
     navigation.navigate("Set location", {action: "Report a problem"})
     setShowModal(false);
@@ -33,45 +31,29 @@ export const PostModal = ({navigation}) => {
     navigation.navigate("New Event")
     setShowModal(false);
   }
-  const renderMediaAction = () => {
-    const [action, setAction] = useState(false);
-    return (
-      <>
-           {action &&
-     <ImageUploader action={action}/>}
-        <Button
-          variant="outline"
-          onPress={() => {
-            setShowModal(false);
-            setAction("camera");
-          }}
-        >
-          Launch Camera
-          {icons.camera}
-        </Button>
-        <Button
-          variant="outline"
-          title="Camera"
-          onPress={() => {
-            setAction("gallery");
-            setShowModal(false);
-          }}
-        >
-          Launch Gallery
-          {icons.gallery}
-        </Button>
-      </>
-    );
-  };
-
   return (
     <>
+    <HStack  marginTop="auto" marginBottom="0">
+  
+  <IconButton w="33%" title="Map" icon={icons.Map}
+ onPress={()=>{
+  navigation.navigate("Map")
+}}/>
+  <IconButton  w="33%" title="Post" icon={icons.Post}
+  onPress={()=>{
+  setShowModal(true)
+  }}/>
+  <IconButton w="33%" title="Event" icon={icons.Event}
+ onPress={()=>{
+  navigation.navigate("Events")
+}}/>
+
+    </HStack>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content marginBottom="0" marginTop="auto">
           <Modal.Header>Choose an action</Modal.Header>
           <Modal.Body>
-            {/* {problem && <renderMediaAction/>} */}
-            {!problem && !event && <EventOrProblem onProblem={handleProblem} onEvent={handleEvent}/>}
+        <EventOrProblem onProblem={handleProblem} onEvent={handleEvent}/>
           </Modal.Body>
           <Modal.Footer></Modal.Footer>
         </Modal.Content>
