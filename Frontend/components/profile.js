@@ -2,7 +2,7 @@ import { View, Text, Button, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
-import { ClerkProvider, SignedIn, SignedOut, useAuth } from "@clerk/clerk-expo";
+import { ClerkProvider, SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
 
 import SignInAndUp from './SignInAndUp';
 
@@ -25,11 +25,14 @@ const SignOut = () => {
 
 export function ProfileScreen() {
     const [signIn, setSignIn] = useState(false);
+    const { isLoaded, isSignedIn, user } = useUser();
 
     return (
         <View>
             <SignedIn>
                 <Text>This is your account.</Text>
+                <Text>First Name: {user.firstName}</Text>
+                <Text>Last Name: {user.lastName}</Text>
                 <SignOut/>
             </SignedIn>
             <SignedOut>
