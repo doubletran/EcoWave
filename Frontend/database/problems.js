@@ -16,13 +16,16 @@ export async function get(id) {
   console.log(' get:' + JSON.stringify(document.data()));
 }
 
-export async function create({title, latitude, longtitude, description}) {
+export async function create({title, latitude, longitude, description, imageUrl}) {
+  console.log(longitude);
+  console.log(latitude);
   return await addDoc(db, {
     title: title,
     description: description,
-    location: new GeoPoint(latitude, longtitude),
+    location: new GeoPoint(latitude, longitude),
     time: Timestamp.fromDate(new Date()),
     flag: 0,
+    imageUrl: imageUrl,
   });
 }
 export async function remove(id) {
