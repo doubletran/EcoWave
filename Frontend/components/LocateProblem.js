@@ -11,7 +11,7 @@ import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 
 import SignInAndUp from './SignInAndUp';
 
-const LocateProblem=({navigation})=>{
+const LocateProblem=({navigation, route})=>{
   const [location, setLocation] = React.useState(false);
   React.useEffect(()=>{
     navigation.setOptions({
