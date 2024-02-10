@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from 'react';
-
-import * as ImagePicker from 'expo-image-picker';
+import { Button, Box, Input, Image } from 'native-base';
 import { create } from '../database/problems';
-import { HeaderRightNext } from '../Navigator';
-import { Box,Button, Input } from 'native-base';
-import ImageUploader from '../database/ImageUploader';
+import { ImageUploader } from '../database/ImageUploader';
+import { View } from 'react-native';
 
- const InputProblem= ({ navigation, route}) => {
-  const [status, setStatus] = React.useState('disabled')
-  React.useEffect(()=>{
-    navigation.setOptions({
-      headerShown: true,
-      headerTitle: true,
-    })
-  })
-  React.useEffect(()=>{
+const InputProblem = ({ navigation, route }) => {
+  const [name, setName] = useState('');
+  const { latitude, longitude } = route.params;
+  const [description, setDescription] = useState('');
+  const [imageUri, setImageUri] = useState(null);
+  const [status, setStatus] = useState('disabled');
+
+  useEffect(() => {
+  const isFormValid = name && latitude && longitude && description && imageUri;
+  const newStatus = isFormValid ? 'enabled' : 'disabled';
+  setStatus(newStatus);
+
     navigation.setOptions({
       headerRight: () => (
-        <Button isDisabled={status=="disabled"} isLoading={status=="loading"} isLoadingText="Submitting">
-       Submit
-      </Button>
-      )
+        <Button
+          isDisabled={status === 'disabled'}
+          isLoading={status === 'loading'}
+          isLoadingText="Submitting"
+          onPress={submitReport}
+        >
+          Submit
+        </Button>
+      ),
+    });
 
-    })
-  }, [status])
-  const [name, setName] = useState('');
-  const { latitude, longitude } =route.params;
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  }, [name, latitude, longitude, description, imageUri, status]);
 
   const submitReport = async () => {
     setStatus('loading');
@@ -54,9 +56,9 @@ import ImageUploader from '../database/ImageUploader';
         setStatus('disabled');
       }
 
-      // setName('');
-      // setDescription('');
-      // setImageUri(null);
+      setName('');
+      setDescription('');
+      setImageUri(null);
     }
 
   };
