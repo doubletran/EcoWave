@@ -11,7 +11,7 @@ import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 
 import SignInAndUp from './SignInAndUp';
 
-const LocateProblem=({navigation})=>{
+const LocateProblem=({navigation, route})=>{
   const [location, setLocation] = React.useState(false);
   React.useEffect(()=>{
     navigation.setOptions({
@@ -20,7 +20,7 @@ const LocateProblem=({navigation})=>{
       headerRight: () => (
         <Button  isDisabled={!location}
         onPress ={()=>{
-          navigation.navigate("Report a problem", {latitude: location.latitude, longitude: location.longitude})
+          navigation.navigate(route.params.action, {latitude: location.latitude, longitude: location.longitude})
         }}
          >Next</Button>
       )
@@ -38,7 +38,7 @@ const LocateProblem=({navigation})=>{
   };
   return (
   <>
-  <SignedIn>
+  {/* <SignedIn> */}
          <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -52,10 +52,10 @@ const LocateProblem=({navigation})=>{
       > 
         {location && <Marker coordinate={location} />}
       </MapView>
-      </SignedIn>
+      {/* </SignedIn>
       <SignedOut>
         <SignInAndUp/>
-      </SignedOut>
+      </SignedOut> */}
 </>
   )
 }
