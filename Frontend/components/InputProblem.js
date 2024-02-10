@@ -15,11 +15,8 @@ import ImageUploader from '../database/ImageUploader';
   React.useEffect(()=>{
     navigation.setOptions({
       headerRight: () => (
-        <Button isDisabled={status=="disabled"} isLoading={status=="loading"} >
-       Create
-      </Button>
+        <Button isDisabled={status=="disabled"} isLoading={status=="loading"} >Create</Button>
       )
-
     })
   }, [status])
   const [name, setName] = useState('');
@@ -47,7 +44,6 @@ import ImageUploader from '../database/ImageUploader';
       console.error('Error submitting problem:', error);
       alert('Error submitting problem. Please try again.');
     }
-
     setName('');
     setDescription('');
     setImage(null);
