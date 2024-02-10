@@ -1,32 +1,40 @@
-import { ScrollView, Text, Heading, Box, HStack } from "native-base";
+import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../components/PostModal";
 import { VStack, Center, Flex, Button } from "native-base";
 import { date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
-import { EventModal } from "../components/ViewEvent";
-export const EventScreen = ({navigation}) => {
-
-
-
-
-  const mockEvent  = {
-    name: "NAME",
-    date: new Date(),
-    endTime : new Date(),
-    startTime: new Date(),
-    participants: 10,
-    location: "Location",
-    description: "This is a Private  cleanup that will be held on April 22, 2024, and will start at . They expect around 6.00 volunteers and it'll be hosted by Blossom Bombs. "
+import { useEffect } from "react";
+import ViewProblem from "./ViewProblem";
+export const ViewEvent = ({navigation, route}) => {
+  const handleRegister = ()=>{
+    
   }
-  const {name, description, date,  startTime, endTime, participants, location} = mockEvent
+  useEffect(()=>{
+    navigation.setOptions({
+      headerShown: true,
+      headerRight: () => (
+        <Button 
+        onPress ={handleRegister}
+         >Register</Button>
+      )
+    })
+  }, [])
+  
+ const {name, description, date,  startTime, endTime, participants, location} = route.params.event
+ const problemRef = {
+  title: "trash floating on the river",
+  description: "",
+  create_time : new Date(),
+  location: location,
+  imageUri : "https://wallpaperaccess.com/full/317501.jpg"
+ }
   return (
     <>
       <ScrollView>
-        <VStack space={4} alignItems='center'>
-          <Box p='5' w='90%' bg='muted.200' rounded='md' shadow={3}>
-            <Pressable onPress={()=> navigation.navigate("View Event", {event: mockEvent})}>
+ 
+          <Box p='5' >
               <HStack justifyContent="space-between">
               <Box>
               <Heading>{name}</Heading>
@@ -50,9 +58,10 @@ export const EventScreen = ({navigation}) => {
               >
                 Location
               </Button>
-            </Pressable>
+              <Text>{description}</Text>
+           <ViewProblem {...problemRef}/>
+
           </Box>
-        </VStack>
       </ScrollView>
       <BottomNav />
     </>

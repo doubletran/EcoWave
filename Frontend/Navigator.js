@@ -11,6 +11,7 @@ import MapScreen from './MainScreens/Map'
 import LocateProblem from './components/LocateProblem';
 import InputProblem from './components/InputProblem';
 import CreateEvent from './components/CreateEvent';
+import { ViewEvent } from './components/ViewEvent';
 import { ProfileScreen } from './components/profile';
 const theme = {
   ...DefaultTheme,
@@ -61,6 +62,8 @@ export default function Navigator() {
         })} />
         <RootStack.Screen name="Report a problem"
         component={InputProblem}/>
+        <RootStack.Screen  name="View Event" component={ViewEvent}
+      />
       </RootStack.Group>
     </RootStack.Navigator>
 
