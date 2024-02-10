@@ -5,6 +5,10 @@ import { PermissionsAndroid } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 
+import { useAuth, SignedIn, SignedOut } from '@clerk/clerk-expo'
+
+import SignInAndUp from './SignInAndUp';
+
 export function ViewEvents({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -22,6 +26,7 @@ export default function CreateEvent({ navigation }) {
   const [location, setLocation] = useState('')
   const [date, setDate] = useState('')
   const [description, setDescription] = useState('')
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
 
   useEffect(() => {
     // Request permission to access the device's location
@@ -56,12 +61,14 @@ export default function CreateEvent({ navigation }) {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
 
-    setLocation({ latitude: latitude, longitude: longitude});
+    setLocation({ latitude: latitude, longitude: longitude });
     console.log(location);
   };
 
-  const submitReport = () => {
-    create({ title: name, description, latitude: location.latitude, longtitude: location.longitude, time: "undefined"})
+  const submitEvent = () => {
+    console.log(userId)
+    console.log(create({ title: name, description, location: location, time: "undefined", userId: userId }))
+
     setName('')
     setDescription('')
     setLocation({latitude: 0, longitude: 0})
@@ -70,6 +77,7 @@ export default function CreateEvent({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <SignedIn>
       <MapView
         style={styles.map}
         onPress={handleMapPress}
@@ -101,7 +109,11 @@ export default function CreateEvent({ navigation }) {
       <Text>
         Selected location: {location.latitude}, {location.longitude}
       </Text>
-      <Button title="Create Event" onPress={submitReport} />
+      <Button title="Create Event" onPress={submitEvent} />
+    </SignedIn>
+    <SignedOut>
+      <SignInAndUp/>
+    </SignedOut>
     </View>
   );
 }

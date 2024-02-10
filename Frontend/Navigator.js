@@ -66,7 +66,7 @@ export default function Navigator() {
         <RootStack.Screen name="Events" component={EventScreen} />
         <RootStack.Screen name="Profile" component={ProfileScreen} />
         {/* <RootStack.Screen name="AddProblem" component={ReportStack}/> */}
-        <RootStack.Screen name="AddEvent" component={CreateEvent}/>
+        <RootStack.Screen name="New Event" component={CreateEvent}/>
       </RootStack.Group>
       <RootStack.Group screenOptions={{ presentation: 'transparentModal' }}>
         <RootStack.Screen name="Post" component={PostModal} />
@@ -79,11 +79,9 @@ export default function Navigator() {
          options={({ navigation, route }) => ({
           // Add a placeholder button without the `onPress` to avoid flicker
           title: "Set location"
-          
         })} />
         <RootStack.Screen name="Report a problem"
         component={InputProblem}/>
-
       </RootStack.Group>
     </RootStack.Navigator>
   );
