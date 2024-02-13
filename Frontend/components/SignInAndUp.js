@@ -7,11 +7,17 @@ import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import SignUpScreen from './SignUp'
 import SignInScreen from './SignIn'
 
+import { SignOut } from './Profile';
+
 export default function SignInAndUp() {
     const [signIn, setSignIn] = useState(false);
 
     return (
         <View>
+            <SignedIn>
+                <Text>You're already signed in! Are you trying to sign out?</Text>
+                <SignOut/>
+            </SignedIn>
             {!signIn && (<View><SignUpScreen/>
             <TouchableOpacity onPress={()=>{setSignIn(true)}}><Text>Sign In instead</Text></TouchableOpacity></View>)}
             {signIn && (<View><SignInScreen/>

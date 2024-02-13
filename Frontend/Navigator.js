@@ -12,7 +12,9 @@ import LocateProblem from './components/LocateProblem';
 import InputProblem from './components/InputProblem';
 import CreateEvent from './components/CreateEvent';
 import { ViewEvent } from './components/ViewEvent';
-import { ProfileScreen } from './components/profile';
+import { ProfileScreen } from './components/Profile';
+import SignInAndUp from './components/SignInAndUp'
+
 const theme = {
   ...DefaultTheme,
   colors: {
@@ -50,6 +52,7 @@ export default function Navigator() {
         <RootStack.Screen name="Events" component={EventScreen} />
         <RootStack.Screen name="Profile" component={ProfileScreen} />
         <RootStack.Screen name="New Event" component={CreateEvent}/>
+        <RootStack.Screen name="Sign In and Up" component={SignInAndUp}/>
       </RootStack.Group>
 
       <RootStack.Group  screenOptions={{ 

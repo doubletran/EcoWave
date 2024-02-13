@@ -6,7 +6,7 @@ import { ClerkProvider, SignedIn, SignedOut, useAuth, useUser } from "@clerk/cle
 
 import SignInAndUp from './SignInAndUp';
 
-const SignOut = () => {
+export const SignOut = () => {
     const { isLoaded,signOut } = useAuth();
     if (!isLoaded) {
       return null;
@@ -24,19 +24,19 @@ const SignOut = () => {
   };
 
 export function ProfileScreen() {
-    const [signIn, setSignIn] = useState(false);
-    const { isLoaded, isSignedIn, user } = useUser();
+    const nav = useNavigation()
+    const [signIn, setSignIn] = useState(false)
+    const { isLoaded, isSignedIn, user } = useUser()
 
     return (
         <View>
             <SignedIn>
                 <Text>This is your account.</Text>
-                <Text>First Name: {user.firstName}</Text>
-                <Text>Last Name: {user.lastName}</Text>
+                {user !== undefined || user != null && (<Text>{user.firstName} {user.lastName}</Text>)}
                 <SignOut/>
             </SignedIn>
             <SignedOut>
-                <SignInAndUp/>
+				<TouchableOpacity onPress={()=>{nav.navigate("Sign In and Up")}}><Text>Go to Sign Up/Sign In</Text></TouchableOpacity>
             </SignedOut>
         </View>
     )
