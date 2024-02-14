@@ -2,8 +2,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NAV_ICONS as icons} from './config/style';
 
-import {  IconButton } from 'native-base';
-import { Button, HStack, Text } from 'native-base';
+import {  Container, Heading, IconButton } from 'native-base';
+import { Button, HStack, Box } from 'native-base';
 import { NavigationContainer, DefaultTheme, useNavigation} from '@react-navigation/native';
 import {EventScreen} from './MainScreens/Event';
 import MapScreen from './MainScreens/Map'
@@ -29,12 +29,18 @@ const theme = {
 
   return(
   <>
-<HStack >
-  <Text>Ecowave</Text>
+<HStack w="95%" justifyContent="space-between">
+
+  <Heading>ecoWave</Heading>
+  <HStack>
+
   <IconButton icon={icons.Search} onPress={onSearch}/>
-  <IconButton alignItems="right" w="33%" title="Map" icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
+  <IconButton  icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
+
+  </HStack>
        {/* <Center h="40" w="33%" bg="primary.300" rounded="md" shadow={3} /> */}
     </HStack>
+  
   </>
   )
 }
