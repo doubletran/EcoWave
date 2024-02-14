@@ -36,7 +36,7 @@ export function ProfileScreen() {
                 <SignOut/>
             </SignedIn>
             <SignedOut>
-				<TouchableOpacity onPress={()=>{nav.navigate("Sign In and Up")}}><Text>Go to Sign Up/Sign In</Text></TouchableOpacity>
+				      <TouchableOpacity onPress={()=>{nav.navigate("Sign In and Up")}}><Text>Go to Sign Up/Sign In</Text></TouchableOpacity>
             </SignedOut>
         </View>
     )
