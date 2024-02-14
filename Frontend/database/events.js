@@ -17,7 +17,7 @@ export async function get(id) {
   console.log(' get:' + JSON.stringify(document.data()));
 }
 
-export async function create({title, description, latitude, longtitude, time, userId}) {
+export async function create({title, description, latitude, longtitude, problemRef,  time, userId}) {
   return await addDoc(EventsDB, {
     title: title,
     description: description,
@@ -25,9 +25,10 @@ export async function create({title, description, latitude, longtitude, time, us
     create_time: Timestamp.fromDate(new Date()),
     time: time,
     userId: userId,
-    problemRef: "undefined"
+    problemRef: problemRef
   });
 }
+
 
 export async function remove(id) {
   console.log('Deleted: at' + await deleteDoc(doc(db, id)));

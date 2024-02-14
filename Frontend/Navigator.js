@@ -3,8 +3,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NAV_ICONS as icons} from './config/style';
 
-import { Center, IconButton } from 'native-base';
-import { Button, HStack ,Text} from 'native-base';
+import {  IconButton } from 'native-base';
+import { Button, HStack, Text } from 'native-base';
 import { NavigationContainer, DefaultTheme, useNavigation} from '@react-navigation/native';
 import {EventScreen} from './MainScreens/Event';
 import MapScreen from './MainScreens/Map'
@@ -25,13 +25,15 @@ const theme = {
 };
 
 
- const Header=()=>{
+ export const Header=({onSearch})=>{
   const nav = useNavigation()
+
   return(
 
   <>
 <HStack >
-  <IconButton alignItems="left" w="33%" title="Map" icon={icons.Updates}/>
+  <Text>Ecowave</Text>
+  <IconButton icon={icons.Search} onPress={onSearch}/>
   <IconButton alignItems="right" w="33%" title="Map" icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
        {/* <Center h="40" w="33%" bg="primary.300" rounded="md" shadow={3} /> */}
    
@@ -65,7 +67,7 @@ export default function Navigator() {
         })} />
         <RootStack.Screen name="Report a problem"
         component={InputProblem}/>
-        <RootStack.Screen  name="View Event" component={ViewEvent}
+        <RootStack.Screen  name="View an event" component={ViewEvent}
       />
       </RootStack.Group>
     </RootStack.Navigator>

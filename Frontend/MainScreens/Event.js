@@ -6,8 +6,9 @@ import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
 import { EventModal } from "../components/ViewEvent";
+import { useEffect } from "react";
+import { getAll } from "../database/events";
 export const EventScreen = ({navigation}) => {
-
 
 
 
