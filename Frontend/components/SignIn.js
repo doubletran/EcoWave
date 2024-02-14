@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button } from "native-base"
 import { useSignIn } from "@clerk/clerk-expo";
  
 export default function SignInScreen() {
@@ -45,9 +46,7 @@ export default function SignInScreen() {
         />
       </View>
  
-      <TouchableOpacity onPress={onSignInPress}>
-        <Text>Sign in</Text>
-      </TouchableOpacity>
+      <Button onPress={onSignInPress}>Sign In</Button>
     </View>
   );
 }
