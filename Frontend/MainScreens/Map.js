@@ -4,7 +4,8 @@ import {Center} from 'native-base';
 import { BottomNav } from "../components/PostModal"
 import { Dimensions } from "react-native";
 import {PROVIDER_GOOGLE} from 'react-native-maps'
-const MapScreen=({navigation})=>{
+
+const MapScreen=({navigation}) => {
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
@@ -26,10 +27,8 @@ const MapScreen=({navigation})=>{
         onMap
       > 
       </MapView>
-      <BottomNav/>
-
- 
-</>
+      <BottomNav/> 
+  </>
   )
 }
 const styles = StyleSheet.create({
@@ -48,4 +47,5 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height
   },
 });
+
 export default MapScreen

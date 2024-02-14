@@ -1,4 +1,3 @@
-
 // import { PostModalScreen } from './PostModalScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NAV_ICONS as icons} from './config/style';
@@ -24,20 +23,28 @@ const theme = {
   },
 };
 
-
  const Header=()=>{
   const nav = useNavigation()
   return(
-
   <>
-<HStack >
-  <IconButton alignItems="left" w="33%" title="Map" icon={icons.Updates}/>
-  <IconButton alignItems="right" w="33%" title="Map" icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
+    <HStack >
+      <IconButton alignItems="left" w="33%" title="Notifications" icon={icons.Updates}/>
+      <IconButton alignItems="right" w="33%" title="Profile" icon={icons.Profile} onPress={()=>{nav.navigate("Profile")}}/>
        {/* <Center h="40" w="33%" bg="primary.300" rounded="md" shadow={3} /> */}
-   
     </HStack>
-  
   </>
+  )
+}
+
+const BackHeader = () => {
+  const nav = useNavigation()
+
+  return (
+    <>
+      <HStack>
+        <IconButton alignItems="left" title="Back" icon={icons.Back} onPress={() => { nav.goBack() }}/>
+      </HStack>
+    </>
   )
 }
 
@@ -50,13 +57,19 @@ export default function Navigator() {
       <RootStack.Group>
         <RootStack.Screen name="Map" component={MapScreen} />
         <RootStack.Screen name="Events" component={EventScreen} />
-        <RootStack.Screen name="Profile" component={ProfileScreen} />
         <RootStack.Screen name="New Event" component={CreateEvent}/>
-        <RootStack.Screen name="Sign In and Up" component={SignInAndUp}/>
       </RootStack.Group>
 
       <RootStack.Group  screenOptions={{ 
     headerBackVisible:true }}>
+      <RootStack.Screen name="Profile" component={ProfileScreen} options={{
+          headerTitle: "Profile",
+          headerBackVisible: true
+        }}/>
+      <RootStack.Screen name="Sign In and Up" component={SignInAndUp} options={{
+          headerTitle: "Sign In/Up",
+          headerBackVisible: true
+      }}/>
       <RootStack.Screen name="Set location" 
         component={LocateProblem}
          options={({ navigation, route }) => ({
@@ -73,7 +86,8 @@ export default function Navigator() {
     </NavigationContainer>
   );
 }
-export function HeaderRight( title, disabled,handler){
+
+export function HeaderRight(title, disabled, handler){
   return   <Button title={title} isDisabled={disabled} icon={icons.Next}
   onPress={handler}/>
 }
