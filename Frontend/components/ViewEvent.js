@@ -21,7 +21,7 @@ export const ViewEvent = ({navigation, route}) => {
       )
     })
   }, [])
-  
+
  const {name, description, date,  startTime, endTime, participants, location} = route.params.event
  const problemRef = {
   title: "trash floating on the river",
