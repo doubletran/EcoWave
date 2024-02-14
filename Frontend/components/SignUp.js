@@ -1,25 +1,31 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+
 import { useSignUp } from "@clerk/clerk-expo";
-import { Button, Box, Input, Image, Center, IconButton, Pressable, Divider, KeyboardAvoidingView, ScrollView} from 'native-base';
+import {
+  Box,
+  FormControl,
+  Input,
+  Button,
+  HStack,
+  Center,
+  Container,
+} from "native-base";
+
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
- 
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState("");
-  React.useEffect(()=>{
-    
-  })
+  React.useEffect(() => {});
   // start the sign up process.
   const onSignUpPress = async () => {
     if (!isLoaded) {
       return;
     }
- 
+
     try {
       await signUp.create({
         firstName,
@@ -27,90 +33,85 @@ export default function SignUpScreen() {
         emailAddress,
         password,
       });
- 
+
       // send the email.
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
- 
+
       // change the UI to our pending section.
       setPendingVerification(true);
     } catch (err) {
       console.error(JSON.stringify(err, null, 2));
     }
   };
- 
+
   // This verifies the user using email code that is delivered.
   const onPressVerify = async () => {
     if (!isLoaded) {
       return;
     }
- 
+
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       });
- 
+
       await setActive({ session: completeSignUp.createdSessionId });
     } catch (err) {
       console.error(JSON.stringify(err, null, 2));
     }
   };
- 
+
   return (
-    <View>
-      {!pendingVerification && (
-        <View>
-        <View>
-            <TextInput
-              autoCapitalize="none"
-              value={firstName}
-              placeholder="First Name..."
-              onChangeText={(firstName) => setFirstName(firstName)}
-            />
-          </View>
-          <View>
-            <TextInput
-              autoCapitalize="none"
-              value={lastName}
-              placeholder="Last Name..."
-              onChangeText={(lastName) => setLastName(lastName)}
-            />
-      </View>
-          <View>
-            <TextInput
-              autoCapitalize="none"
-              value={emailAddress}
-              placeholder="Email..."
-              onChangeText={(email) => setEmailAddress(email)}
-            />
-          </View>
- 
-          <View>
-            <TextInput
-              value={password}
-              placeholder="Password..."
-              //placeholderTextColor="#000"
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-            />
-          </View>
- 
-        <Button onPress={onSignUpPress}>Sign up</Button>
-        </View>
+    <Center>
+      {!pendingVerification ? (
+        <>
+          <Box p='4' m='auto' w='100%'>
+            <FormControl>
+              <FormControl.Label>First Name</FormControl.Label>
+              <Input onChangeText={(firstName) => setFirstName(firstName)} />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Last Name</FormControl.Label>
+              <Input onChangeText={(lastName) => setLastName(lastName)} />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Email ID</FormControl.Label>
+              <Input
+                onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Password</FormControl.Label>
+              <Input
+                type='password'
+                onChangeText={(password) => setPassword(password)}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>Confirm Password</FormControl.Label>
+              <Input type='password' />
+            </FormControl>
+          </Box>
+
+          <Button m='auto' onPress={onSignUpPress}>
+            Sign up
+          </Button>
+          <Button variant='link'>
+            Already have an account? Sign in instead
+          </Button>
+        </>
+      ) : (
+        <>
+          <Box p='4' m='auto' w='100%'>
+            <FormControl>
+              <FormControl.Label>Confirm Password</FormControl.Label>
+              <Input onChangeText={(code) => setCode(code)} />
+            </FormControl>
+          </Box>
+
+          <Button onPress={onPressVerify}>Verify</Button>
+        </>
       )}
-      {pendingVerification && (
-        <View>
-          <View>
-            <TextInput
-              value={code}
-              placeholder="Code..."
-              onChangeText={(code) => setCode(code)}
-            />
-          </View>
-          <TouchableOpacity onPress={onPressVerify}>
-            <Text>Verify Email</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+    </Center>
   );
 }

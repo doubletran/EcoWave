@@ -1,14 +1,14 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../components/PostModal";
 import { VStack, Center, Flex, Button, Image } from "native-base";
-import { date_format, time_format } from "../config/lib";
+import { date_format} from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 export default function ViewProblem({
   title,
   description,
   create_time,
-  imageUri,
+  imageUri
 }) {
   return (
     <>

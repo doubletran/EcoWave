@@ -1,19 +1,27 @@
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Button } from "native-base"
 import { useSignIn } from "@clerk/clerk-expo";
- 
+import {
+  Box,
+  Text,
+  Heading,
+  VStack,
+  FormControl,
+  Input,
+  Button,
+  HStack,
+  Center,
+  NativeBaseProvider,
+} from "native-base";
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
- 
+
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
- 
   const onSignInPress = async () => {
     if (!isLoaded) {
       return;
     }
- 
+
     try {
       const completeSignIn = await signIn.create({
         identifier: emailAddress,
@@ -27,26 +35,27 @@ export default function SignInScreen() {
     }
   };
   return (
-    <View>
-      <View>
-        <TextInput
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Email..."
-          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-        />
-      </View>
- 
-      <View>
-        <TextInput
-          value={password}
-          placeholder="Password..."
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-      </View>
- 
+    <Center>
+      <Box w='80%'>
+        <FormControl>
+          <FormControl.Label>Email ID</FormControl.Label>
+          <Input
+            onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          />
+        </FormControl>
+        <FormControl>
+          <FormControl.Label>Password</FormControl.Label>
+          <Input onChangeText={(password) => setPassword(password)} />
+        </FormControl>
+
+       
+      </Box>
       <Button onPress={onSignInPress}>Sign In</Button>
-    </View>
+      <HStack>
+      <Button variant="link" onPress={onSignInPress}>Not a user? Create an account</Button>
+ 
+      </HStack>
+    </Center>
   );
+
 }

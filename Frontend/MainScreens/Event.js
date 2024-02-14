@@ -6,10 +6,8 @@ import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
 import { EventModal } from "../components/ViewEvent";
-import { useState, useEffect } from "react"
-
+import { useEffect } from "react";
 import { getAll } from "../database/events";
-
 export const EventScreen = ({navigation}) => {
   const [events, setEvents] = useState([])
 

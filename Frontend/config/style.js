@@ -13,7 +13,7 @@ export const NAV_ICONS={
   Profile: <Ionicons name="person-outline" size={24}  color="black" />,
   Marker: <Ionicons name="location-sharp" size={24} color="black"/>,
   Next: <Ionicons name="arrow-forward" size={24} color="black"/>,
-  Back: <Ionicons name="arrow-back" size={24} color="black"/>
+  Search: <Ionicons name="search" size={24} color="black"/>
 }
 export const INPUT_ICONS= {
   Event: <Ionicons name="calendar" size={24} color="black"/>,
