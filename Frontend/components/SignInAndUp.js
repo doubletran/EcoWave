@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity } from 'react-native'
+import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
@@ -6,26 +6,16 @@ import { ClerkProvider, SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 
 import SignUpScreen from './SignUp'
 import SignInScreen from './SignIn'
-
-import { SignOut } from './Profile'
-import { BottomNav } from './PostModal'
+import { HStack } from 'native-base';
 
 export default function SignInAndUp() {
     const [signIn, setSignIn] = useState(false);
     const { isLoaded, isSignedIn, user } = useUser()
-    const nav = useNavigation()
 
-    setTimeout(() => {
-        if (isSignedIn)
-            nav.goBack()
-    })
-    
     return (
-        <View>
-            <SignedIn>
-                <Text>You're already signed in!</Text>
-            </SignedIn>
+        <View style={styles.container}>
             <SignedOut>
+                
             {!signIn && (<View><SignUpScreen/>
             <TouchableOpacity onPress={()=>{setSignIn(true)}}><Text>Sign In instead</Text></TouchableOpacity></View>)}
             {signIn && (<View><SignInScreen/>
@@ -34,3 +24,13 @@ export default function SignInAndUp() {
         </View>
     )
 }
+
+// temporary styling
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
