@@ -1,8 +1,10 @@
 import ReportProblem from "./reportProblem";
 import { useState, u, useEffect } from "react";
 import { Modal, Button,HStack, IconButton } from "native-base";
+import { View } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import { NAV_ICONS as icons} from '../config/style';
+
 function EventOrProblem  ({onProblem, onEvent})  {
   return (
     <>
@@ -20,20 +22,23 @@ function EventOrProblem  ({onProblem, onEvent})  {
     </>
   );
 };
+
 export const BottomNav = () => {
   const navigation=useNavigation();
   const [showModal, setShowModal] = useState(false);
+
   const handleProblem = ()=>{
     navigation.navigate("Set location", {action: "Report a problem"})
     setShowModal(false);
   }
+
   const handleEvent = ()=>{
     navigation.navigate("New Event")
     setShowModal(false);
   }
   return (
     <>
-    <HStack  marginTop="auto" marginBottom="0">
+    <HStack marginTop="auto" marginBottom="0">
   
   <IconButton w="33%" title="Map" icon={icons.Map}
  onPress={()=>{

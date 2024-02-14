@@ -95,10 +95,8 @@ const MapScreen=({navigation})=>{
         }}
       > 
       </MapView>
-      <BottomNav/>
-
- 
-</>
+      <BottomNav/> 
+  </>
   )
 }
 const styles = StyleSheet.create({
@@ -117,4 +115,5 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height
   },
 });
+
 export default MapScreen

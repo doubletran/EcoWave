@@ -1,15 +1,12 @@
-import {addDoc, collection, GeoPoint, getDocs, Timestamp} from 'firebase/firestore';
+import {addDoc, collection, GeoPoint, getDocs, Timestamp, query } from 'firebase/firestore';
 
 import firebase from '../config/firebase';
 
-const EventsDB = collection(firebase, 'events');
+const db = collection(firebase, 'events');
 
 export async function getAll() {
-  const querySnapshot = await getDocs(db);
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, ' => ', doc.data());
-  });
+  const querySnapshot = await getDocs(collection(firebase, "events"));
+  return querySnapshot
 }
 
 export async function get(id) {

@@ -1,10 +1,11 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ClerkProvider, SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
 
-import SignInAndUp from './SignInAndUp';
+import { BottomNav } from './PostModal';
+import NotSignedIn from './NotSignedIn';
 
 export const SignOut = () => {
     const { isLoaded,signOut } = useAuth();
@@ -27,7 +28,7 @@ export function ProfileScreen() {
     const nav = useNavigation()
     const [signIn, setSignIn] = useState(false)
     const { isLoaded, isSignedIn, user } = useUser()
-
+    
     return (
         <View>
             <SignedIn>
@@ -36,7 +37,7 @@ export function ProfileScreen() {
                 <SignOut/>
             </SignedIn>
             <SignedOut>
-				      <TouchableOpacity onPress={()=>{nav.navigate("Sign In and Up")}}><Text>Go to Sign Up/Sign In</Text></TouchableOpacity>
+				      <NotSignedIn/>
             </SignedOut>
         </View>
     )
