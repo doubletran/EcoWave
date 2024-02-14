@@ -38,7 +38,10 @@ const uploadImageAsync = async (uri) => {
     xhr.send(null);
   });
 
-  const fileRef = ref(getStorage(), "images");
+  const randomNum = Math.floor(Math.random() * 1000000);
+  const imageName = `image_${randomNum}`;
+
+  const fileRef = ref(getStorage(), imageName);
   const result = await uploadBytes(fileRef, blob);
 
   blob.close();
