@@ -1,17 +1,6 @@
 import React from "react";
 import { useSignIn } from "@clerk/clerk-expo";
-import {
-  Box,
-  Text,
-  Heading,
-  VStack,
-  FormControl,
-  Input,
-  Button,
-  HStack,
-  Center,
-  NativeBaseProvider,
-} from "native-base";
+import { Box, FormControl, Input, Button, HStack, Center } from "native-base";
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
 
@@ -47,15 +36,12 @@ export default function SignInScreen() {
           <FormControl.Label>Password</FormControl.Label>
           <Input onChangeText={(password) => setPassword(password)} />
         </FormControl>
-
-       
       </Box>
       <Button onPress={onSignInPress}>Sign In</Button>
-      <HStack>
-      <Button variant="link" onPress={onSignInPress}>Not a user? Create an account</Button>
- 
-      </HStack>
+
+      <Button variant='link' onPress={onSignInPress}>
+        Not a user? Create an account
+      </Button>
     </Center>
   );
-
 }
