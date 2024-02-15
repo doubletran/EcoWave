@@ -1,4 +1,4 @@
-import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer } from 'firebase/firestore';
+import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer, updateDoc, doc } from 'firebase/firestore';
 
 import firebase from '../config/firebase';
 
@@ -24,6 +24,11 @@ export async function create({title, description, latitude, longtitude, problemR
     userId: userId,
     problemRef: problemRef
   });
+}
+
+export async function update(eventId, updates) {
+  let ref = doc(firebase, "events", eventId)
+  return await updateDoc(ref, updates)
 }
 
 
