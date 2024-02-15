@@ -116,6 +116,17 @@ export default function CreateEvent({ navigation , route}) {
     console.log(location);
   };
 
+  /* EVENTS SHOULD BE SEND IN THIS FORMAT TO THE DATABASE
+  const event = {
+    name: "",
+    description: "",
+    date: new Date(),
+    start_time: new Date(),
+    end_time: new Date(),
+    location: { latitude: 0, longitude: 0 },
+    participants: [user.Id]
+  }
+  */
   const submitReport = () => {
     create({
       title: name,

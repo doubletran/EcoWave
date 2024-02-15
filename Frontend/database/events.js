@@ -1,11 +1,11 @@
-import {addDoc, collection, GeoPoint, getDocs, Timestamp, query } from 'firebase/firestore';
+import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer } from 'firebase/firestore';
 
 import firebase from '../config/firebase';
 
 const db = collection(firebase, 'events');
 
 export async function getAll() {
-  const querySnapshot = await getDocs(collection(firebase, "events"));
+  const querySnapshot = await getDocsFromServer(collection(firebase, "events"));
   return querySnapshot
 }
 

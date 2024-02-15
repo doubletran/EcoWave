@@ -6,7 +6,7 @@ import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
 import { EventModal } from "../components/ViewEvent";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getAll } from "../database/events";
 export const EventScreen = ({navigation}) => {
   const [events, setEvents] = useState([])
@@ -32,7 +32,6 @@ export const EventScreen = ({navigation}) => {
   useEffect(() => {
     const getData = async () => {
       let data = await getAll()
-      console.log(data)
       setEvents(data)
     }
     getData();
@@ -49,7 +48,7 @@ export const EventScreen = ({navigation}) => {
   }
 
   let ListableEvent = (event) => {
-    const {name, description, date,  startTime, endTime, participants, location} = event
+    const {name, description, date,  start_time, end_time, location, participants} = event
 
     // hash algorithm from stack overflow, non-secure
     let str = name + description
@@ -67,16 +66,16 @@ export const EventScreen = ({navigation}) => {
             <Heading>{name}</Heading>
             <Text>{date_format(date)}</Text>
             <Text>
-              From {time_format(startTime)} to {time_format(endTime)}
+              From {time_format(start_time)} to {time_format(end_time)}
             </Text>
           </Box>
           <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>
-            {participants}
+            {participants.length}
           </Button>
         </HStack>
 
         <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Marker} onPress={() => navigation.navigate("Set location")}>
-          {location}
+          {location.latitude} {location.longitude}
         </Button>
       </Pressable>
     )

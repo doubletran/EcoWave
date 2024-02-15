@@ -1,10 +1,10 @@
-
 const options = {
   weekday: 'short',
   year: 'numeric',
   month: 'short',
   day: 'numeric',
 };
+
 export const DEFAULT = {
   location: {
     latitude: 44.5630651,
@@ -15,14 +15,18 @@ export const DEFAULT = {
 
 }
 
-export const date_format = (date)=>{
+export const date_format = (date) => {
   if (!date) return ""
-  return date.toLocaleDateString([], options)
-
+  return date.toDate().toString()
 }
-export const time_format= (timestamp)=>{
 
-    if (!timestamp) return ""
-    // console.log(timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }))
-    return timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-  }
+export const time_format = (timestamp) => {
+  if (!timestamp) return ""
+  
+  const fireBaseTime = new Date(
+    timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
+  );
+
+  return fireBaseTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  // return timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+}
