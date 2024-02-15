@@ -117,7 +117,10 @@ export default function Navigator() {
             })}
           />
           <RootStack.Screen name='Report a problem' component={InputProblem} />
-          <RootStack.Screen name='View an event' component={ViewEvent} />
+          <RootStack.Screen name='View an event' component={ViewEvent} options={{
+            headerTitle: "View an Event",
+            headerBackVisible: true,
+          }}/>
         </RootStack.Group>
       </RootStack.Navigator>
     </NavigationContainer>

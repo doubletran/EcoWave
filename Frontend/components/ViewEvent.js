@@ -5,24 +5,38 @@ import { firebase_date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import ViewProblem from "./ViewProblem";
+
+import { arrayUnion } from 'firebase/firestore';
+
+import { update } from "../database/events";
+
+import { useUser } from "@clerk/clerk-expo";
+
 export const ViewEvent = ({navigation, route}) => {
-  const handleRegister = ()=>{
-    
+  const [showModal, setShowModal] = useState(false)
+  const { user } = useUser()
+
+  const handleRegister = async () => {
+    let eventId = route.params.eventId
+    await update(eventId, { participants: arrayUnion(user.id)})
+    setShowModal(true)
   }
+
   useEffect(()=>{
     navigation.setOptions({
       headerShown: true,
       headerRight: () => (
         <Button 
-        onPress ={handleRegister}
+        onPress={handleRegister}
          >Register</Button>
       )
     })
   }, [])
 
  const {name, description, date,  start_time, end_time, participants, location} = route.params.event
+
  const problemRef = {
   title: "trash floating on the river",
   description: "",
@@ -30,6 +44,7 @@ export const ViewEvent = ({navigation, route}) => {
   location: location,
   imageUri : "https://wallpaperaccess.com/full/317501.jpg"
  }
+
   return (
     <>
       <ScrollView>
@@ -62,6 +77,14 @@ export const ViewEvent = ({navigation, route}) => {
 
           </Box>
       </ScrollView>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content w='100%' marginBottom='0' marginTop='auto'>
+          <Modal.Header>Test</Modal.Header>
+          <Modal.Body>
+            <Text>You're registered!</Text>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
       <BottomNav />
     </>
   );

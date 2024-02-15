@@ -8,6 +8,7 @@ import { Pressable } from "react-native";
 import { EventModal } from "../components/ViewEvent";
 import { useState, useEffect } from "react";
 import { getAll } from "../database/events";
+
 export const EventScreen = ({navigation}) => {
   const [events, setEvents] = useState([])
 
@@ -16,7 +17,7 @@ export const EventScreen = ({navigation}) => {
   //   date: new Date(),
   //   endTime : new Date(),
   //   startTime: new Date(),
-  //   participants: 10,
+  //   participants: [userId],
   //   location: "Location",
   //   description: "This is a Private  cleanup that will be held on April 22, 2024, and will start at . They expect around 6.00 volunteers and it'll be hosted by Blossom Bombs. "
   // }, {
@@ -24,7 +25,7 @@ export const EventScreen = ({navigation}) => {
   //   date: new Date(),
   //   endTime : new Date(),
   //   startTime: new Date(),
-  //   participants: 10,
+  //   participants: [userId],
   //   location: "LOCATION2",
   //   description: "This is a Private  cleanup that will be held on April 22, 2024, and will start at . They expect around 6.00 volunteers and it'll be hosted by Blossom Bombs. "
   // }]
@@ -39,15 +40,13 @@ export const EventScreen = ({navigation}) => {
 
   let RenderListableEvents = () => {
     let render_arr = []
-    console.log(events.size)
     events.forEach((evnt) => {
-      console.log(evnt.data())
-      render_arr.push(ListableEvent(evnt.data()))
+      render_arr.push(ListableEvent(evnt.data(), evnt.id))
     })
     return render_arr
   }
 
-  let ListableEvent = (event) => {
+  let ListableEvent = (event, eventId) => {
     const {name, description, date,  start_time, end_time, location, participants} = event
 
     // hash algorithm from stack overflow, non-secure
@@ -60,7 +59,7 @@ export const EventScreen = ({navigation}) => {
     }
 
     return (
-      <Pressable key={hash} onPress={()=> navigation.navigate("View an event", {event: event})}>
+      <Pressable key={hash} onPress={()=> navigation.navigate("View an event", {event: event, eventId: eventId})}>
         <HStack justifyContent="space-between">
           <Box>
             <Heading>{name}</Heading>
