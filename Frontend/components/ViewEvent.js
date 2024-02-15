@@ -1,7 +1,7 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../components/PostModal";
 import { VStack, Center, Flex, Button } from "native-base";
-import { date_format, time_format } from "../config/lib";
+import { firebase_date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
@@ -22,7 +22,7 @@ export const ViewEvent = ({navigation, route}) => {
     })
   }, [])
 
- const {name, description, date,  startTime, endTime, participants, location} = route.params.event
+ const {name, description, date,  start_time, end_time, participants, location} = route.params.event
  const problemRef = {
   title: "trash floating on the river",
   description: "",
@@ -37,16 +37,16 @@ export const ViewEvent = ({navigation, route}) => {
               <HStack justifyContent="space-between">
               <Box>
               <Heading>{name}</Heading>
-              <Text>{date_format(date)}</Text>
+              <Text>{firebase_date_format(date)}</Text>
               <Text>
-                From {time_format(startTime)} to {time_format(endTime)}
+                From {time_format(start_time)} to {time_format(end_time)}
               </Text>
               </Box>
               <Button 
                 {...Style.inputBtn}
                 leftIcon={INPUT_ICONS.People}
               >
-                {participants}
+                {participants.length}
               </Button>
               </HStack>
 
@@ -55,7 +55,7 @@ export const ViewEvent = ({navigation, route}) => {
                 leftIcon={INPUT_ICONS.Marker}
                 onPress={() => navigation.navigate("Set location")}
               >
-                Location
+                Location: {location.latitude}
               </Button>
               <Text>{description}</Text>
            <ViewProblem {...problemRef}/>

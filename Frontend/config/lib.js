@@ -15,6 +15,11 @@ export let DEFAULT = {
 
 export const date_format = (date) => {
   if (!date) return ""
+  return date.toString()
+}
+
+export const firebase_date_format = (date) => {
+  if (!date) return ""
   return date.toDate().toString()
 }
 

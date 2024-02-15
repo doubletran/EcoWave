@@ -1,7 +1,7 @@
 import { ScrollView, Text, Heading, Box, HStack, List } from "native-base";
 import { BottomNav } from "../components/PostModal";
 import { VStack, Center, Flex, Button } from "native-base";
-import { date_format, time_format } from "../config/lib";
+import { firebase_date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
@@ -60,11 +60,11 @@ export const EventScreen = ({navigation}) => {
     }
 
     return (
-      <Pressable key={hash} onPress={()=> navigation.navigate("View Event", {event: event})}>
+      <Pressable key={hash} onPress={()=> navigation.navigate("View an event", {event: event})}>
         <HStack justifyContent="space-between">
           <Box>
             <Heading>{name}</Heading>
-            <Text>{date_format(date)}</Text>
+            <Text>{firebase_date_format(date)}</Text>
             <Text>
               From {time_format(start_time)} to {time_format(end_time)}
             </Text>
