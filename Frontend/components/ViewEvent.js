@@ -1,11 +1,11 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../components/PostModal";
-import { VStack, Center, Flex, Button } from "native-base";
+import { VStack, Center, Flex, Button, Modal } from "native-base";
 import { firebase_date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import ViewProblem from "./ViewProblem";
 
 import { arrayUnion } from 'firebase/firestore';
@@ -15,10 +15,13 @@ import { update } from "../database/events";
 import { useUser } from "@clerk/clerk-expo";
 
 export const ViewEvent = ({navigation, route}) => {
+  const [showModal, setShowModal] = useState(false)
   const { user } = useUser()
+
   const handleRegister = async () => {
     let eventId = route.params.eventId
-    return await update(eventId, { participants: arrayUnion(user.id)})
+    await update(eventId, { participants: arrayUnion(user.id)})
+    setShowModal(true)
   }
 
   useEffect(()=>{
@@ -74,6 +77,14 @@ export const ViewEvent = ({navigation, route}) => {
 
           </Box>
       </ScrollView>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content w='100%' marginBottom='0' marginTop='auto'>
+          <Modal.Header>Test</Modal.Header>
+          <Modal.Body>
+            <Text>You're registered!</Text>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
       <BottomNav />
     </>
   );
