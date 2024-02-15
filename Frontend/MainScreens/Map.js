@@ -1,6 +1,6 @@
-import MapView from "react-native-maps";
-import { StyleSheet } from "react-native";
-import {Center, Text, Input} from 'native-base'; 
+import MapView, { Marker, Callout } from "react-native-maps";
+import { StyleSheet, Image} from "react-native";
+import {Center, Text, View  } from 'native-base'; 
 import { BottomNav } from "../components/PostModal"
 import { Dimensions } from "react-native";
 import {PROVIDER_GOOGLE} from 'react-native-maps'
@@ -8,6 +8,12 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { Header } from "../Navigator";
 import {createRef, useEffect, useRef, useState} from "react";
 import { DEFAULT } from "../config/lib";
+import { getAll } from "../database/problems"
+import { FileSystem } from 'expo-file-system';
+import {Svg, Image as ImageSvg} from 'react-native-svg';
+import WebView from "react-native-webview";
+
+
 export const MapSearchbox = ({onReturn})=>{
   const ref = useRef()
   useEffect(() => {
@@ -36,6 +42,8 @@ export const MapSearchbox = ({onReturn})=>{
 const MapScreen=({navigation})=>{
   const [location, setLocation ]= useState(DEFAULT.location)
   const [search, setSearch] = useState(false)
+  const [problems, setProblems] = useState([]);
+
   const mapRef = createRef()
   useEffect(()=>{
     if (!search){
@@ -51,33 +59,79 @@ const MapScreen=({navigation})=>{
         onReturn={(data, details) =>{
 
   
-         const latitude= details.geometry.location.lat;
-         const longitude = details.geometry.location.lng;
-       mapRef.current.animateToRegion({
-          latitude: latitude
-          , longitude: longitude,
-               latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-         }, 1000)
-         setLocation(details.geometry.location)
-         setSearch(false);
+        const latitude= details.geometry.location.lat;
+        const longitude = details.geometry.location.lng;
+        mapRef.current.animateToRegion({
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+        }, 1000)
+        setLocation(details.geometry.location)
+        setSearch(false);
         }}
          />
       })
     }
 
+    const fetchProblems = async () => {
+      try {
+        const updatedProblems = await getAll();
+        setProblems(updatedProblems);
+      } catch (error) {
+        console.error("Error fetching problems:", error);
+      }
+    };
+
+    fetchProblems();
+
+    const intervalId = setInterval(fetchProblems, 1000);
+    return () => clearInterval(intervalId);
+
   }, [search])
-  // useEffect(()=>{
-  //   navigation.setOptions({
-  //     headerTitle: ()=> MapSearchbox
-  //   })
-  // })
+
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
     setLocation({ latitude: latitude, longitude: longitude});
     console.log(location);
   };
+
+  const downloadImage = async (url, fileName) => {
+    const fileUri = FileSystem.documentDirectory + fileName;
+    const { exists } = await FileSystem.getInfoAsync(fileUri);
+    if (!exists) {
+      await FileSystem.downloadAsync(url, fileUri);
+    }
+    return fileUri;
+  };
+
+  const getMarkers = () => {
+    return problems && problems.length > 0
+      ? problems.map((problem) => (
+        <Marker
+          key={problem.id}
+          title={problem.title}
+          coordinate={{
+            latitude: problem.latitude,
+            longitude: problem.longitude,
+          }}
+          description={problem.description}
+        > 
+          <Callout>
+            <View style={styles.calloutContainer}>
+            <Text style={styles.title}>{problem.title}</Text>
+            <View>
+      <WebView style={ styles.image } source={{ uri: problem.imageUrl }} />
+        </View>
+              <Text>{problem.description}</Text>
+              </View>
+          </Callout>
+        </Marker>
+      ))
+      : null; 
+  };
+
   return (
   <>
      <MapView
@@ -93,20 +147,27 @@ const MapScreen=({navigation})=>{
         onPress={()=>{
           setSearch(false)
         }}
+        onMap
       > 
+
+        {getMarkers()}
       </MapView>
       <BottomNav/> 
   </>
   )
 }
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
+  calloutContainer: {
+    borderRadius: 100,
+    backgroundColor: 'white', 
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,  
   },
   image: {
-    width: 200,
-    height: 200,
-    marginVertical: 10,
+    width: 100,
+    height: 100,
   },
   map: {
     //flex: 1,
