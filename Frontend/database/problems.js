@@ -6,10 +6,22 @@ const db = collection(firebase, 'problems');
 
 export async function getAll() {
   const querySnapshot = await getDocs(db);
+  let problems = [];
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, ' => ', doc.data());
+    // console.log(doc.id, ' => ', doc.data()); 
+    const data = doc.data();
+    problems.push({
+      id: doc.id,
+      title: data.title,
+      latitude: data.location.latitude,
+      longitude: data.location.longitude,
+      description: data.description,
+      imageUrl: data.imageUrl
+    })
   });
+
+  return problems;
 }
 export async function get(id) {
   const document = await getDoc(doc(db, id));
