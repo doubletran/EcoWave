@@ -4,7 +4,25 @@ import { NativeBaseProvider } from "native-base";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import SignInAndUp from "./components/SignInAndUp";
+import { Text, HStack} from "native-base";
 
+export const Name = ({small})=>{
+  const max = small ? 4 : 7;
+  let name = [
+    ["E", max], ["C", max-1],[ "O", max-2],[ "W", max], [ "A", max-2] , ["V", max-1], ["E", max]
+  ]
+  return (
+    <HStack alignItems="baseline">
+      {
+     name.map((letter)=> {
+        const size = `${letter[1].toString()}xl`
+     return  <Text fontSize={size}>{letter[0]}</Text>
+      })
+      
+      }
+    </HStack>
+  )
+}
 const tokenCache = {
   async getToken(key) {
     try {
@@ -25,11 +43,16 @@ const tokenCache = {
 function App() {
   const theme = extendTheme({
     components: {
+      
       Text: {
         fontSize: "17",
       },
+      FormControl:{
+        width:"100%"
+      },
       Input: {
         sizes: "lg",
+        width:"100%",
         baseStyle: {
           p: "10",
         },

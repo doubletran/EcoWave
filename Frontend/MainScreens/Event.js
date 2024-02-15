@@ -1,5 +1,5 @@
 import { ScrollView, Text, Heading, Box, HStack, List } from "native-base";
-import { BottomNav } from "../components/PostModal";
+import { BottomNav } from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
 import { firebase_date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";

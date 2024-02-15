@@ -6,7 +6,6 @@ import {
   Image,
   Center,
   Divider,
-  KeyboardAvoidingView,
   ScrollView,
 } from "native-base";
 import { create } from "../database/problems";

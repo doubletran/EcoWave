@@ -1,8 +1,8 @@
-// import { PostModalScreen } from './PostModalScreen';
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NAV_ICONS as icons } from "./config/style";
 
-import { Container, Heading, IconButton } from "native-base";
+import { Container, Modal, Heading, IconButton } from "native-base";
 import { Button, HStack, Box } from "native-base";
 import {
   NavigationContainer,
@@ -15,8 +15,10 @@ import LocateProblem from "./components/LocateProblem";
 import InputProblem from "./components/InputProblem";
 import CreateEvent from "./components/CreateEvent";
 import { ViewEvent } from "./components/ViewEvent";
-import { ProfileScreen } from "./components/Profile";
+import { ProfileScreen } from "./MainScreens/Profile";
 import SignInAndUp from "./components/SignInAndUp";
+import ReportProblem from "./components/reportProblem";
+import { useState,  useEffect } from "react";
 
 const theme = {
   ...DefaultTheme,
@@ -132,3 +134,71 @@ export function HeaderRight(title, disabled, handler) {
     />
   );
 }
+
+
+
+function EventOrProblem({ onProblem, onEvent }) {
+  return (
+    <>
+      <Button variant='outline' onPress={onProblem}>
+        Spot a problem
+      </Button>
+      <Button variant='outline' title='Event' onPress={onEvent}>
+        Create an event
+      </Button>
+    </>
+  );
+}
+
+export const BottomNav = () => {
+  const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleProblem = () => {
+    navigation.navigate("Set location", { action: "Report a problem" });
+    setShowModal(false);
+  };
+
+  const handleEvent = () => {
+    navigation.navigate("New Event");
+    setShowModal(false);
+  };
+  return (
+    <>
+      <HStack backgroundColor="yellow.200" justifyContent="center" marginTop='auto' marginBottom='0' >
+        <IconButton
+          w='33%'
+          title='Map'
+          icon={icons.Map}
+          onPress={() => {
+            navigation.navigate("Map");
+          }}
+        />
+        <IconButton
+          w='20%'
+          title='Post'
+          icon={icons.Post}
+          onPress={() => {
+            setShowModal(true);
+          }}
+        />
+        <IconButton
+          w='33%'
+          title='Event'
+          icon={icons.Event}
+          onPress={() => {
+            navigation.navigate("Events");
+          }}
+        />
+      </HStack>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content w='100%' marginBottom='0' marginTop='auto'>
+          <Modal.Header>Choose an action</Modal.Header>
+          <Modal.Body>
+            <EventOrProblem onProblem={handleProblem} onEvent={handleEvent} />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+    </>
+  );
+};

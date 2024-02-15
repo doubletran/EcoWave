@@ -1,7 +1,15 @@
 import React from "react";
 import { useSignIn } from "@clerk/clerk-expo";
-import { Box, FormControl, Input, Button, HStack, Center } from "native-base";
-export default function SignInScreen() {
+import {
+  Box,
+  FormControl,
+  Input,
+  Button,
+  HStack,
+  Center,
+  VStack,
+} from "native-base";
+export default function SignInScreen({ handleSignup }) {
   const { signIn, setActive, isLoaded } = useSignIn();
 
   const [emailAddress, setEmailAddress] = React.useState("");
@@ -24,22 +32,24 @@ export default function SignInScreen() {
     }
   };
   return (
-    <Center>
-      <Box w='80%'>
+    <Center w='100%'>
+      <Box w="100%" py="5" px='10'>
         <FormControl>
           <FormControl.Label>Email ID</FormControl.Label>
           <Input
             onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-          />
+          ></Input>
         </FormControl>
         <FormControl>
           <FormControl.Label>Password</FormControl.Label>
           <Input onChangeText={(password) => setPassword(password)} />
         </FormControl>
       </Box>
-      <Button onPress={onSignInPress}>Sign In</Button>
+      <Button w='20%' onPress={onSignInPress}>
+        Sign In
+      </Button>
 
-      <Button variant='link' onPress={onSignInPress}>
+      <Button variant='link' onPress={handleSignup}>
         Not a user? Create an account
       </Button>
     </Center>

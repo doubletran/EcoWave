@@ -6,12 +6,9 @@ import {
   FormControl,
   Input,
   Button,
-  HStack,
-  Center,
-  Container,
 } from "native-base";
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ handleSignin }) {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -62,10 +59,10 @@ export default function SignUpScreen() {
   };
 
   return (
-    <Center>
+    <>
       {!pendingVerification ? (
         <>
-          <Box p='4' m='auto' w='100%'>
+          <Box w='100%' py='5' px='10'>
             <FormControl>
               <FormControl.Label>First Name</FormControl.Label>
               <Input onChangeText={(firstName) => setFirstName(firstName)} />
@@ -93,18 +90,18 @@ export default function SignUpScreen() {
             </FormControl>
           </Box>
 
-          <Button m='auto' onPress={onSignUpPress}>
-            Sign up
+          <Button onPress={onSignUpPress}>
+            Sign Up
           </Button>
-          <Button variant='link'>
+          <Button variant='link' onPress={handleSignin}>
             Already have an account? Sign in instead
           </Button>
         </>
       ) : (
         <>
-          <Box p='4' m='auto' w='100%'>
+              <Box w='100%' py='5' px='10'>
             <FormControl>
-              <FormControl.Label>Confirm Password</FormControl.Label>
+              <FormControl.Label>Enter code to verify email</FormControl.Label>
               <Input onChangeText={(code) => setCode(code)} />
             </FormControl>
           </Box>
@@ -112,6 +109,6 @@ export default function SignUpScreen() {
           <Button onPress={onPressVerify}>Verify</Button>
         </>
       )}
-    </Center>
+    </>
   );
 }

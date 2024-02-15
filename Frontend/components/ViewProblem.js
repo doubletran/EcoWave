@@ -1,5 +1,5 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
-import { BottomNav } from "../components/PostModal";
+import { BottomNav } from "../Navigator"
 import { VStack, Center, Flex, Button, Image } from "native-base";
 import { date_format} from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
