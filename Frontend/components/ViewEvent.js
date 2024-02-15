@@ -33,7 +33,6 @@ export const ViewEvent = ({navigation, route}) => {
   return (
     <>
       <ScrollView>
- 
           <Box p='5' >
               <HStack justifyContent="space-between">
               <Box>

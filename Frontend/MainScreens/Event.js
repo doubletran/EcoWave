@@ -10,9 +10,6 @@ import { useEffect } from "react";
 import { getAll } from "../database/events";
 export const EventScreen = ({navigation}) => {
   const [events, setEvents] = useState("")
-
-  
-
   let RenderListableEvents = () => {
     let render_arr = []
     for (let i = 0; i < events.length; i++) {

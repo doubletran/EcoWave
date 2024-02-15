@@ -19,7 +19,6 @@ export default function ViewProblem({
         <Text>{title}</Text>
         <Text size='sm'>{date_format(create_time)}</Text>
         </Box>
-    
         </HStack>
         <Image
           key={imageUri}

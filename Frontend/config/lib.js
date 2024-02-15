@@ -5,14 +5,13 @@ const options = {
   month: 'short',
   day: 'numeric',
 };
-export const DEFAULT = {
+export let DEFAULT = {
   location: {
     latitude: 44.5630651,
     longitude: -123.3659387,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   }
-
 }
 
 export const date_format = (date)=>{

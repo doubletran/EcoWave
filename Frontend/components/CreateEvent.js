@@ -9,14 +9,13 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import {
   Center,
   Input,
- Box,
+  Box,
   HStack,
   Button,
-  VStack,
   Text,
   Divider,
 } from "native-base";
-import { date_format, time_format } from "../config/lib"
+import { date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 export function ViewEvents({ navigation }) {
   return (
@@ -30,9 +29,7 @@ export function ViewEvents({ navigation }) {
   );
 }
 
-
-export default function CreateEvent({ navigation , route}) {
-  
+export default function CreateEvent({ navigation, route }) {
   const [name, setName] = useState("");
 
   const [description, setDescription] = useState("");
@@ -44,39 +41,28 @@ export default function CreateEvent({ navigation , route}) {
   const [startTimePicker, setStartTimePicker] = useState(false);
   const [endTimePicker, setEndTimePicker] = useState(false);
   const [datePicker, setDatePicker] = useState(false);
-  const [status, setStatus] = React.useState('disabled')
-  React.useEffect(()=>{
+  const [status, setStatus] = React.useState("disabled");
+  React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
       headerTitle: true,
-    })
-  })
-  React.useEffect(()=>{
-    console.log(name, startTime, endTime, date)
-    if (name && startTime && endTime && date){
+    });
+  });
+  React.useEffect(() => {
+    console.log(name, startTime, endTime, date);
+    if (name && startTime && endTime && date) {
       navigation.setOptions({
-        headerRight: () => (
-          <Button > Submit
-        </Button>
-        )
-  
-      })
-    }
-    else{
+        headerRight: () => <Button> Submit</Button>,
+      });
+    } else {
       navigation.setOptions({
-        headerRight: () => (
-          <Button isDisabled>
-         Submit
-        </Button>
-        )
-   
-      })
+        headerRight: () => <Button isDisabled>Submit</Button>,
+      });
     }
-  
-  }, [name, startTime, endTime, date])
+  }, [name, startTime, endTime, date]);
   useEffect(() => {
-    if (route.params){
-      setLocation(toute.params)
+    if (route.params) {
+      setLocation(toute.params);
     }
     // Request permission to access the device's location
     let getLocationPerms = async () => {
@@ -134,109 +120,119 @@ export default function CreateEvent({ navigation , route}) {
 
   return (
     <>
-      
-        {startTimePicker && (
-          <DateTimePicker
-            mode='time'
-            value={new Date(startTime)}
-            onChange={(event, date) => {
-              const {
-                type,
-                nativeEvent: { timestamp, utcOffset },
-              } = event;
-              if (type == "set") {
-                setStartTime(date);
-              }
-              setStartTimePicker(false);
-            }}
-          />
-        )}
-        {endTimePicker && (
-          <DateTimePicker
-            mode='time'
-            value={new Date(endTime)}
-            onChange={(event, date) => {
-              const {
-                type,
-                nativeEvent: { timestamp, utcOffset },
-              } = event;
-              if (type == "set") {
-                setEndTime(date);
-              }
-              setEndTimePicker(false);
-            }}
-          />
-        )}
-
-        {datePicker && (
-          <DateTimePicker
-          minimumDate={Date.now()}
-            value={new Date(date)}
-            onChange={(event, date) => {
-              const {
-                type,
-                nativeEvent: { timestamp, utcOffset },
-              } = event;
-              console.log(date);
-              if (type == "set") {
-                setDate(date);
-              }
-              setDatePicker(false);
-            }}
-          />
-        )}<Center>
-           
-        <Box w ="90%">
-        <Input
-          placeholder='Title'
-          value={name}
-          variant='underlined'
-          size='2xl'
-          onChangeText={setName}
+      {startTimePicker && (
+        <DateTimePicker
+          mode='time'
+          value={new Date(startTime)}
+          onChange={(event, date) => {
+            const {
+              type,
+              nativeEvent: { timestamp, utcOffset },
+            } = event;
+            if (type == "set") {
+              setStartTime(date);
+            }
+            setStartTimePicker(false);
+          }}
         />
-                
-             <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Calendar} onPress={() => setDatePicker(true)}> Date {date_format(date)}
-          
+      )}
+      {endTimePicker && (
+        <DateTimePicker
+          mode='time'
+          value={new Date(endTime)}
+          onChange={(event, date) => {
+            const {
+              type,
+              nativeEvent: { timestamp, utcOffset },
+            } = event;
+            if (type == "set") {
+              setEndTime(date);
+            }
+            setEndTimePicker(false);
+          }}
+        />
+      )}
+
+      {datePicker && (
+        <DateTimePicker
+          minimumDate={Date.now()}
+          value={new Date(date)}
+          onChange={(event, date) => {
+            const {
+              type,
+              nativeEvent: { timestamp, utcOffset },
+            } = event;
+            console.log(date);
+            if (type == "set") {
+              setDate(date);
+            }
+            setDatePicker(false);
+          }}
+        />
+      )}
+      <Center>
+        <Box w='90%'>
+          <Input
+            placeholder='Title'
+            value={name}
+            variant='underlined'
+            size='2xl'
+            onChangeText={setName}
+          />
+
+          <Button
+            {...Style.inputBtn}
+            leftIcon={INPUT_ICONS.Calendar}
+            onPress={() => setDatePicker(true)}
+          >
+            {" "}
+            Date {date_format(date)}
           </Button>
-          <Divider thickness="2"  />
-          <HStack >
-            <Button  {...Style.inputBtn}
+          <Divider thickness='2' />
+          <HStack>
+            <Button
+              {...Style.inputBtn}
               w='50%'
               onPress={() => setStartTimePicker(true)}
-            >  From {time_format(startTime)}</Button>
-          
-            <Button {...Style.inputBtn}
+            >
+              {" "}
+              From {time_format(startTime)}
+            </Button>
+
+            <Button
+              {...Style.inputBtn}
               w='50%'
               onPress={() => setEndTimePicker(true)}
-            > To {time_format(endTime)} </Button>
+            >
+              {" "}
+              To {time_format(endTime)}{" "}
+            </Button>
           </HStack>
-          <Divider thickness="2"  />
+          <Divider thickness='2' />
 
-          <Button {...Style.inputBtn}
-              leftIcon={INPUT_ICONS.Flag}
-         
-            >
-              Link a problem 
-            </Button>
-            <Divider thickness="2"  />
-            <Button {...Style.inputBtn}
-              leftIcon={INPUT_ICONS.Marker}
-             onPress={()=> navigation.navigate('Set location', {action: "New Event"})}
-            >
-              Location 
-            </Button>
+          <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Flag}>
+            Link a problem
+          </Button>
+          <Divider thickness='2' />
+          <Button
+            {...Style.inputBtn}
+            leftIcon={INPUT_ICONS.Marker}
+            onPress={() =>
+              navigation.navigate("Set location", { action: "New Event" })
+            }
+          >
+            Location
+          </Button>
 
-  
-        <Input
-          placeholder='Description'
-          size='md'
-          variant='unstyled'
-          value={description}
-          onChangeText={setDescription}
-        />
- 
+          <Input
+            placeholder='Description'
+            size='md'
+            variant='unstyled'
+            value={description}
+            onChangeText={setDescription}
+          />
         </Box>
-        </Center>
+      </Center>
     </>
   );
 }
