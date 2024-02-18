@@ -11,12 +11,14 @@ export const Name = ({small})=>{
   let name = [
     ["E", max], ["C", max-1],[ "O", max-2],[ "W", max], [ "A", max-2] , ["V", max-1], ["E", max]
   ]
+  let i = 0
   return (
     <HStack alignItems="baseline">
       {
+        
      name.map((letter)=> {
         const size = `${letter[1].toString()}xl`
-     return  <Text fontSize={size}>{letter[0]}</Text>
+     return  <Text key={i++} color="blue.700" fontWeight="bold" fontSize={size}>{letter[0]}</Text>
       })
       
       }
@@ -39,6 +41,7 @@ const tokenCache = {
     }
   },
 };
+
 
 function App() {
   const theme = extendTheme({

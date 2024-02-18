@@ -5,57 +5,65 @@ import { NAV_ICONS } from "../config/style";
 import React from "react";
 import {PROVIDER_GOOGLE, Marker} from 'react-native-maps'
 import { HeaderRightNext } from "../Navigator";
-import { Button } from "native-base";
-
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-
-import SignInAndUp from './SignInAndUp';
-
+import { Button, Center } from "native-base";
+import { useRef } from "react";
+import MapSearchbox from "./MapSearchbox";
+import { DEFAULT_REGION } from "../config/lib";
 const LocateProblem=({navigation, route})=>{
-  const [location, setLocation] = React.useState(false);
+  const [location, setLocation] = React.useState(DEFAULT_REGION._j);
+  const [showCoord, setShowCoord] = React.useState(`${location.latitude}, ${location.longitude}`)
+  const mapRef =useRef();
   React.useEffect(()=>{
+
     navigation.setOptions({
+      headerBackVisible: true,
       headerShown: true,
-      headerTitle: true,
+      headerTitle: () => (
+        <MapSearchbox
+        placeholder={showCoord}
+          handleReturn={(region)=>{
+    
+            mapRef.current.animateToRegion(region, 100)
+            setLocation(region)
+            setShowCoord(false)
+          }}
+        />),
       headerRight: () => (
-        <Button  isDisabled={!location}
+        <Button marginTop="0" isDisabled={!location}
         onPress ={()=>{
-          navigation.navigate(route.params.action, {latitude: location.latitude, longitude: location.longitude})
+          console.log("Navigate"  + JSON.stringify(location))
+          navigation.navigate(route.params.action, {...location})
         }}
          >Next</Button>
       )
     })
+  
+  
   }, [location])
+  
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
     const { latitude, longitude } = event.nativeEvent.coordinate;
     setLocation({ latitude: latitude, longitude: longitude});
-    console.log(location);
-    navigation.setOptions({
-     title: `${latitude}, ${longitude}`,
-     })
+    setShowCoord(`${location.latitude}, ${location.longitude}`)
+    // navigation.setOptions({
+    //  title: `${latitude}, ${longitude}`,
+    //  })
  
   };
   return (
   <>
-  {/* <SignedIn> */}
+
          <MapView
+         ref={mapRef}
         style={styles.map}
         onPress={handleMapPress}
         provider = {PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        initialRegion={DEFAULT_REGION._j}
       > 
         {location && <Marker coordinate={location} />}
       </MapView>
-      {/* </SignedIn>
-      <SignedOut>
-        <SignInAndUp/>
-      </SignedOut> */}
+
 </>
   )
 }

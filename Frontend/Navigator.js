@@ -1,4 +1,3 @@
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NAV_ICONS as icons } from "./config/style";
 
@@ -18,14 +17,14 @@ import { ViewEvent } from "./components/ViewEvent";
 import { ProfileScreen } from "./MainScreens/Profile";
 import SignInAndUp from "./components/SignInAndUp";
 import ReportProblem from "./components/reportProblem";
-import { useState,  useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Name } from "./App";
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "rgb(255, 45, 85)",
-    background: "rgb(255, 255, 255)",
+    background: "rgb(255, 255, 0 )",
   },
 };
 
@@ -35,7 +34,7 @@ export const Header = ({ onSearch }) => {
   return (
     <>
       <HStack w='95%' justifyContent='space-between'>
-        <Heading>ecoWave</Heading>
+        {Name({small: true})}
         <HStack>
           <IconButton icon={icons.Search} onPress={onSearch} />
           <IconButton
@@ -71,17 +70,23 @@ const BackHeader = () => {
 };
 
 const RootStack = createNativeStackNavigator();
-export default function Navigator() {
-  
+export default function  Navigator() {
+
   return (
     <NavigationContainer theme={theme}>
       <RootStack.Navigator
         screenOptions={{
-          headerTitle: (props) => <Header />,
-          headerBackVisible: false,
+        
+          headerStyle: {
+            backgroundColor: theme.colors.background,
+          },
         }}
       >
-        <RootStack.Group>
+        <RootStack.Group
+        screenOptions={{
+          headerTitle: (props) => <Header />,
+          headerBackVisible: false,
+        }}>
           <RootStack.Screen name='Map' component={MapScreen} />
           <RootStack.Screen name='Events' component={EventScreen} />
           <RootStack.Screen name='New Event' component={CreateEvent} />
@@ -117,10 +122,14 @@ export default function Navigator() {
             })}
           />
           <RootStack.Screen name='Report a problem' component={InputProblem} />
-          <RootStack.Screen name='View an event' component={ViewEvent} options={{
-            headerTitle: "View an Event",
-            headerBackVisible: true,
-          }}/>
+          <RootStack.Screen
+            name='View an event'
+            component={ViewEvent}
+            options={{
+              headerTitle: "View an Event",
+              headerBackVisible: true,
+            }}
+          />
         </RootStack.Group>
       </RootStack.Navigator>
     </NavigationContainer>
@@ -130,6 +139,7 @@ export default function Navigator() {
 export function HeaderRight(title, disabled, handler) {
   return (
     <Button
+    
       title={title}
       isDisabled={disabled}
       icon={icons.Next}
@@ -137,8 +147,6 @@ export function HeaderRight(title, disabled, handler) {
     />
   );
 }
-
-
 
 function EventOrProblem({ onProblem, onEvent }) {
   return (
@@ -168,7 +176,12 @@ export const BottomNav = () => {
   };
   return (
     <>
-      <HStack backgroundColor="yellow.200" justifyContent="center" marginTop='auto' marginBottom='0' >
+      <HStack
+        backgroundColor={theme.colors.background}
+        justifyContent='center'
+        marginTop='auto'
+        marginBottom='0'
+      >
         <IconButton
           w='33%'
           title='Map'
@@ -178,7 +191,8 @@ export const BottomNav = () => {
           }}
         />
         <IconButton
-          w='20%'
+          roundedTop='md'
+          w='25%'
           title='Post'
           icon={icons.Post}
           onPress={() => {

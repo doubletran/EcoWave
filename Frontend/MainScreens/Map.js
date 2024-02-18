@@ -7,58 +7,20 @@ import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Header, BottomNav } from "../Navigator";
 import { createRef, useEffect, useRef, useState } from "react";
-import { DEFAULT } from "../config/lib";
 import { getAll } from "../database/problems";
 import { FileSystem } from "expo-file-system";
 import WebView from "react-native-webview";
-import * as Location from 'expo-location';
-
-export const MapSearchbox = ({ onReturn }) => {
-  const ref = useRef();
-  useEffect(() => {
-    setTimeout(() => {
-      ref.current.focus(); //setTimeout to wait for ref to be assigned before call focus
-    }, 10);
-  }, []);
-  return (
-    <>
-      <GooglePlacesAutocomplete
-        ref={ref}
-        placeholder='Search'
-        fetchDetails={true}
-        autoFocus={true}
-        onPress={onReturn}
-        query={{
-          key: "AIzaSyC2M542GAMZIBZsWxkiVaW6Vc3yAr7JEOs",
-          language: "en",
-        }}
-      />
-    </>
-  );
-};
-
+import { NAV_ICONS } from "../config/style";
+import MapSearchbox from "../components/MapSearchbox";
+import { DEFAULT_REGION, getRegionByCoords } from "../config/lib";
 const MapScreen = ({ navigation }) => {
-  const [location, setLocation] = useState(DEFAULT.location);
+  const [location, setLocation] = useState(false);
   const [search, setSearch] = useState(false);
   const [problems, setProblems] = useState([]);
-
-  const mapRef = createRef();
+  const mapRef =useRef();
+ 
   useEffect(() => {
-    (async () => {
-      
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
-
-
-  useEffect(() => {
+    console.log(location)
     if (!search) {
       navigation.setOptions({
         headerShown: true,
@@ -68,26 +30,19 @@ const MapScreen = ({ navigation }) => {
       navigation.setOptions({
         headerTitle: () => (
           <MapSearchbox
-            onReturn={(data, details) => {
-              const latitude = details.geometry.location.lat;
-              const longitude = details.geometry.location.lng;
-              mapRef.current.animateToRegion(
-                {
-                  latitude: latitude,
-                  longitude: longitude,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                },
-                1000
-              );
-              setLocation(details.geometry.location);
-              setSearch(false);
-            }}
-          />
+          handleReturn={(region)=>{
+            setTimeout(()=>{
+          
+              mapRef.current.animateToRegion(region, 10)
+              setLocation(region)
+              setSearch(false)
+            }, 1)
+
+          }}
+        />
         ),
       });
     }
-
 
     const fetchProblems = async () => {
       try {
@@ -131,6 +86,7 @@ const MapScreen = ({ navigation }) => {
               longitude: problem.longitude,
             }}
             description={problem.description}
+            icon={NAV_ICONS.Dot}
           >
             <Callout>
               <View style={styles.calloutContainer}>
@@ -155,12 +111,7 @@ const MapScreen = ({ navigation }) => {
         ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        initialRegion={DEFAULT_REGION._j}
         onPress={() => {
           setSearch(false);
         }}
@@ -168,6 +119,7 @@ const MapScreen = ({ navigation }) => {
       >
         {getMarkers()}
       </MapView>
+
       <BottomNav />
     </>
   );
