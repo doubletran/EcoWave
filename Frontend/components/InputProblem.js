@@ -4,20 +4,22 @@ import {
   Box,
   Input,
   Image,
-  Center,
-  Divider,
-  Pressable,
   ScrollView,
+  Alert,
+  Center,
+  Pressable
 } from "native-base";
+import { Divider } from "native-base";
 import { create } from "../database/problems";
 import { ImageUploader } from "../database/ImageUploader";
 import { SafeAreaView } from "react-native";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { useAuth } from "@clerk/clerk-expo";
-
+import { useToast } from 'native-base';
 const InputProblem = ({ navigation, route:{params: location}}) => {
   const [name, setName] = useState("");
+  const toast = useToast()
   const { latitude, longitude, address } = location;
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
@@ -57,7 +59,7 @@ const InputProblem = ({ navigation, route:{params: location}}) => {
           ? await ImageUploader.uploadImageAsync(imageUri)
           : null;
 
-        await create({
+        const newProblem = await create({
           title: name,
           latitude: latitude,
           longitude: longitude,
@@ -67,17 +69,26 @@ const InputProblem = ({ navigation, route:{params: location}}) => {
           
         });
 
-        alert("Problem submitted successfully!");
-        setStatus("disabled");
+        toast.show({
+          render: ()=>
+          <Alert status="success">SUCCESS
+          </Alert> 
+
+          
+
+        })
+        navigation.navigate("Map", {anchor: newProblem })
+        
+
       } catch (error) {
         console.error("Error submitting problem:", error);
         alert("Error submitting problem. Please try again.");
         setStatus("disabled");
       }
 
-      // setName("");
-      // setDescription("");
-      // setImageUri(null);
+      setName("");
+      setDescription("");
+      setImageUri(null);
     }
   };
 

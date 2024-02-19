@@ -26,16 +26,20 @@ export const INPUT_ICONS= {
   Camera: <Ionicons name="camera-outline" m="auto" size={50} color="white" />,
   Close: <Ionicons name="close-circle-sharp" size={24} color="black" />,
   People: <Ionicons name="people-outline" size={24} color="black" />,
-  Next:<MaterialIcons name="navigate-next" size={24} color="grey" />
-
+  Next:<MaterialIcons name="navigate-next" size={24} color="grey" />,
+  Clear: <MaterialIcons name="clear" size={20} color="black" />,
+  Back: <MaterialIcons name="arrow-back" size={24} color="black" />
 }
+
 export const ICONS = {
   
 }
 
+
  const Style={
+  ViewBox: "cyan.200",
   inputBtn:{
-    rightIcon: INPUT_ICONS.Next,
+ 
     justifyContent: "space-between",
     color: "#080808",
     variant: "ghost",

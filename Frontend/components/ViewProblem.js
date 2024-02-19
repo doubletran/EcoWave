@@ -8,7 +8,7 @@ export default function ViewProblem({
   title,
   description,
   create_time,
-  imageUri
+  imageUrl
 }) {
   return (
     <>
@@ -21,11 +21,11 @@ export default function ViewProblem({
         </Box>
         </HStack>
         <Image
-          key={imageUri}
+          key={imageUrl}
           width={500}
           height={500}
-          source={{ uri: imageUri }}
-          alt='Selected Image'
+          source={{ uri: imageUrl}}
+          alt={description}
         />
         <Text>{description}</Text>
       </Box>

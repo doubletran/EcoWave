@@ -46,7 +46,7 @@ export function getRegionByCoords(center, northeast, southwest, ASPECT_RATIO = 0
 }
 export const date_format = (date) => {
   if (!date) return ""
-  return date.toString()
+  return date.toDate().toLocaleDateString([], options)
 }
 
 export const firebase_date_format = (date) => {

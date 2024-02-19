@@ -1,17 +1,18 @@
 import { ScrollView, Text, Heading, Box, HStack, List } from "native-base";
 import { BottomNav } from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
-import { firebase_date_format, time_format } from "../config/lib";
+import { date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
 import { EventModal } from "../components/ViewEvent";
 import { useState, useEffect } from "react";
 import { getAll } from "../database/events";
+import { useAuth } from "@clerk/clerk-expo";
 
 export const EventScreen = ({navigation}) => {
   const [events, setEvents] = useState([])
-
+  const {userId} = useAuth()
   // events = [{
   //   name: "NAME",
   //   date: new Date(),
@@ -33,25 +34,26 @@ export const EventScreen = ({navigation}) => {
   useEffect(() => {
     const getData = async () => {
       let data = await getAll()
+      console.log(data)
       setEvents(data)
     }
     getData();
   }, []);
 
-  let RenderListableEvents = () => {
-    let render_arr = []
-    events.forEach((evnt) => {
-      render_arr.push(ListableEvent(evnt.data(), evnt.id))
-    })
-    return render_arr
-  }
+  // let RenderListableEvents = () => {
+  //   let render_arr = []
+  //   events.forEach((event) => {
+  //     render_arr.push(ListableEvent(event, event.id))
+  //   })
+  //   return render_arr
+  // }
 
-  let ListableEvent = (event, eventId) => {
-    const {name, description, date,  start_time, end_time, location, participants} = event
-
+  let ListableEvent = (event) => {
+    const {name, description, time: {start, end}, location, address, participants} = event
+    console.log(name,location)
     // hash algorithm from stack overflow, non-secure
     let str = name + description
-    let hash = 0;
+     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
         let chr = str.charCodeAt(i);
         hash = (hash << 5) - hash + chr;
@@ -59,34 +61,34 @@ export const EventScreen = ({navigation}) => {
     }
 
     return (
-      <Pressable key={hash} onPress={()=> navigation.navigate("View an event", {event: event, eventId: eventId})}>
+      <Box p="3" bgColor={Style.ViewBox} w="95%" rounded="xl" shadow="3">
+      <Pressable key={hash} onPress={()=> navigation.navigate("View an event", {...event})}>
+      <Text fontWeight="bold" fontSize="md">{name}</Text>
         <HStack justifyContent="space-between">
-          <Box>
-            <Heading>{name}</Heading>
-            <Text>{firebase_date_format(date)}</Text>
+
+          <Box mt="5">
+            <Text>{date_format(start)}</Text>
             <Text>
-              From {time_format(start_time)} to {time_format(end_time)}
+              {time_format(start)} - {time_format(end)}
             </Text>
           </Box>
           <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>
             {participants.length}
           </Button>
         </HStack>
-
         <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Marker} onPress={() => navigation.navigate("Set location")}>
-          {location.latitude} {location.longitude}
-        </Button>
+         { `${location.latitude}, ${location.longitude}`}
+      </Button>
       </Pressable>
+      </Box>
     )
   }
 
   return (
     <>
       <ScrollView>
-        <VStack space={4} alignItems='center'>
-          <Box p='5' w='90%' bg='muted.200' rounded='md' shadow={3}>
-            <RenderListableEvents/>
-          </Box>
+        <VStack space={3} alignItems='center'>
+          {events.map((event)=> ListableEvent(event))}
         </VStack>
       </ScrollView>
       <BottomNav />

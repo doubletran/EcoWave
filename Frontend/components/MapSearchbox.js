@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
 import { useEffect } from "react";
-import { Box, Container, Input} from "native-base";
+import { Box, Container, IconButton, Input, useTheme} from "native-base";
 import { getRegionByCoords } from "../config/lib";
 import { StyleSheet,Dimensions } from "react-native";
+
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-const MapSearchbox = ({ handleReturn,placeholder }) => {
+import { INPUT_ICONS } from "../config/style";
+const MapSearchbox = ({ handleReturn,placeholder, goBack}) => {
 
   const ref = useRef();
   useEffect(() => {
@@ -31,6 +33,8 @@ const MapSearchbox = ({ handleReturn,placeholder }) => {
 
       <GooglePlacesAutocomplete 
         ref={ref}
+        renderRightButton={()=> <IconButton icon={INPUT_ICONS.Clear} onPress={()=> ref.current.clear()} />}
+        renderLeftButton={()=> <IconButton icon={INPUT_ICONS.Back} onPress={goBack} /> }
         placeholder={placeholder? placeholder : "Search"}
        isRowScrollable ={true}
         fetchDetails={true}
@@ -46,17 +50,20 @@ const MapSearchbox = ({ handleReturn,placeholder }) => {
           language: "en",
         }} 
         styles={{
+  
+          
           textInput: {
-            width: 300
+            backgroundColor: useTheme().colors.muted[200],
+     
+            
           },
           textInputContainer: {
-            width:300
+            width:"80%"
+            
+            
           },
 
-          listView:{
-            width:300
-         
-          } 
+ 
         }}
 
 
@@ -68,13 +75,5 @@ const MapSearchbox = ({ handleReturn,placeholder }) => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  search: {
-    //flex: 1,
-    ...StyleSheet.absoluteFillObject,
-    maxWidth: 500,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
-  },
-});
+
 export default MapSearchbox

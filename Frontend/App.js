@@ -5,7 +5,7 @@ import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import SignInAndUp from "./components/SignInAndUp";
 import { Text, HStack} from "native-base";
-
+import * as config from './app.json'
 export const Name = ({small})=>{
   const max = small ? 4 : 7;
   let name = [
@@ -41,6 +41,7 @@ const tokenCache = {
     }
   },
 };
+export const MAP_API_KEY = config.expo.android.config.googleMaps.apiKey
 
 
 function App() {

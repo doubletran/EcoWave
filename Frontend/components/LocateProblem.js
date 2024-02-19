@@ -5,21 +5,43 @@ import { NAV_ICONS } from "../config/style";
 import React from "react";
 import {PROVIDER_GOOGLE, Marker} from 'react-native-maps'
 import { HeaderRightNext } from "../Navigator";
-import { Button, Center } from "native-base";
+import { Button, Box, HStack } from "native-base";
 import { useRef } from "react";
 import MapSearchbox from "./MapSearchbox";
 import { DEFAULT_REGION } from "../config/lib";
+import { MAP_API_KEY } from "../App";
 const LocateProblem=({navigation, route})=>{
   const [location, setLocation] = React.useState(DEFAULT_REGION._j);
   const [showCoord, setShowCoord] = React.useState(`${location.latitude}, ${location.longitude}`)
   const mapRef =useRef();
   React.useEffect(()=>{
+    //If event, manually fetch address 
+    if (showCoord && route.params.action == "New Event"){
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${MAP_API_KEY}`
+      console.log("fetching" + url)
+      fetch(url)
+      .then((res)=> {
+        res.json()
+      })
+      .then((res)=>{
+        console.log(res)
+        console.log(JSON.stringify(res.results))
+        // console.log(results[0]);
+        // const {formatted_address, geometry} = results[0]
+        // setLocation({address:formatted_address, latitude: geometry.locatioo.lat, longitude: geometry.location.lng})})
+      })
+      .catch(error=>{
+        console.log(error)
+      })
+
+    }
 
     navigation.setOptions({
-      headerBackVisible: true,
-      headerShown: true,
+
       headerTitle: () => (
-        <MapSearchbox
+    
+       <MapSearchbox
+       goBack={()=> navigation.goBack()}
         placeholder={showCoord}
           handleReturn={(region)=>{
     
@@ -27,7 +49,11 @@ const LocateProblem=({navigation, route})=>{
             setLocation(region)
             setShowCoord(false)
           }}
-        />),
+    />
+        ),
+     
+   
+
       headerRight: () => (
         <Button marginTop="0" isDisabled={!location}
         onPress ={()=>{
@@ -35,7 +61,8 @@ const LocateProblem=({navigation, route})=>{
           navigation.navigate(route.params.action, {...location})
         }}
          >Next</Button>
-      )
+      ),
+      headerBackVisible: true
     })
   
   

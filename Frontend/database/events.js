@@ -6,12 +6,23 @@ const db = collection(firebase, 'events');
 
 export async function getAll() {
   const querySnapshot = await getDocsFromServer(collection(firebase, "events"));
-  return querySnapshot
+  let events = []
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, ' => ', doc.data()); 
+    let data = doc.data();
+    events.push(Object.assign(data, {id: doc.id}))
+  })
+  return events
 }
 
 export async function get(id) {
   const document = await getDoc(doc(EventsDB, id));
   console.log(' get:' + JSON.stringify(document.data()));
+}
+export async function getMyEvent(userId){
+  const document = await getDoc(doc(EventsDB, {'userId': userId}));
+  return document
 }
 
 export async function create({title, description, latitude, longtitude, problemRef,  time, userId}) {
@@ -21,7 +32,7 @@ export async function create({title, description, latitude, longtitude, problemR
     location: new GeoPoint(latitude, longtitude),
     create_time: Timestamp.fromDate(new Date()),
     time: time,
-    userId: userId,
+    participants: [userId],
     problemRef: problemRef
   });
 }

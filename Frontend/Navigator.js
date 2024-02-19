@@ -16,7 +16,7 @@ import CreateEvent from "./components/CreateEvent";
 import { ViewEvent } from "./components/ViewEvent";
 import { ProfileScreen } from "./MainScreens/Profile";
 import SignInAndUp from "./components/SignInAndUp";
-import ReportProblem from "./components/reportProblem";
+
 import { useState, useEffect } from "react";
 import { Name } from "./App";
 
@@ -34,7 +34,7 @@ export const Header = ({ onSearch }) => {
   return (
     <>
       <HStack w='95%' justifyContent='space-between'>
-        {Name({small: true})}
+        {Name({ small: true })}
         <HStack>
           <IconButton icon={icons.Search} onPress={onSearch} />
           <IconButton
@@ -70,23 +70,22 @@ const BackHeader = () => {
 };
 
 const RootStack = createNativeStackNavigator();
-export default function  Navigator() {
-
+export default function Navigator() {
   return (
     <NavigationContainer theme={theme}>
       <RootStack.Navigator
         screenOptions={{
-        
           headerStyle: {
             backgroundColor: theme.colors.background,
           },
         }}
       >
         <RootStack.Group
-        screenOptions={{
-          headerTitle: (props) => <Header />,
-          headerBackVisible: false,
-        }}>
+          screenOptions={{
+            headerTitle: (props) => <Header />,
+            headerBackVisible: false,
+          }}
+        >
           <RootStack.Screen name='Map' component={MapScreen} />
           <RootStack.Screen name='Events' component={EventScreen} />
           <RootStack.Screen name='New Event' component={CreateEvent} />
@@ -105,21 +104,15 @@ export default function  Navigator() {
               headerBackVisible: true,
             }}
           />
-          <RootStack.Screen
-            name='Sign In and Up'
-            component={SignInAndUp}
-            options={{
-              headerTitle: "Sign In/Up",
-              headerBackVisible: true,
-            }}
-          />
+
           <RootStack.Screen
             name='Set location'
             component={LocateProblem}
-            options={({ navigation, route }) => ({
+            options={{
               // Add a placeholder button without the `onPress` to avoid flicker
               title: "Set location",
-            })}
+              headerBackVisible: true,
+            }}
           />
           <RootStack.Screen name='Report a problem' component={InputProblem} />
           <RootStack.Screen
@@ -139,7 +132,6 @@ export default function  Navigator() {
 export function HeaderRight(title, disabled, handler) {
   return (
     <Button
-    
       title={title}
       isDisabled={disabled}
       icon={icons.Next}
@@ -176,38 +168,39 @@ export const BottomNav = () => {
   };
   return (
     <>
-      <HStack
-        backgroundColor={theme.colors.background}
-        justifyContent='center'
-        marginTop='auto'
-        marginBottom='0'
-      >
-        <IconButton
-          w='33%'
-          title='Map'
-          icon={icons.Map}
-          onPress={() => {
-            navigation.navigate("Map");
-          }}
-        />
-        <IconButton
-          roundedTop='md'
-          w='25%'
-          title='Post'
-          icon={icons.Post}
-          onPress={() => {
-            setShowModal(true);
-          }}
-        />
-        <IconButton
-          w='33%'
-          title='Event'
-          icon={icons.Event}
-          onPress={() => {
-            navigation.navigate("Events");
-          }}
-        />
-      </HStack>
+      <Box marginTop='auto' marginBottom='0' shadow={3}>
+        <HStack
+          backgroundColor={theme.colors.background}
+          justifyContent='center'
+    
+        >
+          <IconButton
+            w='33%'
+            title='Map'
+            icon={icons.Map}
+            onPress={() => {
+              navigation.navigate("Map");
+            }}
+          />
+          <IconButton
+            roundedTop='md'
+            w='25%'
+            title='Post'
+            icon={icons.Post}
+            onPress={() => {
+              setShowModal(true);
+            }}
+          />
+          <IconButton
+            w='33%'
+            title='Event'
+            icon={icons.Event}
+            onPress={() => {
+              navigation.navigate("Events");
+            }}
+          />
+        </HStack>
+      </Box>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content w='100%' marginBottom='0' marginTop='auto'>
           <Modal.Header>Choose an action</Modal.Header>

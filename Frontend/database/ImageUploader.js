@@ -48,6 +48,10 @@ const uploadImageAsync = async (uri) => {
 
   return await getDownloadURL(fileRef);
 };
+const retrieveImage = async (name)=>{
+  const fileRef = ref(getStorage(), name )
+  return await getDownloadURL(fileRef)
+}
 
 const ImageUploader = {
   pickImage,

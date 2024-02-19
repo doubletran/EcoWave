@@ -1,6 +1,6 @@
 import MapView, { Marker, Callout } from "react-native-maps";
 import { StyleSheet, Image } from "react-native";
-import { Center, Text, View } from "native-base";
+import { Center, Text, View, Box } from "native-base";
 
 import { Dimensions } from "react-native";
 import { PROVIDER_GOOGLE } from "react-native-maps";
@@ -10,10 +10,12 @@ import { createRef, useEffect, useRef, useState } from "react";
 import { getAll } from "../database/problems";
 import { FileSystem } from "expo-file-system";
 import WebView from "react-native-webview";
+
 import { NAV_ICONS } from "../config/style";
 import MapSearchbox from "../components/MapSearchbox";
 import { DEFAULT_REGION, getRegionByCoords } from "../config/lib";
-const MapScreen = ({ navigation }) => {
+import ViewProblem from "../components/ViewProblem";
+const MapScreen = ({ navigation, route }) => {
   const [location, setLocation] = useState(false);
   const [search, setSearch] = useState(false);
   const [problems, setProblems] = useState([]);
@@ -28,7 +30,9 @@ const MapScreen = ({ navigation }) => {
       });
     } else {
       navigation.setOptions({
+     
         headerTitle: () => (
+          
           <MapSearchbox
           handleReturn={(region)=>{
             setTimeout(()=>{
@@ -41,6 +45,7 @@ const MapScreen = ({ navigation }) => {
           }}
         />
         ),
+        
       });
     }
 
@@ -55,8 +60,8 @@ const MapScreen = ({ navigation }) => {
 
     fetchProblems();
 
-    const intervalId = setInterval(fetchProblems, 1000);
-    return () => clearInterval(intervalId);
+    // const intervalId = setInterval(fetchProblems, 1000);
+    // return () => clearInterval(intervalId);
   }, [search]);
 
   const handleMapPress = (event) => {
@@ -76,6 +81,7 @@ const MapScreen = ({ navigation }) => {
   };
 
   const getMarkers = () => {
+    // console.log(problems)
     return problems && problems.length > 0
       ? problems.map((problem) => (
           <Marker
@@ -85,10 +91,13 @@ const MapScreen = ({ navigation }) => {
               latitude: problem.latitude,
               longitude: problem.longitude,
             }}
+
             description={problem.description}
             icon={NAV_ICONS.Dot}
           >
-            <Callout>
+            <Callout
+            onPress={(event)=>{}}>
+      
               <View style={styles.calloutContainer}>
                 <Text style={styles.title}>{problem.title}</Text>
                 <View>
@@ -99,6 +108,21 @@ const MapScreen = ({ navigation }) => {
                 </View>
                 <Text>{problem.description}</Text>
               </View>
+ 
+           <ViewProblem {...problem}/>
+            
+              {/* <View style={styles.calloutContainer}>
+                <Text style={styles.title}>{problem.title}</Text>
+                <View>
+                  <WebView
+                    style={styles.image}
+                    source={{ uri: problem.imageUrl }}
+                  />
+                </View>
+                <Text>{problem.description}</Text>
+      
+
+          */}           
             </Callout>
           </Marker>
         ))

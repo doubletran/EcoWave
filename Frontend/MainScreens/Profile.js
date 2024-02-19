@@ -37,6 +37,7 @@ export function ProfileScreen() {
 
   return (
     <View>
+      <SignOut/>
       <BottomNav/>
      
     </View>
