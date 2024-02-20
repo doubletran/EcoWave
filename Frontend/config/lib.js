@@ -46,7 +46,7 @@ export function getRegionByCoords(center, northeast, southwest, ASPECT_RATIO = 0
 }
 export const date_format = (date) => {
   if (!date) return ""
-  return date.toDate().toLocaleDateString([], options)
+  return new Date(date).toLocaleDateString([], options)
 }
 
 export const firebase_date_format = (date) => {
@@ -57,9 +57,13 @@ export const firebase_date_format = (date) => {
 export const time_format = (timestamp) => {
   if (!timestamp) return ""
 
-  const fireBaseTime = new Date(
-    timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
-  );
+  // const fireBaseTime = new Date(
+  //   timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
+  // );
+    const fireBaseTime = new Date(
+timestamp
+    )
+
 
   return fireBaseTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   // return timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })

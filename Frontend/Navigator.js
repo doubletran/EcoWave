@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import { EventScreen } from "./MainScreens/Event";
 import MapScreen from "./MainScreens/Map";
-import LocateProblem from "./components/LocateProblem";
+import Locate from "./components/LocateProblem";
 import InputProblem from "./components/InputProblem";
 import CreateEvent from "./components/CreateEvent";
 import { ViewEvent } from "./components/ViewEvent";
@@ -88,7 +88,6 @@ export default function Navigator() {
         >
           <RootStack.Screen name='Map' component={MapScreen} />
           <RootStack.Screen name='Events' component={EventScreen} />
-          <RootStack.Screen name='New Event' component={CreateEvent} />
         </RootStack.Group>
 
         <RootStack.Group
@@ -107,13 +106,10 @@ export default function Navigator() {
 
           <RootStack.Screen
             name='Set location'
-            component={LocateProblem}
-            options={{
-              // Add a placeholder button without the `onPress` to avoid flicker
-              title: "Set location",
-              headerBackVisible: true,
-            }}
+            component={Locate}
+
           />
+          <RootStack.Screen name='New Event' component={CreateEvent} />
           <RootStack.Screen name='Report a problem' component={InputProblem} />
           <RootStack.Screen
             name='View an event'
@@ -172,7 +168,6 @@ export const BottomNav = () => {
         <HStack
           backgroundColor={theme.colors.background}
           justifyContent='center'
-    
         >
           <IconButton
             w='33%'

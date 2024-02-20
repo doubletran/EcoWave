@@ -1,6 +1,7 @@
 import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer, updateDoc, doc } from 'firebase/firestore';
 
 import firebase from '../config/firebase';
+import * as geofire from 'geofire-common'
 
 const db = collection(firebase, 'events');
 
@@ -25,15 +26,20 @@ export async function getMyEvent(userId){
   return document
 }
 
-export async function create({title, description, latitude, longtitude, problemRef,  time, userId}) {
-  return await addDoc(EventsDB, {
+export async function create({title, description, latitude, longitude, address, problemRef,  start, end, userId}) {
+  console.log(start)
+  return await addDoc(db, {
     title: title,
     description: description,
-    location: new GeoPoint(latitude, longtitude),
-    create_time: Timestamp.fromDate(new Date()),
-    time: time,
-    participants: [userId],
-    problemRef: problemRef
+    location: new GeoPoint(latitude, longitude),
+    address: address,
+   geohash: geofire.geohashForLocation([latitude,longitude ]),
+    time: {
+      start: Timestamp.fromDate(start),
+      end: Timestamp.fromDate(end)
+    },
+    participants: [userId]
+    // problemRef: problemRef
   });
 }
 

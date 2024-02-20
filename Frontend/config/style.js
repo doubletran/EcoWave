@@ -28,7 +28,8 @@ export const INPUT_ICONS= {
   People: <Ionicons name="people-outline" size={24} color="black" />,
   Next:<MaterialIcons name="navigate-next" size={24} color="grey" />,
   Clear: <MaterialIcons name="clear" size={20} color="black" />,
-  Back: <MaterialIcons name="arrow-back" size={24} color="black" />
+  Back: <MaterialIcons name="arrow-back" size={24} color="black" />,
+  Time: <Ionicons name="time" size={24} color="black" />
 }
 
 export const ICONS = {
@@ -45,8 +46,9 @@ export const ICONS = {
     variant: "ghost",
     _text: {
       fontSize:"17",
-      color:  "#080808",
+      color: "grey"
     },
+    width: "100%",
     minHeight: 16
   },
  
