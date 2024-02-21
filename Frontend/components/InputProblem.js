@@ -4,32 +4,37 @@ import {
   Box,
   Input,
   Image,
-  Center,
-  Divider,
   ScrollView,
+  Alert,
+  Center,
+  Pressable
 } from "native-base";
+import { Divider } from "native-base";
 import { create } from "../database/problems";
 import { ImageUploader } from "../database/ImageUploader";
 import { SafeAreaView } from "react-native";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { googleAPI as apiKey } from "../config/firebase";
-
-const InputProblem = ({ navigation, route }) => {
+import { useAuth } from "@clerk/clerk-expo";
+import { useToast } from 'native-base';
+const InputProblem = ({ navigation, route:{params: location}}) => {
   const [name, setName] = useState("");
-  const { latitude, longitude } = route.params;
+  const toast = useToast()
+  const { latitude, longitude, address } = location;
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
   const [status, setStatus] = useState("disabled");
-
+  const {userId}  = useAuth()
   useEffect(() => {
+    console.log(userId)
     const isFormValid =
       name && latitude && longitude && description && imageUri;
     const newStatus = isFormValid ? "enabled" : "disabled";
     setStatus(newStatus);
 
     navigation.setOptions({
+      
+      headerBackVisible:true,
       headerRight: () => (
         <Button
           isDisabled={status === "disabled"}
@@ -54,16 +59,27 @@ const InputProblem = ({ navigation, route }) => {
           ? await ImageUploader.uploadImageAsync(imageUri)
           : null;
 
-        await create({
+        const newProblem = await create({
           title: name,
           latitude: latitude,
           longitude: longitude,
           description: description,
           imageUrl: imageUrl,
+          userId: userId
+          
         });
 
-        alert("Problem submitted successfully!");
-        setStatus("disabled");
+        toast.show({
+          render: ()=>
+          <Alert status="success">SUCCESS
+          </Alert> 
+
+          
+
+        })
+        navigation.navigate("Map", {anchor: newProblem })
+        
+
       } catch (error) {
         console.error("Error submitting problem:", error);
         alert("Error submitting problem. Please try again.");
@@ -87,8 +103,8 @@ const InputProblem = ({ navigation, route }) => {
 
   return (
     <ScrollView automaticallyAdjustKeyboardInsets>
-      <Center>
-        <Box safeArea w='90%'>
+      <Center bgColor="yellow.100">
+        <Box safeArea  w='90%'>
           <Input
             placeholder='Title'
             value={name}
@@ -125,8 +141,8 @@ const InputProblem = ({ navigation, route }) => {
             value={description}
             onChangeText={setDescription}
           />
-          <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Flag}>
-            Link a problem
+          <Button {...Style.inputBtn}  leftIcon={INPUT_ICONS.Calendar}>
+            Create an event
           </Button>
           <Divider thickness='2' />
           <Button
@@ -138,10 +154,10 @@ const InputProblem = ({ navigation, route }) => {
               })
             }
           >
-            Location
+           {!address? `${latitude}, ${longitude}`: address}
           </Button>
 
-          <SafeAreaView>
+          {/* <SafeAreaView>
             <GooglePlacesAutocomplete
               placeholder='Pickup'
               minLength={2}
@@ -156,7 +172,7 @@ const InputProblem = ({ navigation, route }) => {
                 language: "en",
               }}
             />
-          </SafeAreaView>
+          </SafeAreaView> */}
         </Box>
       </Center>
     </ScrollView>

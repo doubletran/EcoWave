@@ -102,7 +102,7 @@ export default function SignUpScreen({ handleSignin }) {
               <Box w='100%' py='5' px='10'>
             <FormControl>
               <FormControl.Label>Enter code to verify email</FormControl.Label>
-              <Input onChangeText={(code) => setCode(code)} />
+              <Input value={code} onChangeText={(code) => setCode(code)} />
             </FormControl>
           </Box>
 
