@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { create } from "../database/events";
-import { PermissionsAndroid } from "react-native";
+import { PermissionsAndroid, Pressable } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Style from "../config/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
@@ -14,6 +14,8 @@ import { useAuth } from "@clerk/clerk-expo";
 
 import * as ProblemDB from '../database/problems';
 import ViewProblem from "./ViewProblem";
+import firebase from "../config/firebase";
+import { getDocs, collection } from "firebase/firestore";
 
 export function ViewEvents({ navigation }) {
   return (
@@ -27,13 +29,14 @@ export function ViewEvents({ navigation }) {
   );
 }
 
-async function ListProblems() {
-  let lst = []
-  let problems = await ProblemDB.getAll()
-  for (let i = 0; i < problems.length; i++) {
-    lst.push(<ViewProblem title={problems[i].title} description={problems[i].description} create_time={new Date()} imageUrl={problems[i].imageUrl}/>)
+let hash = (str) => {
+  let num = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+      let chr = str.charCodeAt(i);
+      num = (num << 5) - num + chr;
+      num |= 0; // Convert to 32bit integer
   }
-  return lst
+  return num
 }
 
 export default function CreateEvent({ navigation, route:{params: location} }) {
@@ -50,12 +53,32 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
   const [status, setStatus] = React.useState("disabled");
 
   const [showProblemModal, setShowProblemModal] = useState(false)
+  const [problems, setProblems] = useState([])
+  const [chosenProblem, setChosenProblem] = useState({})
+
+  function ListProblem(problem) {
+    return (
+      <Pressable onPress={() => {setChosenProblem(problem); setShowProblemModal(false)}}>
+        <ViewProblem key={hash(problem.title + problem.description)} title={problem.title} description={problem.description} create_time={new Date()} imageUrl={problem.imageUrl}/>
+      </Pressable>
+    )
+  }
 
   React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
       headerTitle: true,
     });
+
+    let getProblems = async () => {
+      let temp = []
+      let res = await getDocs(collection(firebase, 'problems'))
+      res.forEach((doc) => {
+        temp.push(doc.data())
+      })
+      setProblems(temp)
+    }
+    getProblems()
   });
   React.useEffect(() => {
     console.log(location)
@@ -234,6 +257,7 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
 
           <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Flag} onPress={() => setShowProblemModal(true)}>
             Link a problem
+            {chosenProblem != {} && (chosenProblem.title)}
           </Button>
           <Divider thickness='2' />
           <Button
@@ -259,8 +283,7 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
           <Modal.Body>
             <Modal.Header>Problems</Modal.Header>
             <VStack>
-              {problems.map((problem) => ListProblems(problem))}
-            <ViewProblem title={"test"} description={"test"} create_time={new Date()} imageUrl={"https://github.com"}/>
+              {problems.map((problem) => ListProblem(problem))}
             </VStack>
           </Modal.Body>
         </Modal.Content>
