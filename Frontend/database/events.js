@@ -34,7 +34,7 @@ export async function create({title, description, latitude, longitude, address, 
     description: description,
     location: new GeoPoint(latitude, longitude),
     address: address,
-   geohash: geofire.geohashForLocation([latitude,longitude ]),
+    geohash: geofire.geohashForLocation([latitude,longitude ]),
     time: {
       start: Timestamp.fromDate(start),
       end: Timestamp.fromDate(end)

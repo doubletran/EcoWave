@@ -1,7 +1,7 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
-import { date_format, time_format } from "../config/lib";
+import { firebase_date_format, firebase_time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 
@@ -19,8 +19,9 @@ export const ViewEvent = ({ navigation, route }) => {
   const { user } = useUser();
 
   const handleRegister = async () => {
-    let eventId = route.params.eventId;
-    await update(eventId, { participants: arrayUnion(user.id) });
+    let eventId = route.params.id;
+    let res = await update(eventId, { participants: arrayUnion(user.id) });
+    console.log(res)
     setShowModal(true);
   };
 
@@ -34,7 +35,7 @@ export const ViewEvent = ({ navigation, route }) => {
   const {
     name,
     description,
-    time: { start, end },
+    time,
     location,
     address,
     participants,
@@ -55,9 +56,9 @@ export const ViewEvent = ({ navigation, route }) => {
           <Heading>{name}</Heading>
           <HStack justifyContent='space-between'>
             <Box pt="3">
-              <Text>{date_format(start)}</Text>
+              <Text>{firebase_date_format(time.start)}</Text>
               <Text>
-                {time_format(start)} - {time_format(end)}
+                {firebase_time_format(time.start)} - {firebase_time_format(time.end)}
               </Text>
             </Box>
             <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>

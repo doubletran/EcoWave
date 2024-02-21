@@ -34,7 +34,7 @@ export const EventScreen = ({navigation}) => {
   useEffect(() => {
     const getData = async () => {
       let data = await getAll()
-      console.log(data)
+      //console.log(data)
       setEvents(data)
     }
     getData();
@@ -50,7 +50,7 @@ export const EventScreen = ({navigation}) => {
 
   let ListableEvent = (event) => {
     const {name, description, time, location, address, participants} = event
-    console.log(name, location, time)
+    // console.log(name, location, time)
     // hash algorithm from stack overflow, non-secure
     let str = name + description
      let hash = 0;
@@ -88,7 +88,7 @@ export const EventScreen = ({navigation}) => {
     <>
       <ScrollView>
         <VStack space={3} alignItems='center'>
-          {events.map((event)=> ListableEvent(event))}
+          {events.map((event) => ListableEvent(event))}
         </VStack>
       </ScrollView>
       <BottomNav />
