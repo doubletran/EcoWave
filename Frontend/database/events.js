@@ -2,7 +2,7 @@ import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServ
 
 import firebase from '../config/firebase';
 
-const db = collection(firebase, 'events');
+const EventsDB = collection(firebase, 'events');
 
 export async function getAll() {
   const querySnapshot = await getDocsFromServer(collection(firebase, "events"));
@@ -11,7 +11,8 @@ export async function getAll() {
 
 export async function get(id) {
   const document = await getDoc(doc(EventsDB, id));
-  console.log(' get:' + JSON.stringify(document.data()));
+  //console.log(' get:' + JSON.stringify(document.data()));
+  return document
 }
 
 export async function create({title, description, latitude, longtitude, problemRef,  time, userId}) {
