@@ -15,14 +15,18 @@ import { NAV_ICONS } from "../config/style";
 import MapSearchbox from "../components/MapSearchbox";
 import { DEFAULT_REGION, getRegionByCoords } from "../config/lib";
 import ViewProblem from "../components/ViewProblem";
+import { Modal, TouchableWithoutFeedback } from "react-native";
+
+
 const MapScreen = ({ navigation, route }) => {
   const [location, setLocation] = useState(false);
   const [search, setSearch] = useState(false);
   const [problems, setProblems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedProblem, setSelectedProblem] = useState(null);
   const mapRef =useRef();
  
   useEffect(() => {
-    console.log(location)
     if (!search) {
       navigation.setOptions({
         headerShown: true,
@@ -53,6 +57,7 @@ const MapScreen = ({ navigation, route }) => {
       try {
         const updatedProblems = await getAll();
         setProblems(updatedProblems);
+        console.log(updatedProblems[0].imageUrl);
       } catch (error) {
         console.error("Error fetching problems:", error);
       }
@@ -60,8 +65,8 @@ const MapScreen = ({ navigation, route }) => {
 
     fetchProblems();
 
-    // const intervalId = setInterval(fetchProblems, 1000);
-    // return () => clearInterval(intervalId);
+    const intervalId = setInterval(fetchProblems, 1000);
+    return () => clearInterval(intervalId);
   }, [search]);
 
   const handleMapPress = (event) => {
@@ -80,54 +85,37 @@ const MapScreen = ({ navigation, route }) => {
     return fileUri;
   };
 
+  const ModalContent = ({ problem }) => (
+    <View style={styles.container}>
+      <Text style={styles.title}>{problem.title}</Text>
+      <View>
+        <WebView style={styles.image} source={{ uri: problem.imageUrl }} />
+      </View>
+      <Image style={styles.image} source={{ uri: problem.imageUrl }}></Image>
+      <Text style={{ color: "blue"}}>{selectedProblem.description}</Text>
+    </View>
+  );
+  
+
   const getMarkers = () => {
-    // console.log(problems)
     return problems && problems.length > 0
       ? problems.map((problem) => (
           <Marker
             key={problem.id}
-            title={problem.title}
             coordinate={{
               latitude: problem.latitude,
               longitude: problem.longitude,
             }}
-
-            description={problem.description}
-            icon={NAV_ICONS.Dot}
-          >
-            <Callout
-            onPress={(event)=>{}}>
-      
-              <View style={styles.calloutContainer}>
-                <Text style={styles.title}>{problem.title}</Text>
-                <View>
-                  <WebView
-                    style={styles.image}
-                    source={{ uri: problem.imageUrl }}
-                  />
-                </View>
-                <Text>{problem.description}</Text>
-              </View>
- 
-           <ViewProblem {...problem}/>
-            
-              {/* <View style={styles.calloutContainer}>
-                <Text style={styles.title}>{problem.title}</Text>
-                <View>
-                  <WebView
-                    style={styles.image}
-                    source={{ uri: problem.imageUrl }}
-                  />
-                </View>
-                <Text>{problem.description}</Text>
-      
-
-          */}           
-            </Callout>
-          </Marker>
+            onPress={() => {
+              setSelectedProblem(problem);
+              setModalVisible(true);
+            }}
+          />
         ))
       : null;
   };
+  
+  
 
   return (
     <>
@@ -145,22 +133,45 @@ const MapScreen = ({ navigation, route }) => {
       </MapView>
 
       <BottomNav />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+      <View style={styles.modalOverlay}>
+        <ModalContent problem={selectedProblem} />
+      </View>
+      </TouchableWithoutFeedback>
+      </Modal>
+
     </>
   );
 };
 const styles = StyleSheet.create({
-  calloutContainer: {
-    borderRadius: 100,
+  container: {
+    borderRadius: 10,
     backgroundColor: "white",
+    padding: 16,
+    width: 300,
   },
   title: {
     fontWeight: "bold",
     fontSize: 16,
+    color: "blue",
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },  
   map: {
     //flex: 1,
     ...StyleSheet.absoluteFillObject,
