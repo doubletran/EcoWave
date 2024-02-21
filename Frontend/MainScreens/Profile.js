@@ -1,6 +1,7 @@
 import { View, Text, Button, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import { Box } from "native-base";
 
 import {
   ClerkProvider,
@@ -35,11 +36,24 @@ export function ProfileScreen() {
   const [signIn, setSignIn] = useState(false);
   const { isLoaded, isSignedIn, user } = useUser();
 
+  let DisplayMyEvents = () => {
+    //import { query, where } from "firebase/firestore";  
+    const q = query(citiesRef, where("regions", "array-contains", "west_coast"));
+    return (
+      <View>
+        {}
+      </View>
+    )
+  }
+
   return (
     <View>
+      <DisplayMyEvents/>
       <SignOut/>
+      <Box h={'100%'}>
+      {/* This box holds the bottom nav at the bottom of the screen lol*/}
+      </Box>
       <BottomNav/>
-     
     </View>
   );
 }

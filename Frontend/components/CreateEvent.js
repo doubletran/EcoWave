@@ -7,10 +7,14 @@ import Style from "../config/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 // import { InputButtonStyle as style } from "../config/style";
-import { Center, Input, Box, HStack, Button, Text, Divider } from "native-base";
+import { Center, Input, Box, HStack, VStack, Button, Text, Divider, Modal } from "native-base";
 import { date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import { useAuth } from "@clerk/clerk-expo";
+
+import * as ProblemDB from '../database/problems';
+import ViewProblem from "./ViewProblem";
+
 export function ViewEvents({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -21,6 +25,15 @@ export function ViewEvents({ navigation }) {
       />
     </View>
   );
+}
+
+async function ListProblems() {
+  let lst = []
+  let problems = await ProblemDB.getAll()
+  for (let i = 0; i < problems.length; i++) {
+    lst.push(<ViewProblem title={problems[i].title} description={problems[i].description} create_time={new Date()} imageUrl={problems[i].imageUrl}/>)
+  }
+  return lst
 }
 
 export default function CreateEvent({ navigation, route:{params: location} }) {
@@ -35,6 +48,9 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
   const [endTimePicker, setEndTimePicker] = useState(false);
   const [datePicker, setDatePicker] = useState(false);
   const [status, setStatus] = React.useState("disabled");
+
+  const [showProblemModal, setShowProblemModal] = useState(false)
+
   React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -216,7 +232,7 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
           </HStack>
           <Divider thickness='2' />
 
-          <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Flag}>
+          <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.Flag} onPress={() => setShowProblemModal(true)}>
             Link a problem
           </Button>
           <Divider thickness='2' />
@@ -238,6 +254,17 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
             onChangeText={setDescription}
           />
         </Box>
+        <Modal isOpen={showProblemModal} onClose={() => setShowProblemModal(false)}>
+        <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
+          <Modal.Body>
+            <Modal.Header>Problems</Modal.Header>
+            <VStack>
+              {problems.map((problem) => ListProblems(problem))}
+            <ViewProblem title={"test"} description={"test"} create_time={new Date()} imageUrl={"https://github.com"}/>
+            </VStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
       </Center>
     </>
   );
