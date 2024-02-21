@@ -74,7 +74,7 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
       let temp = []
       let res = await getDocs(collection(firebase, 'problems'))
       res.forEach((doc) => {
-        temp.push(doc.data())
+        temp.push(doc.data() + doc.id)
       })
       setProblems(temp)
     }
@@ -137,20 +137,21 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
     participants: [user.Id]
   }
   */
-  const submit = () => {
+  const submit = async () => {
     let start = new Date(startTime)
     let end = new Date(endTime)
     start.setDate(date.getDate())
     end.setDate(date.getDate())
-    create({
+    await create({
       title: name,
-      description,
+      description: description,
       latitude: location.latitude,
       longitude: location.longitude,
       address: location.address,
       userId: userId,
+      problemRef: chosenProblem.id,
       start: start,
-      end: end
+      end: end,
     })
     .then((res)=>{
       console.log("Submit result: " + res);

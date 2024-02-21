@@ -27,9 +27,9 @@ export async function getMyEvent(userId){
   return document
 }
 
-export async function create({title, description, latitude, longitude, address, problemRef,  start, end, userId}) {
+export async function create({title, description, latitude, longitude, address, userId, problemRef,  start, end}) {
   console.log(start)
-  return await addDoc(db, {
+  return await addDoc(EventsDB, {
     title: title,
     description: description,
     location: new GeoPoint(latitude, longitude),
@@ -39,8 +39,9 @@ export async function create({title, description, latitude, longitude, address, 
       start: Timestamp.fromDate(start),
       end: Timestamp.fromDate(end)
     },
-    participants: [userId]
-    // problemRef: problemRef
+    creator: userId,
+    participants: [userId],
+    problemRef: problemRef
   });
 }
 
