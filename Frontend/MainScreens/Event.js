@@ -1,7 +1,7 @@
 import { ScrollView, Text, Heading, Box, HStack, List } from "native-base";
 import { BottomNav } from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
-import { date_format, time_format } from "../config/lib";
+import { firebase_date_format, firebase_time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { Pressable } from "react-native";
@@ -49,8 +49,8 @@ export const EventScreen = ({navigation}) => {
   // }
 
   let ListableEvent = (event) => {
-    const {name, description, time: {start, end}, location, address, participants} = event
-    console.log(name,location)
+    const {name, description, time, location, address, participants} = event
+    console.log(name, location, time)
     // hash algorithm from stack overflow, non-secure
     let str = name + description
      let hash = 0;
@@ -67,9 +67,9 @@ export const EventScreen = ({navigation}) => {
         <HStack justifyContent="space-between">
 
           <Box mt="5">
-            <Text>{date_format(start)}</Text>
+            <Text>{firebase_date_format(time.start)}</Text>
             <Text>
-              {time_format(start)} - {time_format(end)}
+              {firebase_time_format(time.start)} - {firebase_time_format(time.end)}
             </Text>
           </Box>
           <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>

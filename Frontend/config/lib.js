@@ -1,13 +1,13 @@
 import * as Location from 'expo-location'
 import { Dimensions } from 'react-native';
 
-
 const options = {
   weekday: 'short',
   year: 'numeric',
   month: 'short',
   day: 'numeric',
 };
+
 // export let DEFAULT = {
 //   location: {
 //     latitude:44.2423649,-119.80930251,
@@ -16,6 +16,7 @@ const options = {
 //     longitudeDelta: 0.01,
 //   }
 // }
+
 export const DEFAULT_REGION = (async()=> {
   let { status } = await Location.requestForegroundPermissionsAsync();
   let location = {latitude: 44.2423649,longitude: -119.80930251}
@@ -67,4 +68,14 @@ timestamp
 
   return fireBaseTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   // return timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+}
+
+export const firebase_time_format = (timestamp) => {
+  if (!timestamp) return ""
+
+  const fireBaseTime = new Date(
+    timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
+  )
+
+  return fireBaseTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 }

@@ -1,4 +1,4 @@
-import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer, updateDoc, doc } from 'firebase/firestore';
+import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer, updateDoc, doc, getDoc } from 'firebase/firestore';
 
 import firebase from '../config/firebase';
 import * as geofire from 'geofire-common'
