@@ -1,9 +1,9 @@
-import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer, updateDoc, doc } from 'firebase/firestore';
+import {addDoc, collection, GeoPoint, getDocs, Timestamp, query, getDocsFromServer, updateDoc, doc, getDoc } from 'firebase/firestore';
 
 import firebase from '../config/firebase';
 import * as geofire from 'geofire-common'
 
-const db = collection(firebase, 'events');
+const EventsDB = collection(firebase, 'events');
 
 export async function getAll() {
   const querySnapshot = await getDocsFromServer(collection(firebase, "events"));
@@ -19,7 +19,8 @@ export async function getAll() {
 
 export async function get(id) {
   const document = await getDoc(doc(EventsDB, id));
-  console.log(' get:' + JSON.stringify(document.data()));
+  //console.log(' get:' + JSON.stringify(document.data()));
+  return document
 }
 export async function getMyEvent(userId){
   const document = await getDoc(doc(EventsDB, {'userId': userId}));
@@ -33,7 +34,7 @@ export async function create({title, description, latitude, longitude, address, 
     description: description,
     location: new GeoPoint(latitude, longitude),
     address: address,
-   geohash: geofire.geohashForLocation([latitude,longitude ]),
+    geohash: geofire.geohashForLocation([latitude,longitude ]),
     time: {
       start: Timestamp.fromDate(start),
       end: Timestamp.fromDate(end)

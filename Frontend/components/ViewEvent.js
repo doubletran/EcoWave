@@ -1,7 +1,7 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
-import { date_format, time_format } from "../config/lib";
+import { firebase_date_format, firebase_time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 
@@ -10,17 +10,26 @@ import ViewProblem from "./ViewProblem";
 
 import { arrayUnion } from "firebase/firestore";
 
-import { update } from "../database/events";
+import { get, update } from "../database/events";
 import { Modal } from "native-base";
 import { useUser } from "@clerk/clerk-expo";
 
 export const ViewEvent = ({ navigation, route }) => {
-  const [showModal, setShowModal] = useState(false);
-  const { user } = useUser();
+  const [showModal, setShowModal] = useState(false)
+  const [showAlreadyRegModal, setShowAlreadyRegModal] = useState(false)
+  const [showParticipants, setShowParticipants] = useState(false)
+  const { user } = useUser()
 
   const handleRegister = async () => {
-    let eventId = route.params.eventId;
-    await update(eventId, { participants: arrayUnion(user.id) });
+    let eventId = route.params.id;
+    let evnt = await get(eventId)
+    if (evnt.data().participants.includes(user.id)) {
+      setShowAlreadyRegModal(true)
+      return
+    }
+
+    let res = await update(eventId, { participants: arrayUnion(user.id) });
+    console.log(res)
     setShowModal(true);
   };
 
@@ -34,7 +43,7 @@ export const ViewEvent = ({ navigation, route }) => {
   const {
     name,
     description,
-    time: { start, end },
+    time,
     location,
     address,
     participants,
@@ -48,6 +57,7 @@ export const ViewEvent = ({ navigation, route }) => {
     imageUri: "https://wallpaperaccess.com/full/317501.jpg",
   };
 
+  // show participants modal is not implemented yet and therefore disabled
   return (
     <>
       <ScrollView>
@@ -55,12 +65,12 @@ export const ViewEvent = ({ navigation, route }) => {
           <Heading>{name}</Heading>
           <HStack justifyContent='space-between'>
             <Box pt="3">
-              <Text>{date_format(start)}</Text>
+              <Text>{firebase_date_format(time.start)}</Text>
               <Text>
-                {time_format(start)} - {time_format(end)}
+                {firebase_time_format(time.start)} - {firebase_time_format(time.end)}
               </Text>
             </Box>
-            <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>
+            <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People} onPress={() => {setShowParticipants(false)}}>
               {participants.length}
             </Button>
           </HStack>
@@ -81,6 +91,23 @@ export const ViewEvent = ({ navigation, route }) => {
           <Modal.Header>Test</Modal.Header>
           <Modal.Body>
             <Text>You're registered!</Text>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+      <Modal isOpen={showAlreadyRegModal} onClose={() => setShowAlreadyRegModal(false)}>
+        <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
+          <Modal.Body>
+            <Text>You're already registered for this event!</Text>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+      <Modal isOpen={showParticipants} onClose={() => setShowParticipants(false)}>
+        <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
+          <Modal.Body>
+            <Modal.Header>Participants</Modal.Header>
+            <VStack>
+              {participants.map((participant) => { <Text>{participant}</Text> })}
+            </VStack>
           </Modal.Body>
         </Modal.Content>
       </Modal>
