@@ -7,7 +7,7 @@ import Style from "../config/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 // import { InputButtonStyle as style } from "../config/style";
-import { Center, Input, Box, HStack, VStack, Button, Text, Divider, Modal } from "native-base";
+import { Center, Input, Box, HStack, VStack, Button, Text, Divider, Modal, Image } from "native-base";
 import { date_format, time_format } from "../config/lib";
 import { INPUT_ICONS } from "../config/style";
 import { useAuth } from "@clerk/clerk-expo";
@@ -59,7 +59,22 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
   function ListProblem(problem) {
     return (
       <Pressable onPress={() => {setChosenProblem(problem); setShowProblemModal(false)}}>
-        <ViewProblem key={hash(problem.title + problem.description)} title={problem.title} description={problem.description} create_time={new Date()} imageUrl={problem.imageUrl}/>
+        <Box mt='5' p='5' bg='muted.100' shadow={3}>
+      <HStack justifyContent="space-between">
+        <Box>
+        <Text>{problem.title}</Text>
+        <Text size='sm'>{date_format(problem.create_time)}</Text>
+        </Box>
+        </HStack>
+        <Image
+          key={problem.imageUrl}
+          width={500}
+          height={500}
+          source={{ uri: problem.imageUrl}}
+          alt={problem.description}
+        />
+        <Text>{problem.description}</Text>
+      </Box>
       </Pressable>
     )
   }
@@ -74,7 +89,7 @@ export default function CreateEvent({ navigation, route:{params: location} }) {
       let temp = []
       let res = await getDocs(collection(firebase, 'problems'))
       res.forEach((doc) => {
-        temp.push(doc.data() + doc.id)
+        temp.push(doc.data())
       })
       setProblems(temp)
     }
