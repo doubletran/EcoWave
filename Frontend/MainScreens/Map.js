@@ -1,7 +1,7 @@
 import MapView, { Marker, Callout } from "react-native-maps";
 import { StyleSheet, Image } from "react-native";
 import { Center, Text, View, Box } from "native-base";
-
+import { getDoc }from 'firebase/firestore';
 import { Dimensions } from "react-native";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -25,6 +25,15 @@ const MapScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const mapRef =useRef();
+
+  const fetchProblems = async () => {
+    try {
+      const updatedProblems = await getAll();
+      setProblems(updatedProblems);
+    } catch (error) {
+      console.error("Error fetching problems:", error);
+    }
+  };
  
   useEffect(() => {
     if (!search) {
@@ -53,21 +62,38 @@ const MapScreen = ({ navigation, route }) => {
       });
     }
 
-    const fetchProblems = async () => {
-      try {
-        const updatedProblems = await getAll();
-        setProblems(updatedProblems);
-        console.log(updatedProblems[0].imageUrl);
-      } catch (error) {
-        console.error("Error fetching problems:", error);
+    fetchProblems();  
+
+    const fetchNewProblemData = async () => {
+      const anchor = route.params?.anchor;
+
+      if (anchor && !selectedProblem) {
+        try {
+          const problemDoc = await getDoc(anchor);
+          const problemData = problemDoc.data();
+
+          // Focus on the newly created problem's location
+          mapRef.current.animateToRegion({
+            latitude: problemData.latitude,
+            longitude: problemData.longitude,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
+          }, 1000);
+        } catch (error) {
+          console.error("Error fetching problem data:", error);
+        }
       }
     };
 
-    fetchProblems();
+    const initialRegion = route.params?.anchor
+    ? undefined // Let it focus on the new problem's location
+    : DEFAULT_REGION._j;
+
+    fetchNewProblemData();
 
     const intervalId = setInterval(fetchProblems, 1000);
     return () => clearInterval(intervalId);
-  }, [search]);
+  }, [search, route.params?.anchor, selectedProblem]);
 
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location

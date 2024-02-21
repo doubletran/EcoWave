@@ -27,13 +27,17 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "CAMERA_ROLL"
+        "CAMERA_ROLL",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
       ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC2M542GAMZIBZsWxkiVaW6Vc3yAr7JEOs"
         }
-      }
+      },
+      "package": "com.ksenia314.Frontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -46,6 +50,11 @@
           "locationAlwaysAndWhenInUsePermission": "Allow EcoWave to use your location."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "690749f2-30c7-4529-98db-33d0bf05f6fe"
+      }
+    }
   }
 }
