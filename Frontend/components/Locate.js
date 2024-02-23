@@ -4,12 +4,12 @@ import { Dimensions } from "react-native";
 import { NAV_ICONS } from "../config/style";
 import React from "react";
 import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { HeaderRightNext } from "../Navigator";
-import { Button, Box, HStack } from "native-base";
+import { Button, Box, HStack, Container } from "native-base";
 import { useRef } from "react";
 import MapSearchbox from "./MapSearchbox";
 import { DEFAULT_REGION } from "../config/lib";
 import { MAP_API_KEY } from "../App";
+import { useNavigation } from "@react-navigation/native";
 
 const queryEstAddressByCoords = async ({ latitude, longitude }) => {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAP_API_KEY}`;
@@ -18,64 +18,78 @@ const queryEstAddressByCoords = async ({ latitude, longitude }) => {
 
   if (response.status == 200) {
     response = await response.json();
-    console.log("GET response: " + response)
+    console.log("GET response: " + response);
     const { formatted_address, geometry } = response.results[0];
-    console.log(formatted_address)
+    console.log(formatted_address);
     return formatted_address;
   }
-  return ''
+  return "";
 };
+const getPrevious = ()=>{
+  const routes= useNavigation().getState().routes
+  console.log(routes)
+  return routes[routes.length-2]
+}
 const Locate = ({ navigation, route }) => {
-  const COORD_ENABLED = route.params.action != "New Event"
-  const [address, setAddress] = React.useState('')
+  const COORD_ENABLED = route.params.action !=  "New Event";
+  const [address, setAddress] = React.useState("");
   const [location, setLocation] = React.useState(DEFAULT_REGION._j);
   const mapRef = useRef();
 
   React.useEffect(() => {
-        //If event, manually fetch address
+    //If event, manually fetch address
     if (location && !COORD_ENABLED) {
-      queryEstAddressByCoords(location)
-      .then((res)=> setAddress(res))
+      queryEstAddressByCoords(location).then((res) => setAddress(res));
     }
-    
-  }, [])
+  }, []);
   React.useEffect(() => {
-    console.log(address)
-    console.log(location)
+    // console.log(address)
+    // console.log(location)
     navigation.setOptions({
+      headerShown: true,
+      headerRight:()=>{},
       headerTitle: () => (
-        <MapSearchbox
-          goBack={() => navigation.goBack()}
-          address={address}
-          coords={location}
-          handleReturn={(region) => {
-            mapRef.current.animateToRegion(region, 100);
-            console.log(region)
-            setLocation(region);
-          }}
-        />
+        <HStack >
+          <MapSearchbox
+            goBack={() => navigation.goBack()}
+            address={address}
+            coords={location}
+            handleReturn={(region) => {
+              mapRef.current.animateToRegion(region, 100);
+              setLocation(region);
+            }}
+          />
+          <Button
+          height="10"
+         
+            isDisabled={!location}
+            onPress={() => {
+              console.log("Navigate" + JSON.stringify(location));
+              console.log(route.params.action, location, address)
+              navigation.navigate(
+                {
+                  name: route.params.action,
+                  params:{
+                    ...location,
+                   address: address,
+                   types: route.params.types
+                  }
+                }
+              );
+            }}
+          >
+            Next
+          </Button>
+        </HStack>
       ),
 
-      headerRight: () => (
-        <Button
-          marginTop='0'
-          isDisabled={!location}
-          onPress={() => {
-            console.log("Navigate" + JSON.stringify(location));
-            navigation.navigate(route.params.action, Object.assign({address: address}, location));
-          }}
-        >
-          Next
-        </Button>
-      ),
       headerBackVisible: true,
     });
   }, [location, address]);
 
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
-    if (COORD_ENABLED)
-    {
+    if (COORD_ENABLED) {
       const { latitude, longitude } = event.nativeEvent.coordinate;
       setLocation({ latitude: latitude, longitude: longitude });
     }

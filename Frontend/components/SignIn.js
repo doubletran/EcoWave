@@ -28,7 +28,10 @@ export default function SignInScreen({ handleSignup }) {
       // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
     } catch (err) {
-      console.log(err);
+      if (err.errors[0].meta.paramName == "password"){
+        setPassword('')
+      }
+      console.log(JSON.stringify(err));
     }
   };
   return (
@@ -37,12 +40,14 @@ export default function SignInScreen({ handleSignup }) {
         <FormControl>
           <FormControl.Label>Email ID</FormControl.Label>
           <Input
+          value={emailAddress}
             onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
           ></Input>
         </FormControl>
         <FormControl>
           <FormControl.Label>Password</FormControl.Label>
-          <Input onChangeText={(password) => setPassword(password)} />
+          <Input value={password}
+          onChangeText={(password) => setPassword(password)} />
         </FormControl>
       </Box>
       <Button w='20%' onPress={onSignInPress}>

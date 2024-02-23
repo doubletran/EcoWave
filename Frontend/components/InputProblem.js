@@ -7,8 +7,10 @@ import {
   ScrollView,
   Alert,
   Center,
-  Pressable
+  Pressable,
+  Flex
 } from "native-base";
+import { Header } from "./SelectProblemType";
 import { Divider } from "native-base";
 import { create } from "../database/problems";
 import { ImageUploader } from "../database/ImageUploader";
@@ -16,25 +18,31 @@ import { SafeAreaView } from "react-native";
 import { INPUT_ICONS } from "../config/style";
 import Style from "../config/style";
 import { useAuth } from "@clerk/clerk-expo";
-import { useToast } from 'native-base';
-const InputProblem = ({ navigation, route:{params: location}}) => {
+import { useToast } from "native-base";
+import { StackActions } from "@react-navigation/native";
+const InputProblem = ({
+  navigation,
+  route: {
+    params: { types, longitude, latitude, address },
+  },
+}) => {
   const [name, setName] = useState("");
-  const toast = useToast()
-  const { latitude, longitude, address } = location;
+  const toast = useToast();
+
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
   const [status, setStatus] = useState("disabled");
-  const {userId}  = useAuth()
+  const { userId } = useAuth();
   useEffect(() => {
-    console.log(userId)
+    console.log(userId);
+    console.log("At input" + navigation.getState()?.routes)
     const isFormValid =
-      name && latitude && longitude && description && imageUri;
+      name && latitude && longitude && imageUri ;
     const newStatus = isFormValid ? "enabled" : "disabled";
     setStatus(newStatus);
 
     navigation.setOptions({
-      
-      headerBackVisible:true,
+      headerBackVisible: true,
       headerRight: () => (
         <Button
           isDisabled={status === "disabled"}
@@ -65,21 +73,13 @@ const InputProblem = ({ navigation, route:{params: location}}) => {
           longitude: longitude,
           description: description,
           imageUrl: imageUrl,
-          userId: userId
-          
+          userId: userId,
         });
 
         toast.show({
-          render: ()=>
-          <Alert status="success">SUCCESS
-          </Alert> 
-
-          
-
-        })
-        navigation.navigate("Map", {anchor: newProblem })
-        
-
+          render: () => <Alert status='success'>SUCCESS</Alert>,
+        });
+        navigation.navigate("Map", { anchor: newProblem });
       } catch (error) {
         console.error("Error submitting problem:", error);
         alert("Error submitting problem. Please try again.");
@@ -103,61 +103,80 @@ const InputProblem = ({ navigation, route:{params: location}}) => {
 
   return (
     <ScrollView automaticallyAdjustKeyboardInsets>
-      <Center bgColor="yellow.100">
-        <Box safeArea  w='90%'>
-          <Input
-            placeholder='Title'
-            value={name}
-            variant='underlined'
-            size='2xl'
-            onChangeText={setName}
-          />
-          <Center>
-            <Box p='10' w='400' h='400'>
-              <Pressable
-                justifyContent='center'
-                alignItems='center'
-                bg='#dcdcdc'
-                w='100%'
-                h='100%'
-                onPress={pickImage}
-              >
-                {imageUri ? (
-                  <Image
-                    key={imageUri}
-                    style={{ width: "100%", height: "100%" }}
-                    source={{ uri: imageUri }}
-                    alt='Selected Image'
-                  />
-                ) : (
-                  INPUT_ICONS.Camera
-                )}
-              </Pressable>
-            </Box>
-          </Center>
-          <Input
-            placeholder='Describe a problem...'
-            h='100'
-            value={description}
-            onChangeText={setDescription}
-          />
-          <Button {...Style.inputBtn}  leftIcon={INPUT_ICONS.Calendar}>
-            Create an event
-          </Button>
-          <Divider thickness='2' />
-          <Button
-            {...Style.inputBtn}
-            leftIcon={INPUT_ICONS.Marker}
-            onPress={() =>
-              navigation.navigate("Set location", {
-                action: "Report a problem",
-              })
+      <Center px='4'>
+        <Input
+          {...Style.inputBtn}
+          fontSize='2xl'
+          placeholder='Title'
+          value={name}
+          variant='underlined'
+          tex
+          size='2xl'
+          onChangeText={setName}
+        />
+        <Center>
+          <Box p='10' w='400' h='400'>
+            <Pressable
+              justifyContent='center'
+              alignItems='center'
+              bg='#dcdcdc'
+              w='100%'
+              h='100%'
+              onPress={pickImage}
+            >
+              {imageUri ? (
+                <Image
+                  key={imageUri}
+                  style={{ width: "100%", height: "100%" }}
+                  source={{ uri: imageUri }}
+                  alt='Selected Image'
+                />
+              ) : (
+                INPUT_ICONS.Camera
+              )}
+            </Pressable>
+          </Box>
+        </Center>
+        <Input
+          multiline
+          placeholder='Describe a problem (optional)'
+          {...Style.inputBtn}
+          h='100'
+          value={description}
+          onChangeText={setDescription}
+        />
+        <Button
+          {...Style.inputBtn}
+          leftIcon={INPUT_ICONS.Marker}
+          onPress={() =>{
+            const push = StackActions.push("Add location", {action: "New Problem", types: types});
+            navigation.dispatch(push)
             }
-          >
-           {!address? `${latitude}, ${longitude}`: address}
-          </Button>
+          }
+        >
+          {!address ? `${latitude}, ${longitude}` : address}
+        </Button>
+        <Button
+          leftIcon={INPUT_ICONS.Grid}
+          onPress={() => {
+            const push = StackActions.push("SelectProblemType", {types: types});
+            navigation.dispatch(push)
+          }}
+          {...Style.inputBtn}
+        >
+          Select types
+          <Flex w='100%' direction='row' wrap='wrap'>
+            {Array.from(types).map((item) => (
+              <>
+                <Box bgColor='cyan.400' {...Style.Float1}>
+                  {item}
+                </Box>
+              </>
+            ))}
+          </Flex>
+        </Button>
 
-          {/* <SafeAreaView>
+        {/* <SafeAreaView>
             <GooglePlacesAutocomplete
               placeholder='Pickup'
               minLength={2}
@@ -173,7 +192,6 @@ const InputProblem = ({ navigation, route:{params: location}}) => {
               }}
             />
           </SafeAreaView> */}
-        </Box>
       </Center>
     </ScrollView>
   );

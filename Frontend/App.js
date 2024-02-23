@@ -47,10 +47,26 @@ export const MAP_API_KEY = config.expo.android.config.googleMaps.apiKey
 function App() {
   const theme = extendTheme({
     components: {
-      
       Text: {
-        fontSize: "17",
+        defaultProps:{
+          fontSize: "md"
+        }
       },
+     Center:{
+      variants:{
+        card: ()=>{
+          return{
+            p: 1,
+            m: 5,
+            rounded:"full",
+            border: "1",
+            borderRadius: "md",
+            bg: 'white',
+            
+          }
+        }
+      }
+     },
       FormControl:{
         width:"100%"
       },

@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useEffect } from "react";
-import { Box, Container, IconButton, Input, useTheme } from "native-base";
+import { Box, Flex, IconButton, useTheme } from "native-base";
 import { getRegionByCoords } from "../config/lib";
 import { StyleSheet, Dimensions } from "react-native";
 
@@ -16,19 +16,20 @@ const MapSearchbox = ({ handleReturn, goBack, coords, address }) => {
     }, 10);
   }, []);
   useEffect(() => {
-    console.log("address: " + address);
-    if (!coords.address){
-      ref.current.setAddressText(address)
+    // console.log("address: " + address);
+    if (address && !coords.address) {
+      ref.current.setAddressText(address);
     }
-
   }, [address, coords]);
 
   return (
-    <>
+    <Flex width="85%">
       <GooglePlacesAutocomplete
         ref={ref}
         renderRightButton={() => (
           <IconButton
+            position='absolute'
+            marginLeft='85%'
             icon={INPUT_ICONS.Clear}
             onPress={() => ref.current.clear()}
           />
@@ -55,7 +56,7 @@ const MapSearchbox = ({ handleReturn, goBack, coords, address }) => {
           }
         ) => {
           let region = getRegionByCoords(location, northeast, southwest);
-          handleReturn(Object.assign(region, {address: formatted_address}));
+          handleReturn(Object.assign(region, { address: formatted_address }));
         }}
         query={{
           key: MAP_API_KEY,
@@ -63,14 +64,11 @@ const MapSearchbox = ({ handleReturn, goBack, coords, address }) => {
         }}
         styles={{
           textInput: {
-            backgroundColor: useTheme().colors.muted[200],
-          },
-          textInputContainer: {
-            width: "80%",
+            paddingHorizontal: 10,
           },
         }}
       />
-    </>
+    </Flex>
   );
 };
 

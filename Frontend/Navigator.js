@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import { EventScreen } from "./MainScreens/Event";
 import MapScreen from "./MainScreens/Map";
-import Locate from "./components/LocateProblem";
+import Locate from "./components/Locate";
 import InputProblem from "./components/InputProblem";
 import CreateEvent from "./components/CreateEvent";
 import { ViewEvent } from "./components/ViewEvent";
@@ -19,12 +19,14 @@ import SignInAndUp from "./components/SignInAndUp";
 
 import { useState, useEffect } from "react";
 import { Name } from "./App";
+import SelectProblemType from "./components/SelectProblemType";
+import SelectEventType from "./components/SelectEventType";
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "rgb(255, 255, 0 )",
+    background: "#e6ffff",
   },
 };
 
@@ -50,24 +52,6 @@ export const Header = ({ onSearch }) => {
   );
 };
 
-const BackHeader = () => {
-  const nav = useNavigation();
-
-  return (
-    <>
-      <HStack>
-        <IconButton
-          alignItems='left'
-          title='Back'
-          icon={icons.Back}
-          onPress={() => {
-            nav.goBack();
-          }}
-        />
-      </HStack>
-    </>
-  );
-};
 
 const RootStack = createNativeStackNavigator();
 export default function Navigator() {
@@ -88,13 +72,6 @@ export default function Navigator() {
         >
           <RootStack.Screen name='Map' component={MapScreen} />
           <RootStack.Screen name='Events' component={EventScreen} />
-        </RootStack.Group>
-
-        <RootStack.Group
-          screenOptions={{
-            headerBackVisible: true,
-          }}
-        >
           <RootStack.Screen
             name='Profile'
             component={ProfileScreen}
@@ -103,14 +80,20 @@ export default function Navigator() {
               headerBackVisible: true,
             }}
           />
+        </RootStack.Group>
 
+        <RootStack.Group>
+          <RootStack.Screen name='Add location' component={Locate} />
           <RootStack.Screen
-            name='Set location'
-            component={Locate}
-
-          />
+            name='SelectProblemType' 
+            component={SelectProblemType}
+          ></RootStack.Screen>
+          <RootStack.Screen
+            name='SelectEventType'
+            component={SelectEventType}
+          ></RootStack.Screen>
           <RootStack.Screen name='New Event' component={CreateEvent} />
-          <RootStack.Screen name='Report a problem' component={InputProblem} />
+          <RootStack.Screen name='New Problem'  component={InputProblem} />
           <RootStack.Screen
             name='View an event'
             component={ViewEvent}
@@ -140,7 +123,7 @@ function EventOrProblem({ onProblem, onEvent }) {
   return (
     <>
       <Button variant='outline' onPress={onProblem}>
-        Spot a problem
+        Report a problem
       </Button>
       <Button variant='outline' title='Event' onPress={onEvent}>
         Create an event
@@ -154,12 +137,12 @@ export const BottomNav = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleProblem = () => {
-    navigation.navigate("Set location", { action: "Report a problem" });
+    navigation.navigate("SelectProblemType");
     setShowModal(false);
   };
 
   const handleEvent = () => {
-    navigation.navigate("New Event");
+    navigation.navigate("SelectEventType");
     setShowModal(false);
   };
   return (
@@ -196,7 +179,7 @@ export const BottomNav = () => {
           />
         </HStack>
       </Box>
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal w="100%" isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content w='100%' marginBottom='0' marginTop='auto'>
           <Modal.Header>Choose an action</Modal.Header>
           <Modal.Body>
