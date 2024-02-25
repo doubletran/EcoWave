@@ -317,7 +317,7 @@ export default function CreateEvent({
           <Button {...Style.inputBtn} leftIcon={ICONS.Flag} onPress={() => { setShowProblemModal(true) }}>
             Link a problem
           </Button>
-          {problem && <ProblemContent {...problem} />}
+          {chosenProblem && <ProblemContent {...chosenProblem} />}
         <Modal isOpen={showProblemModal} onClose={() => setShowProblemModal(false)}>
         <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
           <Modal.Body>
