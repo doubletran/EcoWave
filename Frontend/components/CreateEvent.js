@@ -92,7 +92,7 @@ export default function CreateEvent({
           <Image
             key={problem.imageUrl}
             width={500}
-            height={500}
+            height={400}
             source={{ uri: problem.imageUrl }}
             alt={problem.description}
           />
@@ -130,15 +130,15 @@ export default function CreateEvent({
       });
     }
 
-    // let getProblems = async () => {
-    //   let temp = []
-    //   let res = await getDocs(collection(firebase, 'problems'))
-    //   res.forEach((doc) => {
-    //     temp.push(doc.data())
-    //   })
-    //   setProblems(temp)
-    // }
-    // getProblems()
+    let getProblems = async () => {
+      let temp = []
+      let res = await getDocs(collection(firebase, 'problems'))
+      res.forEach((doc) => {
+        temp.push(doc.data())
+      })
+      setProblems(temp)
+    }
+    getProblems()
   }, [name, startTime, endTime, date]);
 
   /* EVENTS SHOULD BE SEND IN THIS FORMAT TO THE DATABASE
