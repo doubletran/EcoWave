@@ -12,6 +12,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import MultiSelector from "../tool/MultiSelector";
 import { useNavigation } from "@react-navigation/native";
 import BottomNav from "../BottomNav";
+
 export const ListableEvent = (event) => {
   const navigation = useNavigation()
   const { name, description, time, capacity, location, address, participants, types } =
@@ -61,6 +62,7 @@ export const ListableEvent = (event) => {
     </Box>
   );
 };
+
 export const EventScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const [filterTypes, setFilterTypes] = useState(new Set());
