@@ -2,14 +2,15 @@
 
 ## Overview
 The EcoWave mobile app is a community-driven solution developed for the Google Solution Challenge. 
-It enables users to report and address coastal issues, contributing to the United Nations' Sustainable Development Goal 14 - Life Below Water.
+It enables users to report and address coastal and terrestrial issues, contributing to the United Nations' Sustainable Development Goal 14 (Life Below Water) and 15 (Life on Land).
 
 ## Disclaimer
 This is not an official Google project. Use this project at your own discretion understanding that it is an independent effort and not officially supported by Google.
 
 ## Features
-- Report coastal problems with geotagged photos and descriptions.
-- Organize and participate in cleanup events to address reported issues.
+- Report coastal and land-based problems such as littering, illegal waste dumping, invasive plant species, and soil degradation. Capture the issues with geotagged photos and descriptions.
+- Organize events to address reported environmental issues. Users can also organize events with diverse purposes, including protests, fundraising initiatives, and educational lectures.
+- Register for events of interest
 
 ## Dependencies
 - [Expo](https://expo.dev/): Framework for React Native app development.
