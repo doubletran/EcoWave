@@ -43,7 +43,6 @@ export function ProfileScreen() {
   useEffect(() => {
     (async () => {
       let result = await getMyEvent(userId);
-      console.log(result);
 
       setUserEvents(result);
     })();
