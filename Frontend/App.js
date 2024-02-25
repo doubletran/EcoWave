@@ -6,6 +6,9 @@ import * as SecureStore from "expo-secure-store";
 import SignInAndUp from "./components/SignInAndUp";
 import { Text, HStack} from "native-base";
 import * as config from './app.json'
+import { LogBox } from 'react-native';
+
+
 
 export const Name = ({small})=>{
   const max = small ? 4 : 7;
@@ -46,6 +49,9 @@ export const MAP_API_KEY = config.expo.android.config.googleMaps.apiKey
 
 
 function App() {
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();//Ignore all log notifications
+
   const theme = extendTheme({
     components: {
       Text: {
