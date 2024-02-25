@@ -4,20 +4,14 @@ import { getFirestore } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-export const googleAPI = "AIzaSyDEJsu8EzdmYUBdXYuzl_gpkUHqvnNbQ9k"
+export const googleAPI = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCWE6zaJe6gfMBOSCRnXmlSA852wcPx8U4",
-  authDomain: "gdsc2024-a08e6.firebaseapp.com",
-  projectId: "gdsc2024-a08e6",
-  storageBucket: "gdsc2024-a08e6.appspot.com",
-  messagingSenderId: "544783740142",
-  appId: "1:544783740142:web:3fced6732ca4e9214b57ff",
-  measurementId: "G-FRGQMHNWJJ"
-};
-app =  initializeApp(firebaseConfig);
-  
+const firebaseConfig = process.env.EXPO_PUBLIC_FIREBASE_CONFIGs
+
+app = initializeApp(firebaseConfig);
+
 firebase= getFirestore(app)
 export default firebase;
 // Initialize Firebase
