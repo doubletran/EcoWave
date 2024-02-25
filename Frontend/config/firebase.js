@@ -8,7 +8,15 @@ export const googleAPI = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = process.env.EXPO_PUBLIC_FIREBASE_CONFIGs
+const firebaseConfig = {
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: "gdsc2024-a08e6.firebaseapp.com",
+  projectId: "gdsc2024-a08e6",
+  storageBucket: "gdsc2024-a08e6.appspot.com",
+  messagingSenderId: "544783740142",
+  appId: "1:544783740142:web:3fced6732ca4e9214b57ff",
+  measurementId: "G-FRGQMHNWJJ"
+}
 
 app = initializeApp(firebaseConfig);
 

@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyC2M542GAMZIBZsWxkiVaW6Vc3yAr7JEOs"
+        "googleMapsApiKey": ""
       }
     },
     "android": {
@@ -34,7 +34,7 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyC2M542GAMZIBZsWxkiVaW6Vc3yAr7JEOs"
+          "apiKey": ""
         }
       },
       "package": "com.ksenia314.Frontend"
