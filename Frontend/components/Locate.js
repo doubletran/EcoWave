@@ -1,7 +1,7 @@
 import MapView from "react-native-maps";
 import { StyleSheet } from "react-native";
 import { Dimensions } from "react-native";
-import { NAV_ICONS } from "../config/style";
+import { ICONS } from "../config/style";
 import React from "react";
 import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Button, Box, HStack, Container } from "native-base";

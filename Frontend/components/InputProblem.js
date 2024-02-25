@@ -15,7 +15,7 @@ import { Divider } from "native-base";
 import { create } from "../database/problems";
 import { ImageUploader } from "../database/ImageUploader";
 import { SafeAreaView } from "react-native";
-import { INPUT_ICONS } from "../config/style";
+import { ICONS } from "../config/style";
 import Style from "../config/style";
 import { useAuth } from "@clerk/clerk-expo";
 import { useToast } from "native-base";
@@ -74,6 +74,7 @@ const InputProblem = ({
           description: description,
           imageUrl: imageUrl,
           userId: userId,
+          types: Array.from (types)
         });
 
         toast.show({
@@ -109,8 +110,7 @@ const InputProblem = ({
           fontSize='2xl'
           placeholder='Title'
           value={name}
-          variant='underlined'
-          tex
+
           size='2xl'
           onChangeText={setName}
         />
@@ -132,7 +132,7 @@ const InputProblem = ({
                   alt='Selected Image'
                 />
               ) : (
-                INPUT_ICONS.Camera
+                ICONS.Camera
               )}
             </Pressable>
           </Box>
@@ -147,7 +147,7 @@ const InputProblem = ({
         />
         <Button
           {...Style.inputBtn}
-          leftIcon={INPUT_ICONS.Marker}
+          leftIcon={ICONS.Marker}
           onPress={() =>{
             const push = StackActions.push("Add location", {action: "New Problem", types: types});
             navigation.dispatch(push)
@@ -157,7 +157,7 @@ const InputProblem = ({
           {!address ? `${latitude}, ${longitude}` : address}
         </Button>
         <Button
-          leftIcon={INPUT_ICONS.Grid}
+          leftIcon={ICONS.Grid}
           onPress={() => {
             const push = StackActions.push("SelectProblemType", {types: types});
             navigation.dispatch(push)

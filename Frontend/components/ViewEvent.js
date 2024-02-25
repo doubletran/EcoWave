@@ -2,7 +2,7 @@ import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
 import { firebase_date_format, firebase_time_format } from "../config/lib";
-import { INPUT_ICONS } from "../config/style";
+import { ICONS } from "../config/style";
 import Style from "../config/style";
 
 import { useState, useEffect } from "react";
@@ -46,6 +46,7 @@ export const ViewEvent = ({ navigation, route }) => {
     time,
     location,
     address,
+    types,
     participants,
   } = route.params;
 
@@ -70,17 +71,26 @@ export const ViewEvent = ({ navigation, route }) => {
                 {firebase_time_format(time.start)} - {firebase_time_format(time.end)}
               </Text>
             </Box>
-            <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People} onPress={() => {setShowParticipants(false)}}>
-              {participants.length}
-            </Button>
+
+            <Box pt="3">
+              <HStack>
+              <Text display="flex" fontWeight="bold">Capacity: </Text>
+              <Text>21</Text>
+              </HStack>
+              <HStack>
+              <Text display="flex" fontWeight="bold">Available spots: </Text>
+              <Text>21</Text>
+              </HStack>
+       
+            </Box>
           </HStack>
 
           <Button
             {...Style.inputBtn}
-            leftIcon={INPUT_ICONS.Marker}
+            leftIcon={ICONS.Marker}
             onPress={() => navigation.navigate("Set location")}
           >
-            Location: {location.latitude}
+            Location: {address}
           </Button>
           <Text>{description}</Text>
           {/* <ViewProblem {...problemRef}/> */}

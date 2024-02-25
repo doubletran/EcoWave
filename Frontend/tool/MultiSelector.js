@@ -18,7 +18,7 @@ const TypesFlex = ()=>{
 }
 const Type = ({ value, image, description, select, deselect }) => {
   const [selected, setSelected] = React.useState(value);
-  React.useEffect(()=> console.log(description, value), [])
+  React.useEffect(()=> console.log(description, value), [value])
   handlePress = () => {
     if (!selected) {
       select();
@@ -53,7 +53,8 @@ const Type = ({ value, image, description, select, deselect }) => {
   );
 };
 const MultiSelector = ({ values, setValues, object }) => {
-  console.log(values)
+  
+
   return (
     <ScrollView>
       <Flex w='100%' direction='row' justify='center' wrap='wrap'>

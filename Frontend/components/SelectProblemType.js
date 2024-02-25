@@ -11,7 +11,7 @@ import {
   Heading,
   ScrollView,
 } from "native-base";
-import { NAV_ICONS, PROBLEM_SYMBOL as SYMBOL } from "../config/style";
+import { ICONS, PROBLEM_SYMBOL as SYMBOL } from "../config/style";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/core";
@@ -19,11 +19,11 @@ import MultiSelector from "../tool/MultiSelector";
 const BackButton = () => {
   const navigation = useNavigation();
   return (
-    <IconButton icon={NAV_ICONS.Back} onPress={() => navigation.goBack()} />
+    <IconButton icon={ICONS.Back} onPress={() => navigation.goBack()} />
   );
 };
 const DiscardBtn = ({}) => {
-  return <IconButton icon={NAV_ICONS.Trash} />;
+  return <IconButton icon={ICONS.Trash} />;
 };
 
 const SelectProblemType = ({ navigation, route }) => {

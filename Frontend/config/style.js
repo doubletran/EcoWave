@@ -2,21 +2,13 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
-import { Image } from "native-base";
+import { Button, HStack, Image, Spacer, Text } from "native-base";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import images from "./images";
+const path = "./assets/";
+const SYMBOL_SIZE = "xl";
 
-export const NAV_ICONS = {
-  Map: <Ionicons name='globe-outline' size={30} color='blue' />,
-  Post: <Ionicons name='add' size={40} color='blue' />,
-  Event: <Ionicons name='calendar' size={30} color='blue' />,
-  Updates: <Ionicons name='notifications-outline' size={24} color='blue' />,
-  Profile: <Ionicons name='person-outline' size={24} color='blue' />,
-  Marker: <Ionicons name='location-sharp' size={24} color='blue' />,
-  Back: <MaterialIcons name='arrow-back' size={24} color='black' />,
-  Trash: <Ionicons name='trash-outline' size={24} color='black' />,
-  Search: <Ionicons name='search' size={24} color='blue' />,
-  Dot: <Octicons name='dot-fill' size={24} color='red' />,
-};
-export const INPUT_ICONS = {
+export const ICONS = {
   Event: <Ionicons name='calendar' size={24} color='black' />,
   Marker: <FontAwesome name='map-marker' size={24} color='black' />,
   Flag: <Ionicons name='flag' size={24} color='black' />,
@@ -30,10 +22,72 @@ export const INPUT_ICONS = {
   Clear: <MaterialIcons name='clear' size={20} color='black' />,
   Back: <MaterialIcons name='arrow-back' size={24} color='black' />,
   Time: <Ionicons name='time' size={24} color='black' />,
-  Grid: <Ionicons name="grid" size={24} color="black" />,
+  Grid: <Ionicons name='grid' size={24} color='black' />,
+  Map: <Ionicons name='globe-outline' size={30} color='blue' />,
+  Post: <Ionicons name='add' size={40} color='blue' />,
+  Event: <Ionicons name='calendar' size={30} color='blue' />,
+  Updates: <Ionicons name='notifications-outline' size={24} color='blue' />,
+  Profile: <Ionicons name='person-outline' size={24} color='blue' />,
+  Marker: <Ionicons name='location-sharp' size={24} color='blue' />,
+  Back: <MaterialIcons name='arrow-back' size={24} color='black' />,
+  Trash: <Ionicons name='trash-outline' size={24} color='black' />,
+  Search: <Ionicons name='search' size={24} color='blue' />,
+  Calendar: <Ionicons name='calendar-outline' size={24} color='black' />,
+  Comment: <Ionicons name='chatbox-ellipses-outline' size={24} color='black' />,
+  Check: <Ionicons name='checkmark-done' size={24} color='cyan' />,
+  Inc: <Ionicons name='add' size={24} color='black' />,
+  Dec: <Ionicons name='remove' size={24} color='blue' />,
+  Me: <MaterialCommunityIcons name="calendar-account" size={24} color="black" />
 };
-const SYMBOL_SIZE = "xl";
-const path = "./assets/";
+
+export const Type = ( {name, size = "xs"}) => {
+  // console.log("image" + require(`${path}cleanup.png`))
+  return (
+    <>
+      <HStack bgColor='cyan.300' {...Style.Float1}>
+      <Image
+      size={size}
+      alt={name}
+      source={images[name]}
+    /> 
+        <Text ml="1" fontWeight="bold">{name}</Text>
+      </HStack>
+    </>
+  );
+};
+export const PressableStyle = {
+  focus: {
+    bgColor: "cyan.400",
+  },
+  blur: {
+    bgColor: "primary.100",
+  },
+};
+export const PRESSABLE_ICONS = {
+  Events: {
+    blur: <Ionicons name='calendar-outline' size={24} color='blue' />,
+    focus: <Ionicons name='calendar' size={24} color='blue' />,
+  },
+  Problems: {
+    blur: (
+      <MaterialCommunityIcons
+        name='map-marker-alert-outline'
+        size={24}
+        color='blue'
+      />
+    ),
+    focus: (
+      <MaterialCommunityIcons name='map-marker-alert' size={24} color='blue' />
+    ),
+  },
+  Flag: {
+    blur: <Ionicons name='flag-outline' size={20} color='red' />,
+    focus: <Ionicons name='flag-sharp' size={20} color='red' />,
+  },
+};
+
+
+
 export const PROBLEM_SYMBOL = {
   "Illegal dumping": (
     <Image
@@ -86,7 +140,7 @@ export const EVENT_SYMBOL = {
       source={require(`${path}fundraising.png`)}
     />
   ),
-  Leture: (
+  Lecture: (
     <Image
       size={SYMBOL_SIZE}
       alt='Lecture'
@@ -96,7 +150,7 @@ export const EVENT_SYMBOL = {
   Planting: (
     <Image
       size={SYMBOL_SIZE}
-      alt='invasive species'
+      alt='planting'
       source={require("./assets/planting.png")}
     />
   ),
@@ -115,14 +169,13 @@ export const EVENT_SYMBOL = {
     />
   ),
 };
-export const ICONS = {};
 
 const Style = {
   ViewBox: "muted.100",
   Float1: {
     padding: 2,
-    borderRadius: 20,
-    margin:1
+    borderRadius: 15,
+    margin: 1,
   },
 
   inputBtn: {
@@ -131,7 +184,7 @@ const Style = {
     padding: 2,
     borderRadius: 20,
     margin: 1,
-    bg: "white",
+    bg: "#faffff",
     variant: "ghost",
     _text: {
       fontSize: "17",

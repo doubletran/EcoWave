@@ -5,7 +5,7 @@ import { getRegionByCoords } from "../config/lib";
 import { StyleSheet, Dimensions } from "react-native";
 
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { INPUT_ICONS } from "../config/style";
+import { ICONS } from "../config/style";
 import { MAP_API_KEY } from "../App";
 
 const MapSearchbox = ({ handleReturn, goBack, coords, address }) => {
@@ -30,12 +30,12 @@ const MapSearchbox = ({ handleReturn, goBack, coords, address }) => {
           <IconButton
             position='absolute'
             marginLeft='85%'
-            icon={INPUT_ICONS.Clear}
+            icon={ICONS.Clear}
             onPress={() => ref.current.clear()}
           />
         )}
         renderLeftButton={() => (
-          <IconButton icon={INPUT_ICONS.Back} onPress={goBack} />
+          <IconButton icon={ICONS.Back} onPress={goBack} />
         )}
         placeholder={
           address || address == ""

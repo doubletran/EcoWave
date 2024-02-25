@@ -52,7 +52,7 @@ export const date_format = (date) => {
 
 export const firebase_date_format = (date) => {
   if (!date) return ""
-  return date.toDate().toString()
+  return date.toDate().toLocaleDateString([], options)
 }
 
 export const time_format = (timestamp) => {

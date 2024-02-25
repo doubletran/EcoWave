@@ -1,7 +1,16 @@
 import MapView, { Marker, Callout } from "react-native-maps";
 import { StyleSheet, Image } from "react-native";
-import { Center, Text, View, Box } from "native-base";
-import { getDoc }from 'firebase/firestore';
+import {
+  Center,
+  Text,
+  View,
+  Box,
+ Button,
+  Modal,
+  ScrollView,
+  HStack,
+} from "native-base";
+import { getDoc } from "firebase/firestore";
 import { Dimensions } from "react-native";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -9,14 +18,12 @@ import { Header, BottomNav } from "../Navigator";
 import { createRef, useEffect, useRef, useState } from "react";
 import { getAll } from "../database/problems";
 import { FileSystem } from "expo-file-system";
-import WebView from "react-native-webview";
 
-import { NAV_ICONS } from "../config/style";
+
+import Style, { ICONS } from "../config/style";
 import MapSearchbox from "../components/MapSearchbox";
 import { DEFAULT_REGION, getRegionByCoords } from "../config/lib";
 import ViewProblem from "../components/ViewProblem";
-import { Modal, TouchableWithoutFeedback } from "react-native";
-
 
 const MapScreen = ({ navigation, route }) => {
   const [location, setLocation] = useState(false);
@@ -24,7 +31,7 @@ const MapScreen = ({ navigation, route }) => {
   const [problems, setProblems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState(null);
-  const mapRef =useRef();
+  const mapRef = useRef();
 
   const fetchProblems = async () => {
     try {
@@ -34,7 +41,7 @@ const MapScreen = ({ navigation, route }) => {
       console.error("Error fetching problems:", error);
     }
   };
- 
+
   useEffect(() => {
     if (!search) {
       navigation.setOptions({
@@ -43,26 +50,21 @@ const MapScreen = ({ navigation, route }) => {
       });
     } else {
       navigation.setOptions({
-     
         headerTitle: () => (
-          
           <MapSearchbox
-          handleReturn={(region)=>{
-            setTimeout(()=>{
-          
-              mapRef.current.animateToRegion(region, 10)
-              setLocation(region)
-              setSearch(false)
-            }, 1)
-
-          }}
-        />
+            handleReturn={(region) => {
+              setTimeout(() => {
+                mapRef.current.animateToRegion(region, 10);
+                setLocation(region);
+                setSearch(false);
+              }, 1);
+            }}
+          />
         ),
-        
       });
     }
 
-    fetchProblems();  
+    fetchProblems();
 
     const fetchNewProblemData = async () => {
       const anchor = route.params?.anchor;
@@ -73,12 +75,15 @@ const MapScreen = ({ navigation, route }) => {
           const problemData = problemDoc.data();
 
           // Focus on the newly created problem's location
-          mapRef.current.animateToRegion({
-            latitude: problemData.latitude,
-            longitude: problemData.longitude,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
-          }, 1000);
+          mapRef.current.animateToRegion(
+            {
+              latitude: problemData.latitude,
+              longitude: problemData.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1,
+            },
+            1000
+          );
         } catch (error) {
           console.error("Error fetching problem data:", error);
         }
@@ -86,8 +91,8 @@ const MapScreen = ({ navigation, route }) => {
     };
 
     const initialRegion = route.params?.anchor
-    ? undefined // Let it focus on the new problem's location
-    : DEFAULT_REGION._j;
+      ? undefined // Let it focus on the new problem's location
+      : DEFAULT_REGION._j;
 
     fetchNewProblemData();
 
@@ -111,17 +116,43 @@ const MapScreen = ({ navigation, route }) => {
     return fileUri;
   };
 
-  const ModalContent = ({ problem }) => (
-    <View style={styles.container}>
-      <Text style={styles.title}>{problem.title}</Text>
-      <View>
-        <WebView style={styles.image} source={{ uri: problem.imageUrl }} />
-      </View>
-      <Image style={styles.image} source={{ uri: problem.imageUrl }}></Image>
-      <Text style={{ color: "blue"}}>{selectedProblem.description}</Text>
-    </View>
+  const ModalContent = ({id,  title, imageUrl, description, type }) => (
+    <>
+
+    <Modal.Content bgColor="white">
+    <Modal.Header>
+      <HStack justifyContent="space-between">
+        <Box> 
+      {title}
+    <Text fontSize="sm">{description}</Text>
+    </Box>
+    <Button ml="auto"  leftIcon={ICONS.Check}> Mark as solved</Button>
+    <Box> 
+
+    </Box>
+    </HStack>
+    </Modal.Header>
+    <ScrollView>
+      
+      <Center>
+      <Image style={styles.image}  source={{ uri: imageUrl }}></Image>
+   
+
+      </Center>
+      <HStack justifyContent="space-around" m="2">
+ 
+      <Button variant="ghost" leftIcon={ICONS.Flag}> 12</Button>
+      <Button variant="ghost" leftIcon={ICONS.Comment}> 12</Button>
+      <Button variant="ghost" leftIcon={ICONS.People}> 22</Button>
+      <Button variant="ghost" leftIcon={ICONS.Calendar}> 2</Button>
+
+      </HStack>
+      <Button {...Style.inputBtn} onPress={()=> navigation.navigate("SelectEventType", {problemId: id})} leftIcon={ICONS.Event} >Create an event to solve this problem</Button>
+    
+    </ScrollView>
+    </Modal.Content>
+    </>
   );
-  
 
   const getMarkers = () => {
     return problems && problems.length > 0
@@ -140,8 +171,6 @@ const MapScreen = ({ navigation, route }) => {
         ))
       : null;
   };
-  
-  
 
   return (
     <>
@@ -158,21 +187,16 @@ const MapScreen = ({ navigation, route }) => {
         {getMarkers()}
       </MapView>
 
-      <BottomNav />
+      <BottomNav atProblems={true} />
 
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+      size="full"
+        isOpen={modalVisible}
+        animationPreset='slide' 
+        onClose={() => setModalVisible(false)}
       >
-      <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-      <View style={styles.modalOverlay}>
-        <ModalContent problem={selectedProblem} />
-      </View>
-      </TouchableWithoutFeedback>
+        <ModalContent {...selectedProblem} />
       </Modal>
-
     </>
   );
 };
@@ -189,15 +213,15 @@ const styles = StyleSheet.create({
     color: "blue",
   },
   image: {
-    width: 200,
-    height: 200,
+    minWidth: 300,
+    minHeight: 300,
   },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },  
+  },
   map: {
     //flex: 1,
     ...StyleSheet.absoluteFillObject,

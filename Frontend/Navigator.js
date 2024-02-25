@@ -1,26 +1,32 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NAV_ICONS as icons } from "./config/style";
+import { ICONS, PRESSABLE_ICONS, PressableStyle } from "./config/style";
 
-import { Container, Modal, Heading, IconButton } from "native-base";
+import {
+  Container,
+  Modal,
+  Center,
+  Heading,
+  IconButton,
+  Text,
+} from "native-base";
 import { Button, HStack, Box } from "native-base";
 import {
   NavigationContainer,
   DefaultTheme,
   useNavigation,
 } from "@react-navigation/native";
-import { EventScreen } from "./MainScreens/Event";
-import MapScreen from "./MainScreens/Map";
+import { EventScreen } from "./MainScreens/EventsScreen";
+import MapScreen from "./MainScreens/ProblemsScreen";
 import Locate from "./components/Locate";
 import InputProblem from "./components/InputProblem";
 import CreateEvent from "./components/CreateEvent";
 import { ViewEvent } from "./components/ViewEvent";
 import { ProfileScreen } from "./MainScreens/Profile";
-import SignInAndUp from "./components/SignInAndUp";
 
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { Name } from "./App";
 import SelectProblemType from "./components/SelectProblemType";
-import SelectEventType from "./components/SelectEventType";
+import SelectEventTypeScreen from "./components/SelectEventType";
 
 const theme = {
   ...DefaultTheme,
@@ -38,9 +44,9 @@ export const Header = ({ onSearch }) => {
       <HStack w='95%' justifyContent='space-between'>
         {Name({ small: true })}
         <HStack>
-          <IconButton icon={icons.Search} onPress={onSearch} />
+          <IconButton icon={ICONS.Search} onPress={onSearch} />
           <IconButton
-            icon={icons.Profile}
+            icon={ICONS.Profile}
             onPress={() => {
               nav.navigate("Profile");
             }}
@@ -51,7 +57,6 @@ export const Header = ({ onSearch }) => {
     </>
   );
 };
-
 
 const RootStack = createNativeStackNavigator();
 export default function Navigator() {
@@ -70,7 +75,7 @@ export default function Navigator() {
             headerBackVisible: false,
           }}
         >
-          <RootStack.Screen name='Map' component={MapScreen} />
+          <RootStack.Screen name='Problems' component={MapScreen} />
           <RootStack.Screen name='Events' component={EventScreen} />
           <RootStack.Screen
             name='Profile'
@@ -85,15 +90,15 @@ export default function Navigator() {
         <RootStack.Group>
           <RootStack.Screen name='Add location' component={Locate} />
           <RootStack.Screen
-            name='SelectProblemType' 
+            name='SelectProblemType'
             component={SelectProblemType}
           ></RootStack.Screen>
           <RootStack.Screen
             name='SelectEventType'
-            component={SelectEventType}
+            component={SelectEventTypeScreen}
           ></RootStack.Screen>
           <RootStack.Screen name='New Event' component={CreateEvent} />
-          <RootStack.Screen name='New Problem'  component={InputProblem} />
+          <RootStack.Screen name='New Problem' component={InputProblem} />
           <RootStack.Screen
             name='View an event'
             component={ViewEvent}
@@ -132,8 +137,21 @@ function EventOrProblem({ onProblem, onEvent }) {
   );
 }
 
-export const BottomNav = () => {
+export const Tab = ({ active, name, navigate }) => {
+  return (
+    <>
+      <Button variant='ghost' onPress={() => navigate(name)}>
+        <Center>
+          {active ? PRESSABLE_ICONS[name].focus : PRESSABLE_ICONS[name].blur}
+          <Text fontWeight='bold'>{name}</Text>
+        </Center>
+      </Button>
+    </>
+  );
+};
+export const BottomNav = ({ atProblems, atEvents }) => {
   const navigation = useNavigation();
+
   const [showModal, setShowModal] = useState(false);
 
   const handleProblem = () => {
@@ -145,41 +163,32 @@ export const BottomNav = () => {
     navigation.navigate("SelectEventType");
     setShowModal(false);
   };
+  const navigateTab = (name) => {
+    navigation.navigate(name);
+  };
   return (
     <>
-      <Box marginTop='auto' marginBottom='0' shadow={3}>
+      <Box marginTop='auto' marginBottom='0' shadow='9'>
         <HStack
+          shadow='9'
           backgroundColor={theme.colors.background}
-          justifyContent='center'
+          justifyContent='space-evenly'
         >
+          <Tab active={atProblems} name='Problems' navigate={navigateTab} />
           <IconButton
-            w='33%'
-            title='Map'
-            icon={icons.Map}
-            onPress={() => {
-              navigation.navigate("Map");
-            }}
-          />
-          <IconButton
-            roundedTop='md'
-            w='25%'
+            borderRadius='full'
+            bgColor='primary.300'
+            w='20'
             title='Post'
-            icon={icons.Post}
+            icon={ICONS.Post}
             onPress={() => {
               setShowModal(true);
             }}
           />
-          <IconButton
-            w='33%'
-            title='Event'
-            icon={icons.Event}
-            onPress={() => {
-              navigation.navigate("Events");
-            }}
-          />
+          <Tab active={atEvents} name='Events' navigate={navigateTab} />
         </HStack>
       </Box>
-      <Modal w="100%" isOpen={showModal} onClose={() => setShowModal(false)}>
+      <Modal size='full' isOpen={showModal} onClose={() => setShowModal(false)}>
         <Modal.Content w='100%' marginBottom='0' marginTop='auto'>
           <Modal.Header>Choose an action</Modal.Header>
           <Modal.Body>

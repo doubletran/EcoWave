@@ -5,24 +5,24 @@ import {
   Button,
   Pressable,
   Text,
-  Center,
-  useTheme,
-  Spacer,
+
   Heading,
   ScrollView,
+  
 } from "native-base";
-import { NAV_ICONS, EVENT_SYMBOL as SYMBOL } from "../config/style";
+import MultiSelector from "../tool/MultiSelector";
+import { ICONS, EVENT_SYMBOL as SYMBOL } from "../config/style";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 const BackButton = () => {
   const navigation = useNavigation();
   return (
-    <IconButton icon={NAV_ICONS.Back} onPress={() => navigation.goBack()} />
+    <IconButton icon={ICONS.Back} onPress={() => navigation.goBack()} />
   );
 };
 const DiscardBtn = ({}) => {
-  return <IconButton icon={NAV_ICONS.Trash} />;
+  return <IconButton icon={ICONS.Trash} />;
 };
 // export const Header = ({ heading, nextRoute, params }) => {
 //   const navigation = useNavigation();
@@ -70,7 +70,8 @@ const Type = ({ imageKey, select, deselect }) => {
     </>
   );
 };
-const SelectEventType = ({ navigation }) => {
+
+const SelectEventTypeScreen = ({ navigation, route }) => {
   const [types, setTypes] = React.useState(new Set());
   React.useEffect(() => {
     navigation.setOptions({
@@ -81,7 +82,7 @@ const SelectEventType = ({ navigation }) => {
             marginTop='0'
             onPress={() => {
               console.log(types);
-              navigation.navigate("New Event", { types: Array.from(types) });
+              navigation.navigate("New Event", Object.assign( { types: Array.from(types) }, {problemId: route.params?.problemId}))
             }}
           >
             Next
@@ -93,37 +94,14 @@ const SelectEventType = ({ navigation }) => {
   }, [types]);
   //UseState doesn't work when binding
   return (
-
-      <ScrollView>
-        <Heading>What types of problems?</Heading>
-        <Flex w='100%' direction='row' justify='center' wrap='wrap'>
-          {Object.keys(SYMBOL).map((k) => {
-            return (
-              <Type
-                key={k}
-                imageKey={k}
-                select={() => {
-                  let temp = types;
-                  temp.add(k);
-                  // console.log(temp);
-
-                  setTypes(temp);
-                }}
-                deselect={() => {
-                  let temp = types;
-                  temp.delete(k);
-
-                  setTypes(temp);
-                }}
-              />
-            );
-          })}
-        </Flex>
-      </ScrollView>
+    <ScrollView>
+      <Heading>What types of problems?</Heading>
+      <MultiSelector values={types} setValues={setTypes} object={SYMBOL} />
+    </ScrollView>
 
   );
 };
-export default SelectEventType;
+export default SelectEventTypeScreen;
 const styles = StyleSheet.create({
   pressable: {
     width: "40%",

@@ -14,6 +14,7 @@ export async function getAll() {
     problems.push({
       id: doc.id,
       title: data.title,
+      types: data.types,
       latitude: data.location.latitude,
       longitude: data.location.longitude,
       description: data.description,
@@ -23,6 +24,7 @@ export async function getAll() {
 
   return problems;
 }
+
 
 export async function getKNN(k=3, {latitude, longitude}) {
   let radius = 5000;
@@ -49,15 +51,18 @@ export async function getKNN(k=3, {latitude, longitude}) {
 export async function get(id) {
   const document = await getDoc(doc(db, id));
   console.log(' get:' + JSON.stringify(document.data()));
+  return document.data()
 }
 
-export async function create({title, latitude, longitude, description, imageUrl, userId}) {
+export async function create({title, latitude, longitude, description, imageUrl, userId, types}) {
   return await addDoc(db, {
     title: title,
     description: description,
     location: new GeoPoint(latitude, longitude),
     geohash: geofire.geohashForLocation([latitude,longitude ]),
     time: Timestamp.fromDate(new Date()),
+    types: types,
+
     flag: 0,
     userId: userId,
     imageUrl: imageUrl,

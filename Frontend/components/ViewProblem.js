@@ -2,7 +2,7 @@ import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import { BottomNav } from "../Navigator"
 import { VStack, Center, Flex, Button, Image } from "native-base";
 import { date_format} from "../config/lib";
-import { INPUT_ICONS } from "../config/style";
+import { ICONS } from "../config/style";
 import Style from "../config/style";
 export default function ViewProblem({
   title,
