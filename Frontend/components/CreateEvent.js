@@ -306,7 +306,6 @@ export default function CreateEvent({
           </Button>
           <Text fontWeight='bold'>Optional details</Text>
 
-         {ImagesDeck({ images: [], size:1})}
           <Box {...Style.inputBtn}>
             <HStack>
               {ICONS.People}
@@ -339,7 +338,8 @@ export default function CreateEvent({
           </Button>
 
           {chosenProblem && <ProblemContent {...chosenProblem} />}
-
+          
+     <ImagesDeck images={images} setImageUri ={setImages} size={1} addible={true}/>
           <Input
             {...Style.inputBtn}
             placeholder='Description'

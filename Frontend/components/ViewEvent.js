@@ -1,5 +1,5 @@
 import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
-import { BottomNav } from "../Navigator";
+import  BottomNav from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
 import { firebase_date_format, firebase_time_format } from "../config/lib";
 import { ICONS } from "../config/style";
@@ -31,7 +31,6 @@ export const ViewEvent = ({ navigation, route }) => {
     }
 
     let res = await update(eventId, { participants: arrayUnion(user.id) });
-    console.log(res)
     setShowModal(true);
   };
 
@@ -67,7 +66,7 @@ export const ViewEvent = ({ navigation, route }) => {
     <>
       <ScrollView>
         <Box p='5'>
-        <ImagesDeck images={[]} size={1} addible={isAttendee}/>
+        {/* <ImagesDeck images={[]} size={1} addible={isAttendee}/> */}
           <Heading>{name}</Heading>
          
           <HStack justifyContent='space-between'>
@@ -127,7 +126,7 @@ export const ViewEvent = ({ navigation, route }) => {
           </Modal.Body>
         </Modal.Content>
       </Modal>
-      <BottomNav />
+  
     </>
   );
 };

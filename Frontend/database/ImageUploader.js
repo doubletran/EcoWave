@@ -63,7 +63,7 @@ const ImageUploader = {
   uploadImageAsync,
 };
 
-const ImagesDeck = ({ images, addible = false, size=3}) => {
+const ImagesDeck = ({ setImageUri, images = [], addible = false, size=3}) => {
   const dimension = {width: size*100, height: size*100}
   return (
     <Box flexDirection='row'>
@@ -85,7 +85,7 @@ const ImagesDeck = ({ images, addible = false, size=3}) => {
           bg='#dcdcdc'
           m='5'
          {...dimension}
-          onPress={pickImage}
+          onPress={()=> pickImage(setImageUri)}
         >
           {ICONS.Camera}
         </Button>
