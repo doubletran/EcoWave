@@ -23,11 +23,18 @@ import {
   NumberIncrementStepper,
   NumberInputField,
   ScrollView,
+  Modal,
+  VStack,
+  Pressable
 } from "native-base";
 import { date_format, firebase_date_format, time_format } from "../config/lib";
 import { ICONS } from "../config/style";
 import { useAuth } from "@clerk/clerk-expo";
 import NumericInput from "react-native-numeric-input";
+
+import firebase from "../config/firebase";
+import { getDocs, collection } from "firebase/firestore"
+
 export function ViewEvents({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -61,6 +68,33 @@ export default function CreateEvent({
   const [datePicker, setDatePicker] = useState(false);
   const [status, setStatus] = React.useState("disabled");
 
+  // problem modal vars
+  const [showProblemModal, setShowProblemModal] = React.useState(false)
+  const [problems, setProblems] = React.useState([])
+
+  function ListProblem(problem) {
+    return (
+      <Pressable onPress={() => {setChosenProblem(problem); setShowProblemModal(false)}}>
+        <Box mt='5' p='5' bg='muted.100' shadow={3}>
+      <HStack justifyContent="space-between">
+        <Box>
+        <Text>{problem.title}</Text>
+        <Text size='sm'>{date_format(problem.create_time)}</Text>
+        </Box>
+        </HStack>
+        <Image
+          key={problem.imageUrl}
+          width={500}
+          height={500}
+          source={{ uri: problem.imageUrl}}
+          alt={problem.description}
+        />
+        <Text>{problem.description}</Text>
+      </Box>
+      </Pressable>
+    )
+  }
+
   React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -87,38 +121,17 @@ export default function CreateEvent({
         headerRight: () => <Button isDisabled>Submit</Button>,
       });
     }
-  }, [name, startTime, endTime, date]);
 
-  //   console.log(location)
-  //   // Request permission to access the device's location
-  //   let getLocationPerms = async () => {
-  //     PermissionsAndroid.check(
-  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-  //     ).then(async (request) => {
-  //       if (request) {
-  //         console.log("We have location permissions.");
-  //         return;
-  //       }
-  //       try {
-  //         const granted = await PermissionsAndroid.request(
-  //           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //           {
-  //             title: "Example App",
-  //             message: "Example App access to your location ",
-  //           }
-  //         );
-  //         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //           console.log("You can use the location");
-  //         } else {
-  //           console.log("location permission denied");
-  //         }
-  //       } catch (err) {
-  //         console.warn(err);
-  //       }
-  //     });
-  //   };
-  //   getLocationPerms();
-  // }, []);
+    let getProblems = async () => {
+      let temp = []
+      let res = await getDocs(collection(firebase, 'problems'))
+      res.forEach((doc) => {
+        temp.push(doc.data())
+      })
+      setProblems(temp)
+    }
+    getProblems()
+  }, [name, startTime, endTime, date]);
 
   /* EVENTS SHOULD BE SEND IN THIS FORMAT TO THE DATABASE
   const event = {
@@ -300,10 +313,20 @@ export default function CreateEvent({
             value={description}
             onChangeText={setDescription}
           />
-          <Button {...Style.inputBtn} leftIcon={ICONS.Flag}>
+          <Button {...Style.inputBtn} leftIcon={ICONS.Flag} onPress={() => { setShowProblemModal(true) }}>
             Link a problem
           </Button>
           {problem && <ProblemContent {...problem} />}
+        <Modal isOpen={showProblemModal} onClose={() => setShowProblemModal(false)}>
+        <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
+          <Modal.Body>
+            <Modal.Header>Problems</Modal.Header>
+            <VStack>
+              {problems.map((problem) => ListProblem(problem))}
+            </VStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
         </Center>
       </ScrollView>
     </>
