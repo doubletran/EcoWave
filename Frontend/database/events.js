@@ -116,6 +116,7 @@ export async function create({
       start: Timestamp.fromDate(start),
       end: Timestamp.fromDate(end),
     },
+    images: images,
     capacity: capacity,
     participants: [userId],
     problemId: problemId ? problemId: null

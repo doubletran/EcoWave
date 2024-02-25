@@ -66,7 +66,7 @@ export const ViewEvent = ({ navigation, route }) => {
     <>
       <ScrollView>
         <Box p='5'>
-        {/* <ImagesDeck images={[]} size={1} addible={isAttendee}/> */}
+        <ImagesDeck images={[]} size={1} addible={isAttendee}/>
           <Heading>{name}</Heading>
          
           <HStack justifyContent='space-between'>

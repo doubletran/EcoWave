@@ -72,6 +72,7 @@ const ImagesDeck = ({ setImageUri, images = [], addible = false, size=3}) => {
           images.map((item) => {
             return (
               <Image
+              key={item}
                 m='5'
                 style={dimension}
                 source={{ uri: item }}

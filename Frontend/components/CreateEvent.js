@@ -103,7 +103,7 @@ export default function CreateEvent({
   }
 
   React.useEffect(() => {
-    console.log("Address" + address);
+    console.log("Address" + address, longitude, latitude);
     navigation.setOptions({
       headerShown: true,
       headerTitle: "New Event",
@@ -174,6 +174,7 @@ export default function CreateEvent({
     })
       .then((res) => {
         console.log("Submit result: " + res);
+        navigation.popToTop()
         navigation.navigate("Profile");
       })
       .catch((error) => {
@@ -339,7 +340,7 @@ export default function CreateEvent({
 
           {chosenProblem && <ProblemContent {...chosenProblem} />}
           
-     <ImagesDeck images={images} setImageUri ={setImages} size={1} addible={true}/>
+  
           <Input
             {...Style.inputBtn}
             placeholder='Description'
@@ -348,6 +349,7 @@ export default function CreateEvent({
             value={description}
             onChangeText={setDescription}
           />
+             <ImagesDeck images={images} setImageUri ={setImages} size={1} addible={true}/>
           <Modal
             isOpen={showProblemModal}
             onClose={() => setShowProblemModal(false)}
