@@ -5,30 +5,34 @@ import {
   Text,
   View,
   Box,
- Button,
+  Button,
   Modal,
   ScrollView,
   HStack,
 } from "native-base";
+import BottomNav from "../BottomNav";
 import { getDoc } from "firebase/firestore";
 import { Dimensions } from "react-native";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { Header, BottomNav } from "../Navigator";
-import { createRef, useEffect, useRef, useState } from "react";
-import { getAll } from "../database/problems";
+import { Header } from "../Navigator";
+import React, { createRef, useEffect, useRef, useState } from "react";
+import { get, getAll } from "../database/problems";
 import { FileSystem } from "expo-file-system";
-
 
 import Style, { ICONS } from "../config/style";
 import MapSearchbox from "../components/MapSearchbox";
 import { DEFAULT_REGION, getRegionByCoords } from "../config/lib";
 import ViewProblem from "../components/ViewProblem";
+import { getEventsByProblem } from "../database/events";
+import { ListableEvent } from "./EventsScreen";
+import { ImagesDeck } from "../database/ImageUploader";
 
 const MapScreen = ({ navigation, route }) => {
   const [location, setLocation] = useState(false);
   const [search, setSearch] = useState(false);
   const [problems, setProblems] = useState([]);
+  const [linkedEvents, setLinkedEvents] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const mapRef = useRef();
@@ -41,8 +45,20 @@ const MapScreen = ({ navigation, route }) => {
       console.error("Error fetching problems:", error);
     }
   };
+  React.useEffect(() => {
+    if (selectedProblem) {
 
+      (async () => {
+
+        const events = await getEventsByProblem(selectedProblem.id);
+        console.log(events);
+        setLinkedEvents(events);
+        // setModalVisible(true)
+      })();
+    }
+  }, [selectedProblem]);
   useEffect(() => {
+ 
     if (!search) {
       navigation.setOptions({
         headerShown: true,
@@ -67,12 +83,11 @@ const MapScreen = ({ navigation, route }) => {
     fetchProblems();
 
     const fetchNewProblemData = async () => {
-      const anchor = route.params?.anchor;
-
-      if (anchor && !selectedProblem) {
+      const anchor = route.params.anchor;
+    
+      if (anchor) {
         try {
-          const problemDoc = await getDoc(anchor);
-          const problemData = problemDoc.data();
+          const problemData = await get(anchor);
 
           // Focus on the newly created problem's location
           mapRef.current.animateToRegion(
@@ -84,6 +99,8 @@ const MapScreen = ({ navigation, route }) => {
             },
             1000
           );
+         setSelectedProblem(problemData)
+         setModalVisible(true)
         } catch (error) {
           console.error("Error fetching problem data:", error);
         }
@@ -98,7 +115,7 @@ const MapScreen = ({ navigation, route }) => {
 
     const intervalId = setInterval(fetchProblems, 1000);
     return () => clearInterval(intervalId);
-  }, [search, route.params?.anchor, selectedProblem]);
+  }, [search, route.params?.anchor]);
 
   const handleMapPress = (event) => {
     // Extract latitude and longitude from the pressed location
@@ -116,59 +133,81 @@ const MapScreen = ({ navigation, route }) => {
     return fileUri;
   };
 
-  const ModalContent = ({id,  title, imageUrl, description, type }) => (
+  const ModalContent = ({ id, title, images = [], description, type, flag }) => (
     <>
+      <Modal.Content bgColor='white'>
+        <Modal.Header>
+          <HStack justifyContent='space-between'>
+            <Box w="60%">
+              {title}
+              <Text fontSize='sm'>{description}</Text>
+            </Box>
+            <Button  position="absolute" right="0" leftIcon={ICONS.Check} >
+              Mark as solved
+            </Button>
+            <Box></Box>
+          </HStack>
+        </Modal.Header>
+        <Modal.Body>
+          <ImagesDeck images={images}/>
+        <HStack justifyContent='space-around' m='2'>
+          <Button variant='ghost' leftIcon={ICONS.Flag}>
+            {JSON.stringify(flag)}
+          </Button>
+          <Button variant='ghost' leftIcon={ICONS.Comment}>
+            12
+          </Button>
+          <Button variant='ghost' leftIcon={ICONS.People}>
+            22
+          </Button>
+          <Button
+            variant='ghost'
+            bgColor={Style.ViewBox}
+            leftIcon={ICONS.Calendar}
+          >
+            {linkedEvents.length}
+          </Button>
+        </HStack>
+        {/* <Text fontWeight="bold">Linked Events</Text> */}
 
-    <Modal.Content bgColor="white">
-    <Modal.Header>
-      <HStack justifyContent="space-between">
-        <Box> 
-      {title}
-    <Text fontSize="sm">{description}</Text>
-    </Box>
-    <Button ml="auto"  leftIcon={ICONS.Check}> Mark as solved</Button>
-    <Box> 
+        <Center>{linkedEvents.map((event) => ListableEvent(event))}</Center>
+        </Modal.Body>
+  
+          <Button 
+            {...Style.inputBtn} 
+            onPress={() =>{   setModalVisible(false)
+              navigation.navigate("SelectEventType", { problemId: id })
+            }
+            }
+            leftIcon={ICONS.Event}
+          >
+            Create an event to solve this problem
+          </Button>
 
-    </Box>
-    </HStack>
-    </Modal.Header>
-    <ScrollView>
-      
-      <Center>
-      <Image style={styles.image}  source={{ uri: imageUrl }}></Image>
-   
-
-      </Center>
-      <HStack justifyContent="space-around" m="2">
- 
-      <Button variant="ghost" leftIcon={ICONS.Flag}> 12</Button>
-      <Button variant="ghost" leftIcon={ICONS.Comment}> 12</Button>
-      <Button variant="ghost" leftIcon={ICONS.People}> 22</Button>
-      <Button variant="ghost" leftIcon={ICONS.Calendar}> 2</Button>
-
-      </HStack>
-      <Button {...Style.inputBtn} onPress={()=> navigation.navigate("SelectEventType", {problemId: id})} leftIcon={ICONS.Event} >Create an event to solve this problem</Button>
-    
-    </ScrollView>
-    </Modal.Content>
+      </Modal.Content>
     </>
   );
 
   const getMarkers = () => {
     return problems && problems.length > 0
-      ? problems.map((problem) => (
-          <Marker
-            key={problem.id}
-            coordinate={{
-              latitude: problem.latitude,
-              longitude: problem.longitude,
-            }}
-            onPress={() => {
-              setSelectedProblem(problem);
-              setModalVisible(true);
-            }}
-          />
-        ))
+      ? problems.map((problem) => {
+          const { id, location } = problem;
+
+          //  if (problem.longitude== null) console.log(problem.id, problem.longitude)
+          return (
+            <Marker
+              key={id}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              onPress={() => {
+                setSelectedProblem(problem);
+                setModalVisible(true);
+              }}
+            />
+          );
+        })
       : null;
   };
 
@@ -182,46 +221,24 @@ const MapScreen = ({ navigation, route }) => {
         onPress={() => {
           setSearch(false);
         }}
-        onMap
       >
         {getMarkers()}
       </MapView>
 
       <BottomNav atProblems={true} />
 
-      <Modal
-      size="full"
-        isOpen={modalVisible}
-        animationPreset='slide' 
-        onClose={() => setModalVisible(false)}
-      >
+      <Modal size="full" isOpen={modalVisible} onClose={() => setModalVisible(false)}>
         <ModalContent {...selectedProblem} />
       </Modal>
     </>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 10,
-    backgroundColor: "white",
-    padding: 16,
-    width: 300,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "blue",
-  },
   image: {
     minWidth: 300,
     minHeight: 300,
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
+
   map: {
     //flex: 1,
     ...StyleSheet.absoluteFillObject,

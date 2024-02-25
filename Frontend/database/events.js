@@ -10,15 +10,16 @@ import {
   query,
   getDocs,
   where,
+  orderBy
 } from "firebase/firestore";
 
 import firebase from "../config/firebase";
 import * as geofire from "geofire-common";
-
+import { useAuth } from "@clerk/clerk-expo";
 const EventsDB = collection(firebase, "events");
 
 export async function getAll() {
-  const querySnapshot = await getDocsFromServer(collection(firebase, "events"));
+  const querySnapshot = await getDocsFromServer(EventsDB, orderBy("date"))
   let events = [];
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
@@ -48,7 +49,7 @@ export async function queryWithFilter(types, dateRange, capRange) {
   let events = [];
   let q;
   if (types.length > 0) {
-    q = query(EventsDB, filterByTypes(types));
+    q = query(EventsDB, filterByTypes(types), orderBy("time.start"));
   } else {
     q = query(EventsDB);
   }
@@ -63,7 +64,8 @@ export async function queryWithFilter(types, dateRange, capRange) {
   return events;
 }
 export async function getEventsByProblem(problemId) {
-  const q = query(EventsDB, where("problem", "==", problemId));
+  const q = query(EventsDB, where("problemId", "==", problemId));
+  const querySnapshot = await getDocs(q);
   let events = [];
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
@@ -75,25 +77,36 @@ export async function getEventsByProblem(problemId) {
 }
 
 export async function getMyEvent(userId) {
-  const document = await getDoc(doc(EventsDB, { userId: userId }));
-  return document;
+  const q = query(EventsDB,  where("participants", "array-contains", userId))
+  let events = [];
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, ' => ', doc.data());
+    let data = doc.data();
+    events.push(Object.assign(data, { id: doc.id }));
+  });
+  return events;
 }
+
 export async function create({
-  title,
+  name,
   description,
   latitude,
   longitude,
   address,
   userId,
+  images,
   problemId,
   capacity,
   types,
   start,
   end,
 }) {
-  console.log(start);
+
   return await addDoc(EventsDB, {
-    title: title,
+    name: name,
     description: description,
     location: new GeoPoint(latitude, longitude),
     address: address,
@@ -104,10 +117,8 @@ export async function create({
       end: Timestamp.fromDate(end),
     },
     capacity: capacity,
-    problemId: problemId,
-    creator: userId,
     participants: [userId],
-    problemRef: problemRef,
+    problemId: problemId ? problemId: null
   });
 }
 

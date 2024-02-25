@@ -4,12 +4,15 @@ import {
   Box,
   Input,
   Image,
+  HStack,
   ScrollView,
   Alert,
   Center,
   Pressable,
-  Flex
+  Flex,
+  FlatList,
 } from "native-base";
+import { Type } from "../config/style";
 import { Header } from "./SelectProblemType";
 import { Divider } from "native-base";
 import { create } from "../database/problems";
@@ -30,14 +33,13 @@ const InputProblem = ({
   const toast = useToast();
 
   const [description, setDescription] = useState("");
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState([]);
   const [status, setStatus] = useState("disabled");
   const { userId } = useAuth();
   useEffect(() => {
     console.log(userId);
-    console.log("At input" + navigation.getState()?.routes)
-    const isFormValid =
-      name && latitude && longitude && imageUri ;
+    console.log("At input" + navigation.getState()?.routes);
+    const isFormValid = name && latitude && longitude && imageUri;
     const newStatus = isFormValid ? "enabled" : "disabled";
     setStatus(newStatus);
 
@@ -59,37 +61,35 @@ const InputProblem = ({
   const submitReport = async () => {
     setStatus("loading");
 
-    if (!name || !latitude || !longitude || !description || !imageUri) {
+    if (!name || !latitude || !longitude || !imageUri) {
       alert("Please fill in all fields before submitting.");
     } else {
       try {
-        const imageUrl = imageUri
-          ? await ImageUploader.uploadImageAsync(imageUri)
-          : null;
-
-        const newProblem = await create({
-          title: name,
-          latitude: latitude,
-          longitude: longitude,
-          description: description,
-          imageUrl: imageUrl,
-          userId: userId,
-          types: Array.from (types)
-        });
-
-        toast.show({
-          render: () => <Alert status='success'>SUCCESS</Alert>,
-        });
-        navigation.navigate("Map", { anchor: newProblem });
+        let images = []
+      
+        for (let image of imageUri){
+          images.push(await ImageUploader.uploadImageAsync(image) )
+        }
+        create({
+              title: name,
+              latitude: latitude,
+              longitude: longitude,
+              description: description,
+              images: images,
+              userId: userId,
+              types: Array.from(types),
+            })
+          .then((newProblem) => {
+            toast.show({
+              render: () => <Alert status='success'>SUCCESS</Alert>,
+            });
+            navigation.navigate("Problems", { anchor: newProblem.id });
+          });
       } catch (error) {
         console.error("Error submitting problem:", error);
         alert("Error submitting problem. Please try again.");
         setStatus("disabled");
       }
-
-      setName("");
-      setDescription("");
-      setImageUri(null);
     }
   };
 
@@ -103,78 +103,84 @@ const InputProblem = ({
   };
 
   return (
-    <ScrollView automaticallyAdjustKeyboardInsets>
-      <Center px='4'>
+    <Center px="4">
+       <ScrollView SafeAreaView width='100%' pb="3" automaticallyAdjustKeyboardInsets>
         <Input
           {...Style.inputBtn}
           fontSize='2xl'
           placeholder='Title'
           value={name}
-
           size='2xl'
           onChangeText={setName}
         />
         <Center>
-          <Box p='10' w='400' h='400'>
-            <Pressable
-              justifyContent='center'
-              alignItems='center'
-              bg='#dcdcdc'
-              w='100%'
-              h='100%'
-              onPress={pickImage}
-            >
-              {imageUri ? (
-                <Image
-                  key={imageUri}
-                  style={{ width: "100%", height: "100%" }}
-                  source={{ uri: imageUri }}
-                  alt='Selected Image'
-                />
-              ) : (
-                ICONS.Camera
-              )}
-            </Pressable>
+          <Box flexDirection='row'>
+            <ScrollView horizontal>
+              {imageUri &&
+                imageUri.map((item) => {
+                  return (
+                    <Image
+                      m='5'
+                      style={{ width: 300, height: 300 }}
+                      source={{ uri: item }}
+                      alt='Selected Image'
+                    />
+                  );
+                })}
+              <Button
+                justifyContent='center'
+                alignItems='center'
+                bg='#dcdcdc'
+                m='5'
+                width='300'
+                h='300'
+                onPress={pickImage}
+              >
+                {ICONS.Camera}
+              </Button>
+            </ScrollView>
           </Box>
         </Center>
-        <Input
-          multiline
-          placeholder='Describe a problem (optional)'
-          {...Style.inputBtn}
-          h='100'
-          value={description}
-          onChangeText={setDescription}
-        />
-        <Button
-          {...Style.inputBtn}
-          leftIcon={ICONS.Marker}
-          onPress={() =>{
-            const push = StackActions.push("Add location", {action: "New Problem", types: types});
-            navigation.dispatch(push)
-            }
-          }
-        >
-          {!address ? `${latitude}, ${longitude}` : address}
-        </Button>
-        <Button
-          leftIcon={ICONS.Grid}
-          onPress={() => {
-            const push = StackActions.push("SelectProblemType", {types: types});
-            navigation.dispatch(push)
-          }}
-          {...Style.inputBtn}
-        >
-          Select types
-          <Flex w='100%' direction='row' wrap='wrap'>
-            {Array.from(types).map((item) => (
-              <>
-                <Box bgColor='cyan.400' {...Style.Float1}>
-                  {item}
-                </Box>
-              </>
-            ))}
-          </Flex>
-        </Button>
+       
+          <Input
+            multiline
+            placeholder='Describe a problem (optional)'
+            {...Style.inputBtn}
+            h='100'
+            value={description}
+            onChangeText={setDescription}
+          />
+          <Button
+            {...Style.inputBtn}
+            leftIcon={ICONS.Marker}
+            onPress={() => {
+              const push = StackActions.push("Add location", {
+                action: "New Problem",
+                types: types,
+              });
+              navigation.dispatch(push);
+            }}
+          >
+            {!address ? `${latitude}, ${longitude}` : address}
+          </Button>
+          <Button
+            leftIcon={ICONS.Grid}
+            onPress={() => {
+              const push = StackActions.push("SelectProblemType", {
+                types: types,
+              });
+              navigation.dispatch(push);
+            }}
+            {...Style.inputBtn}
+          >
+            Select types
+            <Flex w='200' direction='row' wrap='wrap' overflow="scroll">
+              {Array.from(types).map((item) => (
+                <Type name={item} />
+              ))}
+            </Flex>
+          </Button>
+        </ScrollView>
 
         {/* <SafeAreaView>
             <GooglePlacesAutocomplete
@@ -192,8 +198,8 @@ const InputProblem = ({
               }}
             />
           </SafeAreaView> */}
-      </Center>
-    </ScrollView>
+      
+    </Center>
   );
 };
 

@@ -32,6 +32,7 @@ const SelectProblemType = ({ navigation, route }) => {
   );
   React.useEffect(() => {
     navigation.setOptions({
+      headerTitle: "New Problem",
       headerRight: () => (
         <HStack>
           <DiscardBtn />
@@ -71,7 +72,7 @@ const SelectProblemType = ({ navigation, route }) => {
 
   return (
     <ScrollView>
-      <Heading>What types of problems?</Heading>
+      <Heading m="3">What problems do you want to report? </Heading>
       <MultiSelector values={types} setValues={setTypes} object={SYMBOL} />
     </ScrollView>
   );

@@ -13,13 +13,15 @@ import { arrayUnion } from "firebase/firestore";
 import { get, update } from "../database/events";
 import { Modal } from "native-base";
 import { useUser } from "@clerk/clerk-expo";
-
+import { ImagesDeck } from "../database/ImageUploader";
+import { useNavigationState } from "@react-navigation/native";
 export const ViewEvent = ({ navigation, route }) => {
   const [showModal, setShowModal] = useState(false)
   const [showAlreadyRegModal, setShowAlreadyRegModal] = useState(false)
   const [showParticipants, setShowParticipants] = useState(false)
   const { user } = useUser()
-
+  const routes= useNavigationState(state => state.routes);
+  const isAttendee= (routes[routes.length-2].name == "Events") ?false: true
   const handleRegister = async () => {
     let eventId = route.params.id;
     let evnt = await get(eventId)
@@ -34,6 +36,7 @@ export const ViewEvent = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+   console.log(isAttendee)
     navigation.setOptions({
       headerShown: true,
       headerRight: () => <Button onPress={handleRegister}>Register</Button>,
@@ -47,6 +50,7 @@ export const ViewEvent = ({ navigation, route }) => {
     location,
     address,
     types,
+    images,
     participants,
   } = route.params;
 
@@ -63,7 +67,9 @@ export const ViewEvent = ({ navigation, route }) => {
     <>
       <ScrollView>
         <Box p='5'>
+        <ImagesDeck images={[]} size={1} addible={isAttendee}/>
           <Heading>{name}</Heading>
+         
           <HStack justifyContent='space-between'>
             <Box pt="3">
               <Text>{firebase_date_format(time.start)}</Text>
@@ -86,9 +92,9 @@ export const ViewEvent = ({ navigation, route }) => {
           </HStack>
 
           <Button
-            {...Style.inputBtn}
+            variant="ghost"
             leftIcon={ICONS.Marker}
-            onPress={() => navigation.navigate("Set location")}
+            onPress={() => navigation.navigate("Add location")}
           >
             Location: {address}
           </Button>

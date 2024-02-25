@@ -32,19 +32,19 @@ const getPrevious = ()=>{
 }
 const Locate = ({ navigation, route }) => {
   const COORD_ENABLED = route.params.action !=  "New Event";
-  const [address, setAddress] = React.useState("");
+  const [address, setAddress] = React.useState(route.params.address ? route.params.address: "");
   const [location, setLocation] = React.useState(DEFAULT_REGION._j);
   const mapRef = useRef();
 
   React.useEffect(() => {
     //If event, manually fetch address
-    if (location && !COORD_ENABLED) {
+    console.log(address)
+    if (address == "" && location && !COORD_ENABLED) {
       queryEstAddressByCoords(location).then((res) => setAddress(res));
     }
   }, []);
   React.useEffect(() => {
-    // console.log(address)
-    // console.log(location)
+  
     navigation.setOptions({
       headerShown: true,
       headerRight:()=>{},
@@ -57,6 +57,7 @@ const Locate = ({ navigation, route }) => {
             handleReturn={(region) => {
               mapRef.current.animateToRegion(region, 100);
               setLocation(region);
+              setAddress(region.address ? region.address: address)
             }}
           />
           <Button
@@ -65,6 +66,7 @@ const Locate = ({ navigation, route }) => {
             isDisabled={!location}
             onPress={() => {
               console.log("Navigate" + JSON.stringify(location));
+              console.log("Type", route.params.types)
               console.log(route.params.action, location, address)
               navigation.navigate(
                 {

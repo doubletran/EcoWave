@@ -25,7 +25,7 @@ import {
   ScrollView,
   Modal,
   VStack,
-  Pressable
+  Pressable,
 } from "native-base";
 import { date_format, firebase_date_format, time_format } from "../config/lib";
 import { ICONS } from "../config/style";
@@ -33,7 +33,9 @@ import { useAuth } from "@clerk/clerk-expo";
 import NumericInput from "react-native-numeric-input";
 
 import firebase from "../config/firebase";
-import { getDocs, collection } from "firebase/firestore"
+import { getDocs, collection } from "firebase/firestore";
+import { ImagesDeck } from "../database/ImageUploader";
+import { StackActions } from "@react-navigation/native";
 
 export function ViewEvents({ navigation }) {
   return (
@@ -57,7 +59,6 @@ export default function CreateEvent({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const { userId } = useAuth();
-  const [type, setType] = useState(types);
   const [problem, setProblem] = useState(false);
   //datatyle: date
   const [startTime, setStartTime] = useState(false);
@@ -67,39 +68,45 @@ export default function CreateEvent({
   const [endTimePicker, setEndTimePicker] = useState(false);
   const [datePicker, setDatePicker] = useState(false);
   const [status, setStatus] = React.useState("disabled");
-
+  const [images, setImages] = React.useState([])
   // problem modal vars
-  const [showProblemModal, setShowProblemModal] = React.useState(false)
-  const [problems, setProblems] = React.useState([])
-  const [chosenProblem, setChosenProblem] = React.useState({})
+  const [showProblemModal, setShowProblemModal] = React.useState(false);
+  const [problems, setProblems] = React.useState([]);
+  const [chosenProblem, setChosenProblem] = React.useState({});
 
   function ListProblem(problem) {
     return (
-      <Pressable onPress={() => {setChosenProblem(problem); setShowProblemModal(false)}}>
+      <Pressable
+        onPress={() => {
+          setChosenProblem(problem);
+          setShowProblemModal(false);
+        }}
+      >
         <Box mt='5' p='5' bg='muted.100' shadow={3}>
-      <HStack justifyContent="space-between">
-        <Box>
-        <Text>{problem.title}</Text>
-        <Text size='sm'>{date_format(problem.create_time)}</Text>
+          <HStack justifyContent='space-between'>
+            <Box>
+              <Text>{problem.title}</Text>
+              <Text size='sm'>{date_format(problem.create_time)}</Text>
+            </Box>
+          </HStack>
+          <Image
+            key={problem.imageUrl}
+            width={500}
+            height={500}
+            source={{ uri: problem.imageUrl }}
+            alt={problem.description}
+          />
+          <Text>{problem.description}</Text>
         </Box>
-        </HStack>
-        <Image
-          key={problem.imageUrl}
-          width={500}
-          height={500}
-          source={{ uri: problem.imageUrl}}
-          alt={problem.description}
-        />
-        <Text>{problem.description}</Text>
-      </Box>
       </Pressable>
-    )
+    );
   }
 
   React.useEffect(() => {
+    console.log("Address" + address);
     navigation.setOptions({
       headerShown: true,
-      headerTitle: true,
+      headerTitle: "New Event",
     });
   });
   React.useEffect(() => {
@@ -123,15 +130,15 @@ export default function CreateEvent({
       });
     }
 
-    let getProblems = async () => {
-      let temp = []
-      let res = await getDocs(collection(firebase, 'problems'))
-      res.forEach((doc) => {
-        temp.push(doc.data())
-      })
-      setProblems(temp)
-    }
-    getProblems()
+    // let getProblems = async () => {
+    //   let temp = []
+    //   let res = await getDocs(collection(firebase, 'problems'))
+    //   res.forEach((doc) => {
+    //     temp.push(doc.data())
+    //   })
+    //   setProblems(temp)
+    // }
+    // getProblems()
   }, [name, startTime, endTime, date]);
 
   /* EVENTS SHOULD BE SEND IN THIS FORMAT TO THE DATABASE
@@ -150,9 +157,10 @@ export default function CreateEvent({
     let end = new Date(endTime);
     start.setDate(date.getDate());
     end.setDate(date.getDate());
+    console.log("type" + types);
     create({
-      title: name,
-      description,
+      name: name,
+      description: description,
       latitude: latitude,
       longitude: longitude,
       address: address,
@@ -160,11 +168,17 @@ export default function CreateEvent({
       userId: userId,
       capacity: capacity,
       problemId: problemId,
+      images: images,
       start: start,
       end: end,
-    }).then((res) => {
-      console.log("Submit result: " + res);
-    });
+    })
+      .then((res) => {
+        console.log("Submit result: " + res);
+        navigation.navigate("Profile");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -211,7 +225,7 @@ export default function CreateEvent({
               type,
               nativeEvent: { timestamp, utcOffset },
             } = event;
-            console.log(date);
+            console.log("date" + date);
             if (type == "set") {
               setDate(new Date(date));
             }
@@ -249,6 +263,7 @@ export default function CreateEvent({
 
             <Button
               {...Style.inputBtn}
+              leftIcon={ICONS.Time}
               w='50%'
               onPress={() => setEndTimePicker(true)}
             >
@@ -259,11 +274,21 @@ export default function CreateEvent({
           <Button
             {...Style.inputBtn}
             leftIcon={ICONS.Marker}
-            onPress={() =>
-              navigation.navigate("Add location", { action: "New Event" })
-            }
+            onPress={() => {
+              navigation.navigate("Add location", {
+                action: "New Event",
+                address: address,
+                types: types,
+              });
+
+              // const push = StackActions.p("Add location", {
+              //   action: "New Event",
+              //   types: types,
+              // });
+              // navigation.dispatch(push);
+            }}
           >
-            {address ? address : "Add location"}
+            {address ? <Text>{address}</Text> : "Add location"}
           </Button>
           <Button
             leftIcon={ICONS.Grid}
@@ -274,16 +299,19 @@ export default function CreateEvent({
           >
             Select types
             <Flex w='100%' direction='row' wrap='wrap'>
-              {Array.from(type).map((item) => 
+              {Array.from(types).map((item) => (
                 <Type name={item} />
-              )}
+              ))}
             </Flex>
           </Button>
+          <Text fontWeight='bold'>Optional details</Text>
+
+         {ImagesDeck({ images: [], size:1})}
           <Box {...Style.inputBtn}>
             <HStack>
               {ICONS.People}
 
-              <Text> Capacity: </Text>
+              <Text {...Style.inputBtn._text}> Capacity: </Text>
             </HStack>
             <NumberInput value={capacity} defaultValue={capacity}>
               <HStack>
@@ -298,43 +326,48 @@ export default function CreateEvent({
                 />
               </HStack>
             </NumberInput>
-            {/* <NumericInput
-              min={0}
-              max={100}
-              value={10}
-              onChange={(value) => setCapacity(value)}
-            /> */}
           </Box>
+
+          <Button
+            {...Style.inputBtn}
+            leftIcon={ICONS.Flag}
+            onPress={() => {
+              setShowProblemModal(true);
+            }}
+          >
+            Link a problem
+          </Button>
+
+          {chosenProblem && <ProblemContent {...chosenProblem} />}
 
           <Input
             {...Style.inputBtn}
             placeholder='Description'
-            size='md'
+            size='lg'
             variant='unstyled'
             value={description}
             onChangeText={setDescription}
           />
-          <Button {...Style.inputBtn} leftIcon={ICONS.Flag} onPress={() => { setShowProblemModal(true) }}>
-            Link a problem
-          </Button>
-          {chosenProblem && <ProblemContent {...chosenProblem} />}
-        <Modal isOpen={showProblemModal} onClose={() => setShowProblemModal(false)}>
-        <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
-          <Modal.Body>
-            <Modal.Header>Problems</Modal.Header>
-            <VStack>
-              {problems.map((problem) => ListProblem(problem))}
-            </VStack>
-          </Modal.Body>
-        </Modal.Content>
-      </Modal>
+          <Modal
+            isOpen={showProblemModal}
+            onClose={() => setShowProblemModal(false)}
+          >
+            <Modal.Content w='100%' marginBottom='auto' marginTop='auto'>
+              <Modal.Body>
+                <Modal.Header>Problems</Modal.Header>
+                <VStack>
+                  {problems.map((problem) => ListProblem(problem))}
+                </VStack>
+              </Modal.Body>
+            </Modal.Content>
+          </Modal>
         </Center>
       </ScrollView>
     </>
   );
 }
 
-const ProblemContent = ({ title, description, imageUrl }) => {
+const ProblemContent = ({ title, description, images }) => {
   return (
     <>
       <Box>
@@ -342,13 +375,7 @@ const ProblemContent = ({ title, description, imageUrl }) => {
         <Text fontSize='sm'>{description}</Text>
       </Box>
 
-      <Center>
-        <Image
-          alt={description}
-          style={styles.image}
-          source={{ uri: imageUrl }}
-        ></Image>
-      </Center>
+      <ImagesDeck images={images} />
     </>
   );
 };

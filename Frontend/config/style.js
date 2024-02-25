@@ -179,6 +179,7 @@ const Style = {
   },
 
   inputBtn: {
+    
     justifyContent: "space-between",
     color: "#080808",
     padding: 2,
@@ -186,8 +187,11 @@ const Style = {
     margin: 1,
     bg: "#faffff",
     variant: "ghost",
+    fontSize: "lg",
+    fontSize: "lg",
+    color: "grey",
     _text: {
-      fontSize: "17",
+      fontSize: "lg",
       color: "grey",
     },
     width: "100%",

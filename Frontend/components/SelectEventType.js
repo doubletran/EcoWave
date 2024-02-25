@@ -75,6 +75,7 @@ const SelectEventTypeScreen = ({ navigation, route }) => {
   const [types, setTypes] = React.useState(new Set());
   React.useEffect(() => {
     navigation.setOptions({
+      headerTitle: "New Event",
       headerRight: () => (
         <HStack>
           <DiscardBtn />
@@ -95,7 +96,7 @@ const SelectEventTypeScreen = ({ navigation, route }) => {
   //UseState doesn't work when binding
   return (
     <ScrollView>
-      <Heading>What types of problems?</Heading>
+      <Heading m="2">What events do you want to create?</Heading>
       <MultiSelector values={types} setValues={setTypes} object={SYMBOL} />
     </ScrollView>
 
