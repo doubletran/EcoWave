@@ -71,6 +71,7 @@ export default function CreateEvent({
   // problem modal vars
   const [showProblemModal, setShowProblemModal] = React.useState(false)
   const [problems, setProblems] = React.useState([])
+  const [chosenProblem, setChosenProblem] = React.useState({})
 
   function ListProblem(problem) {
     return (
