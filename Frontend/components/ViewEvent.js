@@ -2,7 +2,7 @@ import { ScrollView, Text, Heading, Box, HStack, Container } from "native-base";
 import  BottomNav from "../Navigator";
 import { VStack, Center, Flex, Button } from "native-base";
 import { firebase_date_format, firebase_time_format } from "../config/lib";
-import { ICONS } from "../config/style";
+import { ICONS, Type } from "../config/style";
 import Style from "../config/style";
 
 import { useState, useEffect } from "react";
@@ -11,6 +11,7 @@ import ViewProblem from "./ViewProblem";
 import { arrayUnion } from "firebase/firestore";
 import { ProblemContent } from "./CreateEvent";
 import { get, update } from "../database/events";
+import { get as getProblem } from "../database/problems";
 import { Modal } from "native-base";
 import { useUser } from "@clerk/clerk-expo";
 import { ImagesDeck } from "../database/ImageUploader";
@@ -22,6 +23,7 @@ export const ViewEvent = ({ navigation, route }) => {
   const { user } = useUser()
   const routes= useNavigationState(state => state.routes);
   const isAttendee= (routes[routes.length-2].name == "Events") ?false: true
+  const [problem, setProblem] = useState(false)
   const handleRegister = async () => {
     let eventId = route.params.id;
     let evnt = await get(eventId)
@@ -35,12 +37,20 @@ export const ViewEvent = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-   console.log(route.params)
+  //  console.log("route " + route.params)
     navigation.setOptions({
       headerShown: true,
       headerRight: () => <Button onPress={handleRegister}>Register</Button>,
     });
   }, []);
+  useEffect(()=>{
+    (async()=>{
+      console.log( "problem" + JSON.stringify(route.params))
+      const problemRef =  await getProblem(route.params.problemId)
+    
+      setProblem(problemRef)
+    })()
+  })
 
   const {
     name,
@@ -67,14 +77,15 @@ export const ViewEvent = ({ navigation, route }) => {
     <>
       <ScrollView>
         <Box p='5'>
-        <ImagesDeck images={images} size={3} addible={isAttendee}/>
+          {/* {types.map(item=> <Type} */}
+        {/* <ImagesDeck images={images} size={3} addible={isAttendee}/> */}
           <Heading>{name}</Heading>
          
           <HStack justifyContent='space-between'>
             <Box pt="3">
               <Text>{firebase_date_format(time.start)}</Text>
               <Text>
-                {firebase_time_format(time.start)} - {firebase_time_format(time.end)}
+                {firebase_time_format(time.start)} - {firebase_time_format(time.end)} */}
               </Text>
             </Box>
 
@@ -99,7 +110,7 @@ export const ViewEvent = ({ navigation, route }) => {
             Location {address}
           </Button>
           <Text>{description}</Text>
-          <ProblemContent {...route.params}></ProblemContent>
+          <ProblemContent {...problem}/>
         </Box>
       </ScrollView>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>

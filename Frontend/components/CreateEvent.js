@@ -396,6 +396,7 @@ export default function CreateEvent({
 }
 
 export const ProblemContent = ({ title, description, time, images }) => {
+  console.log("Time " + JSON.stringify(time))
   return (
     <>
   
