@@ -103,6 +103,7 @@ export async function create({
   start,
   end,
 }) {
+  console.log(longitude, latitude)
 
   return await addDoc(EventsDB, {
     name: name,
@@ -115,6 +116,7 @@ export async function create({
       start: Timestamp.fromDate(start),
       end: Timestamp.fromDate(end),
     },
+    images: images,
     capacity: capacity,
     participants: [userId],
     problemId: problemId ? problemId: null

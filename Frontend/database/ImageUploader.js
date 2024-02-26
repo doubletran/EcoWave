@@ -66,12 +66,13 @@ const ImageUploader = {
 const ImagesDeck = ({ setImageUri, images = [], addible = false, size=3}) => {
   const dimension = {width: size*100, height: size*100}
   return (
-    <Box flexDirection='row'>
+    <Box flexDirection='row' height={300}>
       <ScrollView horizontal>
         {images &&
           images.map((item) => {
             return (
               <Image
+              key={item}
                 m='5'
                 style={dimension}
                 source={{ uri: item }}
