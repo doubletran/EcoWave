@@ -74,7 +74,7 @@ export default function CreateEvent({
 
   const [problem, setProblem] = React.useState([]);
   const [problems, setProblems] = React.useState([]);
-  const [chosenProblem, setChosenProblem] = React.useState({});
+  const [chosenProblem, setChosenProblem] = React.useState(false);
 
   function ListProblem(problem) {
     return (
@@ -358,7 +358,7 @@ export default function CreateEvent({
             }}
           >
             Link a problem
-            {problem && <ProblemContent {...problem} />}
+            {chosenProblem && <ProblemContent {...chosenProblem} />}
           </Button>
           <Input
             {...Style.inputBtn}
