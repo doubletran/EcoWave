@@ -400,7 +400,7 @@ export const ProblemContent = ({ title, description, time, images }) => {
   
       <Box  {...Style.Float1}>
         <Text fontWeight="bold">{title}</Text>
-        <Text >{firebase_date_format(time)}</Text>
+        <Text >{firebase_date_format(time.start)}</Text>
         <Text fontSize='sm'>{description}</Text>
       </Box>
 
