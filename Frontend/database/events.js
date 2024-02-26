@@ -93,8 +93,7 @@ export async function getMyEvent(userId) {
 export async function create({
   name,
   description,
-  latitude,
-  longitude,
+  location,
   address,
   userId,
   images,
@@ -109,10 +108,10 @@ export async function create({
   return await addDoc(EventsDB, {
     name: name,
     description: description,
-    location: new GeoPoint(latitude, longitude),
+    location: new GeoPoint(location.latitude, location.longitude),
     address: address,
     types: types,
-    geohash: geofire.geohashForLocation([latitude, longitude]),
+    geohash: geofire.geohashForLocation([location.latitude, location.longitude]),
     time: {
       start: Timestamp.fromDate(start),
       end: Timestamp.fromDate(end),
