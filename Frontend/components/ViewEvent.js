@@ -54,13 +54,13 @@ export const ViewEvent = ({ navigation, route }) => {
     capacity
   } = route.params;
 
-  const problemRef = {
-    title: "trash floating on the river",
-    description: "",
-    create_time: new Date(),
-    location: location,
-    imageUri: "https://wallpaperaccess.com/full/317501.jpg",
-  };
+  // const problemRef = {
+  //   title: "trash floating on the river",
+  //   description: "",
+  //   create_time: new Date(),
+  //   location: location,
+  //   imageUri: "https://wallpaperaccess.com/full/317501.jpg",
+  // };
 
   // show participants modal is not implemented yet and therefore disabled
   return (

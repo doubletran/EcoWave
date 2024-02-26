@@ -168,15 +168,14 @@ export default function CreateEvent({
   }
   */
 
-  latitude ? latitude : 44.56
-  longitude ? longitude : -123.28
+
 
   const submit = () => {
     let start = new Date(startTime);
     let end = new Date(endTime);
     start.setDate(date.getDate());
     end.setDate(date.getDate());
-    console.log("type" + types);
+    console.log("longitude" + longitude);
     let evnt_obj = {
       name: name,
       description: description,
@@ -396,13 +395,12 @@ export default function CreateEvent({
 }
 
 export const ProblemContent = ({ title, description, time, images }) => {
-
   return (
     <>
   
       <Box  {...Style.Float1}>
         <Text fontWeight="bold">{title}</Text>
-        <Text >{firebase_date_format(time.start)}</Text>
+        <Text >{firebase_date_format(time)}</Text>
         <Text fontSize='sm'>{description}</Text>
       </Box>
 
