@@ -104,6 +104,7 @@ export async function create({
   start,
   end,
 }) {
+  console.log(longitude, latitude)
 
   return await addDoc(EventsDB, {
     name: name,

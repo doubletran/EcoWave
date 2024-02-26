@@ -52,14 +52,14 @@ export function ViewEvents({ navigation }) {
 export default function CreateEvent({
   navigation,
   route: {
-    params: { types, address, longitude, latitude, problemId },
+    params: { types = [], address, longitude, latitude, problemId },
   },
 }) {
   const [capacity, setCapacity] = useState(10);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const { userId } = useAuth();
-  const [problem, setProblem] = useState(false);
+
   //datatyle: date
   const [startTime, setStartTime] = useState(false);
   const [endTime, setEndTime] = useState(false);
@@ -71,7 +71,8 @@ export default function CreateEvent({
   const [images, setImages] = React.useState([])
   // problem modal vars
   const [showProblemModal, setShowProblemModal] = React.useState(false);
-  const [problems, setProblems] = React.useState([]);
+
+  const [problem, setProblem] = React.useState([]);
   const [chosenProblem, setChosenProblem] = React.useState({});
 
   function ListProblem(problem) {
@@ -104,12 +105,15 @@ export default function CreateEvent({
 
   React.useEffect(() => {
     console.log("Address" + address, longitude, latitude);
+
     navigation.setOptions({
       headerShown: true,
       headerTitle: "New Event",
     });
   });
   React.useEffect(() => {
+    console.log(problem)
+    console.log(problemId)
     if (problemId) {
       (async () => {
         const data = await getProblemByID(problemId);
@@ -120,7 +124,11 @@ export default function CreateEvent({
   }, [problemId]);
 
   React.useEffect(() => {
+    if (types){
+      setName(Array.from(types)[0])
+    }
     if (name && startTime && endTime && date) {
+      
       navigation.setOptions({
         headerRight: () => <Button onPress={submit}> Submit</Button>,
       });
@@ -158,11 +166,12 @@ export default function CreateEvent({
     start.setDate(date.getDate());
     end.setDate(date.getDate());
     console.log("type" + types);
+    console.log(address, latitude, longitude)
     create({
       name: name,
       description: description,
-      latitude: latitude,
-      longitude: longitude,
+      latitude: latitude ? latitude : 44.5691905,
+      longitude: longitude ? longitude: -123.2741971,
       address: address,
       types: Array.from(types),
       userId: userId,
@@ -272,7 +281,7 @@ export default function CreateEvent({
             </Button>
           </HStack>
 
-          <Button
+          <Button overflow="hidden"
             {...Style.inputBtn}
             leftIcon={ICONS.Marker}
             onPress={() => {
@@ -289,7 +298,7 @@ export default function CreateEvent({
               // navigation.dispatch(push);
             }}
           >
-            {address ? <Text>{address}</Text> : "Add location"}
+            {address ? <Text width="100%">{address}</Text> : "Add location"}
           </Button>
           <Button
             leftIcon={ICONS.Grid}
@@ -308,13 +317,14 @@ export default function CreateEvent({
           <Text fontWeight='bold'>Optional details</Text>
 
           <Box {...Style.inputBtn}>
-            <HStack>
+            <HStack justifyContent="space-between">
+              <HStack>
               {ICONS.People}
 
-              <Text {...Style.inputBtn._text}> Capacity: </Text>
-            </HStack>
-            <NumberInput value={capacity} defaultValue={capacity}>
-              <HStack>
+              <Text {...Style.inputBtn._text}> Capacity </Text>
+              </HStack>
+              <NumberInput value={capacity} defaultValue={capacity}>
+              <HStack >
                 <IconButton
                   icon={ICONS.Inc}
                   onPress={() => setCapacity(capacity + 1)}
@@ -326,6 +336,8 @@ export default function CreateEvent({
                 />
               </HStack>
             </NumberInput>
+            </HStack>
+          
           </Box>
 
           <Button
@@ -336,21 +348,28 @@ export default function CreateEvent({
             }}
           >
             Link a problem
+            {problem && <ProblemContent {...problem} />}
           </Button>
 
-          {chosenProblem && <ProblemContent {...chosenProblem} />}
-          
+        
+     
   
           <Input
             {...Style.inputBtn}
-            placeholder='Description'
+            placeholder='Add description'
             size='lg'
             variant='unstyled'
             value={description}
             onChangeText={setDescription}
           />
-             <ImagesDeck images={images} setImageUri ={setImages} size={1} addible={true}/>
-          <Modal
+                   <Button
+            {...Style.inputBtn}
+          >
+            Add Image
+             <ImagesDeck images={images} setImageUri ={setImages} size={1} addible={true}/> 
+          </Button>
+            
+          {/* <Modal
             isOpen={showProblemModal}
             onClose={() => setShowProblemModal(false)}
           >
@@ -362,22 +381,24 @@ export default function CreateEvent({
                 </VStack>
               </Modal.Body>
             </Modal.Content>
-          </Modal>
+          </Modal> */}
         </Center>
       </ScrollView>
     </>
   );
 }
 
-const ProblemContent = ({ title, description, images }) => {
+export const ProblemContent = ({ title, description, time, images }) => {
   return (
     <>
-      <Box>
-        {title}
+  
+      <Box  {...Style.Float1}>
+        <Text fontWeight="bold">{title}</Text>
+        <Text >{firebase_date_format(time)}</Text>
         <Text fontSize='sm'>{description}</Text>
       </Box>
 
-      <ImagesDeck images={images} />
+      <ImagesDeck images={images} size={3} />
     </>
   );
 };

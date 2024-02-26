@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import ViewProblem from "./ViewProblem";
 
 import { arrayUnion } from "firebase/firestore";
-
+import { ProblemContent } from "./CreateEvent";
 import { get, update } from "../database/events";
 import { Modal } from "native-base";
 import { useUser } from "@clerk/clerk-expo";
@@ -98,7 +98,7 @@ export const ViewEvent = ({ navigation, route }) => {
             Location: {address}
           </Button>
           <Text>{description}</Text>
-          {/* <ViewProblem {...problemRef}/> */}
+          <ProblemContent {...problemRef}></ProblemContent>
         </Box>
       </ScrollView>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
