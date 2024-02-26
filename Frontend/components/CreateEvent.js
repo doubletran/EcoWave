@@ -61,9 +61,9 @@ export default function CreateEvent({
   const { userId } = useAuth();
   const [problem, setProblem] = useState(false);
   //datatyle: date
-  const [startTime, setStartTime] = useState(false);
-  const [endTime, setEndTime] = useState(false);
-  const [date, setDate] = useState(false);
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [date, setDate] = useState(new Date());
   const [startTimePicker, setStartTimePicker] = useState(false);
   const [endTimePicker, setEndTimePicker] = useState(false);
   const [datePicker, setDatePicker] = useState(false);
@@ -158,11 +158,10 @@ export default function CreateEvent({
     start.setDate(date.getDate());
     end.setDate(date.getDate());
     console.log("type" + types);
-    create({
+    let evnt_obj = {
       name: name,
       description: description,
-      latitude: latitude,
-      longitude: longitude,
+      location: { latitude, longitude },
       address: address,
       types: Array.from(types),
       userId: userId,
@@ -170,8 +169,10 @@ export default function CreateEvent({
       problemId: problemId,
       images: images,
       start: start,
-      end: end,
-    })
+      end: end
+    }
+    console.log(evnt_obj)
+    create(evnt_obj)
       .then((res) => {
         console.log("Submit result: " + res);
         navigation.navigate("Profile");
