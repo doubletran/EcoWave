@@ -34,11 +34,11 @@ export const ListableEvent = (event) => {
               {firebase_time_format(time.end)}
             </Text>
           </Box>
-          <Text>{JSON.stringify(capacity - participants.length)}</Text>
+          {/* <Text>{JSON.stringify(capacity - participants.length)}</Text> */}
 
-          {/* <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>
-          {participants.length}
-        </Button> */}
+          <Button variant="ghost" leftIcon={ICONS.People}>
+         <Text> {capacity - participants.length} spots remaining</Text>
+        </Button>
         </HStack>
         <Button
           variant='ghost'
@@ -80,7 +80,6 @@ export const EventScreen = ({ navigation }) => {
       let data = await queryWithFilter(Array.from(filterTypes))
       setEvents(data);
     })()
-    console.log(filterTypes)
   }, 
     [filterTypes, showModal]);
 

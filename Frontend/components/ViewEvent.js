@@ -35,7 +35,7 @@ export const ViewEvent = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-   console.log(isAttendee)
+   console.log(route.params)
     navigation.setOptions({
       headerShown: true,
       headerRight: () => <Button onPress={handleRegister}>Register</Button>,
@@ -51,6 +51,7 @@ export const ViewEvent = ({ navigation, route }) => {
     types,
     images,
     participants,
+    capacity
   } = route.params;
 
   const problemRef = {
@@ -66,7 +67,7 @@ export const ViewEvent = ({ navigation, route }) => {
     <>
       <ScrollView>
         <Box p='5'>
-        <ImagesDeck images={[]} size={1} addible={isAttendee}/>
+        <ImagesDeck images={images} size={3} addible={isAttendee}/>
           <Heading>{name}</Heading>
          
           <HStack justifyContent='space-between'>
@@ -80,11 +81,11 @@ export const ViewEvent = ({ navigation, route }) => {
             <Box pt="3">
               <HStack>
               <Text display="flex" fontWeight="bold">Capacity: </Text>
-              <Text>21</Text>
+              <Text>{capacity}</Text>
               </HStack>
               <HStack>
               <Text display="flex" fontWeight="bold">Available spots: </Text>
-              <Text>21</Text>
+              <Text>{capacity - participants.length}</Text>
               </HStack>
        
             </Box>
@@ -95,10 +96,10 @@ export const ViewEvent = ({ navigation, route }) => {
             leftIcon={ICONS.Marker}
             onPress={() => navigation.navigate("Add location")}
           >
-            Location: {address}
+            Location {address}
           </Button>
           <Text>{description}</Text>
-          <ProblemContent {...problemRef}></ProblemContent>
+          <ProblemContent {...route.params}></ProblemContent>
         </Box>
       </ScrollView>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
