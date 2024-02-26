@@ -17,18 +17,17 @@ export const ListableEvent = (event) => {
   const navigation = useNavigation()
   const { id, name, description, time, capacity, location, address, participants, types } =
     event;
-console.log(time)
-  let str = name + description + types  + id;
-  // console.log(id)
-  // let hash = 0;
-  // for (let i = 0, len = str.length; i < len; i++) {
-  //   let chr = str.charCodeAt(i);
-  //   hash = (hash << 5) - hash + chr;
-  //   hash |= 0; // Convert to 32bit integer
-  // }
+
+  let str = name + description;
+  let hash = 0;
+  for (let i = 0, len = str.length; i < len; i++) {
+    let chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
 
   return (
-    <Box  p='3' key={id} bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
+    <Box  p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
       <Pressable 
         onPress={() => navigation.navigate("View an event", { ...event })}
       >
