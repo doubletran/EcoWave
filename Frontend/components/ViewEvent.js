@@ -85,7 +85,7 @@ export const ViewEvent = ({ navigation, route }) => {
             <Box pt="3">
               <Text>{firebase_date_format(time.start)}</Text>
               <Text>
-                {firebase_time_format(time.start)} - {firebase_time_format(time.end)} */}
+                {firebase_time_format(time.start)} - {firebase_time_format(time.end)}
               </Text>
             </Box>
 
@@ -98,7 +98,6 @@ export const ViewEvent = ({ navigation, route }) => {
               <Text display="flex" fontWeight="bold">Available spots: </Text>
               <Text>{capacity - participants.length}</Text>
               </HStack>
-       
             </Box>
           </HStack>
 
@@ -110,6 +109,11 @@ export const ViewEvent = ({ navigation, route }) => {
             Location {address}
           </Button>
           <Text>{description}</Text>
+          <Flex w='100%' direction='row' wrap='wrap'>
+              {Array.from(types).map((item) => (
+                <Type name={item} />
+              ))}
+            </Flex>
           <ProblemContent {...problem}/>
         </Box>
       </ScrollView>
