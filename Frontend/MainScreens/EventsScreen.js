@@ -28,9 +28,8 @@ export const ListableEvent = (event) => {
   }
 
   return (
-    <Box p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
-      <Pressable
-        key={hash}
+    <Box key={hash} p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
+      <Pressable key={hash}
         onPress={() => navigation.navigate("View an event", { ...event })}
       >
         <Text fontWeight='bold' fontSize='md'>
