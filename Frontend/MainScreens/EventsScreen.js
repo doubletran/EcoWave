@@ -17,19 +17,10 @@ export const ListableEvent = (event) => {
   const navigation = useNavigation()
   const { name, description, time, capacity, location, address, participants, types } =
     event;
-  // console.log(name, location, time)
-  // hash algorithm from stack overflow, non-secure
-  let str = name + description;
-  let hash = 0;
-  for (let i = 0, len = str.length; i < len; i++) {
-    let chr = str.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
 
   return (
-    <Box key={hash} p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
-      <Pressable key={hash}
+    <Box key={Math.random()} p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
+      <Pressable key={Math.random()}
         onPress={() => navigation.navigate("View an event", { ...event })}
       >
         <Text fontWeight='bold' fontSize='md'>
