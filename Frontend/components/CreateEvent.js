@@ -102,6 +102,12 @@ export default function CreateEvent({
       </Pressable>
     );
   }
+  React.useEffect(() => {
+    console.log("Address" + address, longitude, latitude);
+
+
+  }, [address, longitude, latitude]);
+
 
   React.useEffect(() => {
     console.log("Address" + address, longitude, latitude);
@@ -389,6 +395,7 @@ export default function CreateEvent({
 }
 
 export const ProblemContent = ({ title, description, time, images }) => {
+
   return (
     <>
   

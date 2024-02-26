@@ -17,8 +17,7 @@ export const ListableEvent = (event) => {
   const navigation = useNavigation()
   const { name, description, time, capacity, location, address, participants, types } =
     event;
-  // console.log(name, location, time)
-  // hash algorithm from stack overflow, non-secure
+
   let str = name + description;
   let hash = 0;
   for (let i = 0, len = str.length; i < len; i++) {
@@ -28,8 +27,8 @@ export const ListableEvent = (event) => {
   }
 
   return (
-    <Box key={hash} p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
-      <Pressable key={hash}
+    <Box  p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
+      <Pressable 
         onPress={() => navigation.navigate("View an event", { ...event })}
       >
         <Text fontWeight='bold' fontSize='md'>
@@ -43,11 +42,11 @@ export const ListableEvent = (event) => {
               {firebase_time_format(time.end)}
             </Text>
           </Box>
-          <Text>{JSON.stringify(capacity - participants.length)}</Text>
+          {/* <Text>{JSON.stringify(capacity - participants.length)}</Text> */}
 
-          {/* <Button {...Style.inputBtn} leftIcon={INPUT_ICONS.People}>
-          {participants.length}
-        </Button> */}
+          <Button variant="ghost" leftIcon={ICONS.People}>
+         <Text> {capacity - participants.length} spots remaining</Text>
+        </Button>
         </HStack>
         <Button
           variant='ghost'
@@ -89,7 +88,6 @@ export const EventScreen = ({ navigation }) => {
       let data = await queryWithFilter(Array.from(filterTypes))
       setEvents(data);
     })()
-    console.log(filterTypes)
   }, 
     [filterTypes, showModal]);
 
