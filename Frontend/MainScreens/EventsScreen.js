@@ -27,7 +27,7 @@ export const ListableEvent = (event) => {
   }
 
   return (
-    <Box  p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
+    <Box key={id} p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>
       <Pressable 
         onPress={() => navigation.navigate("View an event", { ...event })}
       >
