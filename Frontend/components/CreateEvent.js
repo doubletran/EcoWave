@@ -73,6 +73,7 @@ export default function CreateEvent({
   const [showProblemModal, setShowProblemModal] = React.useState(false);
 
   const [problem, setProblem] = React.useState([]);
+  const [problems, setProblems] = React.useState([]);
   const [chosenProblem, setChosenProblem] = React.useState({});
 
   function ListProblem(problem) {
@@ -160,9 +161,10 @@ export default function CreateEvent({
     participants: [user.Id]
   }
   */
+
   latitude ? latitude : 44.56
   longitude ? longitude : -123.28
-  
+
   const submit = () => {
     let start = new Date(startTime);
     let end = new Date(endTime);
@@ -353,10 +355,6 @@ export default function CreateEvent({
             Link a problem
             {problem && <ProblemContent {...problem} />}
           </Button>
-
-        
-     
-  
           <Input
             {...Style.inputBtn}
             placeholder='Add description'
@@ -372,7 +370,7 @@ export default function CreateEvent({
              <ImagesDeck images={images} setImageUri ={setImages} size={1} addible={true}/> 
           </Button>
             
-          {/* <Modal
+          {<Modal
             isOpen={showProblemModal}
             onClose={() => setShowProblemModal(false)}
           >
@@ -380,11 +378,11 @@ export default function CreateEvent({
               <Modal.Body>
                 <Modal.Header>Problems</Modal.Header>
                 <VStack>
-                  {problems.map((problem) => ListProblem(problem))}
+                  {problems.map((problem_) => ListProblem(problem_))}
                 </VStack>
               </Modal.Body>
             </Modal.Content>
-          </Modal> */}
+          </Modal>}
         </Center>
       </ScrollView>
     </>
