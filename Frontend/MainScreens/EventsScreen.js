@@ -25,6 +25,7 @@ export const ListableEvent = (event) => {
     hash = (hash << 5) - hash + chr;
     hash |= 0; // Convert to 32bit integer
   }
+  console.log(time)
 
   return (
     <Box key={id} p='3' bgColor={Style.ViewBox} w='95%' rounded='xl' shadow='3'>

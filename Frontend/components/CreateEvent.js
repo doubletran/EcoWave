@@ -131,9 +131,9 @@ export default function CreateEvent({
   }, [problemId]);
 
   React.useEffect(() => {
-    if (types){
-      setName(Array.from(types)[0])
-    }
+    // if (types){
+    //   setName(Array.from(types)[0])
+    // }
     if (name && startTime && endTime && date) {
       
       navigation.setOptions({
@@ -175,7 +175,8 @@ export default function CreateEvent({
     let end = new Date(endTime);
     start.setDate(date.getDate());
     end.setDate(date.getDate());
-    console.log("longitude" + longitude);
+
+    // console.log("longitude" + longitude);
     let evnt_obj = {
       name: name,
       description: description,
