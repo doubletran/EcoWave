@@ -38,3 +38,8 @@ Start the server
 $ npx expo start
 ```
 Scan the QR code with the Expo Go app on your mobile device or use an emulator
+
+
+App Demo link: https://www.youtube.com/watch?v=rubWEcPxzGw
+
+
